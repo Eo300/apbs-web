@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
+import ConfigPDB2PQR from './configpdb2pqr.js';
 import './App.css';
-
-import 'antd/dist/antd.css'
+import 'antd/dist/antd.css';
 
 import { Layout, Menu } from 'antd';
 const { Header, Content, Sider } = Layout;
@@ -26,50 +26,51 @@ class MyHeader extends Component{
           // defaultSelectedKeys={["navbar_pdb2pqr"]}
           style={{ lineHeight: '64px' }}
         >
-          <Menu.Item onClick={() => this.props.onClick("nav_home")} key="navbar_home"> Home </Menu.Item>
-          <Menu.Item onClick={() => this.props.onClick("nav_pdb2pqr")} key="navbar_pdb2pqr"> PDB2PQR </Menu.Item>
-          <Menu.Item onClick={() => this.props.onClick("nav_apbs")} key="navbar_apbs"> APBS </Menu.Item>
-          <Menu.Item onClick={() => this.props.onClick("nav_about")} key="navbar_about"> About </Menu.Item>
+          <Menu.Item onClick={() => this.props.onClick("navbar_home")} key="navbar_home"> Home </Menu.Item>
+          <Menu.Item onClick={() => this.props.onClick("navbar_pdb2pqr")} key="navbar_pdb2pqr" href="#pdb2pqr"> PDB2PQR </Menu.Item>
+          <Menu.Item onClick={() => this.props.onClick("navbar_apbs")} key="navbar_apbs"> APBS </Menu.Item>
+          <Menu.Item onClick={() => this.props.onClick("navbar_about")} key="navbar_about"> About </Menu.Item>
         </Menu>
       </Header>
     )
   }
 }
 
-function renderPDB2PQRconfig(){
-  return(
-    <Layout>
-      <Sider width={200} style={{ background: '#fff' }}>
-      <Menu
-        // theme="dark"
-        mode="inline"
-        defaultSelectedKeys={['which_pdb']}
-        style={{ height: '100%', borderRight: 0 }}
-      >
-        <Menu.Item key="which_pdb"> PDB ID Entry </Menu.Item>
-        <Menu.Item key="which_ff"> Forcefield </Menu.Item>
-        <Menu.Item key="which_output"> Output Naming Scheme </Menu.Item>
-        <Menu.Item key="which_options"> Additional Options </Menu.Item>
-        <Menu.Item key="which_pka"> pKa Settings (optional) </Menu.Item>
-        <Menu.Item key="submission"> Start Job </Menu.Item>
-        {/* <Menu.Item key="submission" style={{ background: '#73d13d' }}> Start Job </Menu.Item> */}
-      </Menu>
-      </Sider>
-      <Layout>
-        <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
-          Content goes here
-        </Content>
-      </Layout>
-    </Layout>
-  )
-}
+// function renderPDB2PQRconfig(){
+//   return(
+//     <Layout id="pdb2pqr">
+//       <Sider width={200} style={{ background: '#fff' }}>
+//       <Menu
+//         // theme="dark"
+//         mode="inline"
+//         defaultSelectedKeys={['which_pdb']}
+//         style={{ height: '100%', borderRight: 0 }}
+//       >
+//         <Menu.Item key="which_pdb"> PDB ID Entry </Menu.Item>
+//         <Menu.Item key="which_ff"> Forcefield </Menu.Item>
+//         <Menu.Item key="which_output"> Output Naming Scheme </Menu.Item>
+//         <Menu.Item key="which_options"> Additional Options </Menu.Item>
+//         <Menu.Item key="which_pka"> pKa Settings (optional) </Menu.Item>
+//         <Menu.Item key="submission"> Start Job </Menu.Item>
+//         {/* <Menu.Item key="submission" style={{ background: '#73d13d' }}> Start Job </Menu.Item> */}
+//       </Menu>
+//       </Sider>
+//       <Layout>
+//         <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
+//           Content goes here
+//         </Content>
+//       </Layout>
+//     </Layout>
+//   )
+// }
 
 class App extends Component {
   constructor(props){
       super(props);
       this.selectJobClick = this.selectJobClick.bind(this)
       this.state = {
-          job_type: null,
+          job_type: "navbar_pdb2pqr",
+          // job_type: "navbar_home",
 
           // Maintains state for PDB2PQR configuration in case user hops back and forth
           pdb2pqr_settings: {
@@ -103,7 +104,7 @@ class App extends Component {
 
 
     // Renders landing page, with choice to do PDB2PQR or APBS
-    if (this.state.job_type === "nav_home" || this.state.job_type === null){
+    if (this.state.job_type === "navbar_home" || this.state.job_type === null){
       // return(
       //   <Layout>
       //     <MyHeader
@@ -117,13 +118,14 @@ class App extends Component {
     }
     
     // Renders configuration elements to set up an PDB2PQR job
-    else if (this.state.job_type === "nav_pdb2pqr"){
+    else if (this.state.job_type === "navbar_pdb2pqr"){
       // content = "You are in PDB2PQR";
-      content = renderPDB2PQRconfig();
+      // content = renderPDB2PQRconfig();
+      content = <ConfigPDB2PQR />
     }
     
     // Renders configuration elements to set up an APBS job
-    else if (this.state.job_type === "nav_apbs"){
+    else if (this.state.job_type === "navbar_apbs"){
       // content = "You are in APBS";
         // return("Selected APBS")
     }
@@ -145,47 +147,46 @@ class App extends Component {
 
     )
 
-    return (
-      <Layout>
-        <Header>
-          <Menu
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={["navbar_pdb2pqr"]}
-            style={{ lineHeight: '64px' }}
-          >
-            <Menu.Item key="navbar_home"> Home </Menu.Item>
-            <Menu.Item key="navbar_pdb2pqr"> PDB2PQR </Menu.Item>
-            <Menu.Item key="navbar_apbs"> APBS </Menu.Item>
-          </Menu>
-        </Header>
-        <Layout>
-          <Sider width={200} style={{ background: '#fff' }}>
-            <Menu
-              // theme="dark"
-              mode="inline"
-              defaultSelectedKeys={['which_pdb']}
-              style={{ height: '100%', borderRight: 0 }}
-            >
-              <Menu.Item key="which_pdb"> PDB ID Entry </Menu.Item>
-              <Menu.Item key="which_ff"> Forcefield </Menu.Item>
-              <Menu.Item key="which_output"> Output Naming Scheme </Menu.Item>
-              <Menu.Item key="which_options"> Additional Options </Menu.Item>
-              <Menu.Item key="which_pka"> pKa Settings (optional) </Menu.Item>
-              <Menu.Item key="submission"> Start Job </Menu.Item>
-              {/* <Menu.Item key="submission" style={{ background: '#73d13d' }}> Start Job </Menu.Item> */}
-            </Menu>
-          </Sider>
-          <Layout>
-            <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
-              Content goes here
-            </Content>
-          </Layout>
-        </Layout>
+    // return (
+    //   <Layout>
+    //     <Header>
+    //       <Menu
+    //         theme="dark"
+    //         mode="horizontal"
+    //         defaultSelectedKeys={["navbar_pdb2pqr"]}
+    //         style={{ lineHeight: '64px' }}
+    //       >
+    //         <Menu.Item key="navbar_home"> Home </Menu.Item>
+    //         <Menu.Item key="navbar_pdb2pqr"> PDB2PQR </Menu.Item>
+    //         <Menu.Item key="navbar_apbs"> APBS </Menu.Item>
+    //       </Menu>
+    //     </Header>
+    //     <Layout>
+    //       <Sider width={200} style={{ background: '#fff' }}>
+    //         <Menu
+    //           // theme="dark"
+    //           mode="inline"
+    //           defaultSelectedKeys={['which_pdb']}
+    //           style={{ height: '100%', borderRight: 0 }}
+    //         >
+    //           <Menu.Item key="which_pdb"> PDB ID Entry </Menu.Item>
+    //           <Menu.Item key="which_ff"> Forcefield </Menu.Item>
+    //           <Menu.Item key="which_output"> Output Naming Scheme </Menu.Item>
+    //           <Menu.Item key="which_options"> Additional Options </Menu.Item>
+    //           <Menu.Item key="which_pka"> pKa Settings (optional) </Menu.Item>
+    //           <Menu.Item key="submission"> Start Job </Menu.Item>
+    //           {/* <Menu.Item key="submission" style={{ background: '#73d13d' }}> Start Job </Menu.Item> */}
+    //         </Menu>
+    //       </Sider>
+    //       <Layout>
+    //         <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
+    //           Content goes here
+    //         </Content>
+    //       </Layout>
+    //     </Layout>
 
-      </Layout>
-
-    );
+    //   </Layout>
+    // );
   }
 }
 
