@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import 'antd/dist/antd.css'
-import { Button, Layout, Menu, Form, Input, Radio, Checkbox , Row} from 'antd';
+import  { Affix, Layout, Menu, Button, Form,
+          Input, Radio, Checkbox , Row
+        } from 'antd';
 const { Content, Sider } = Layout;
 
 class ConfigPDB2PQR extends Component{
   renderSidebar(){
     return(
+      <Affix offsetTop="10">
       <Sider width={200} style={{ background: '#fff' }}>
         <Menu
         // theme="dark"
@@ -13,15 +16,16 @@ class ConfigPDB2PQR extends Component{
         defaultSelectedKeys={['which_pdb']}
         style={{ height: '100%', borderRight: 0 }}
         >
-          <Menu.Item key="which_pdb"      href="#pdbid"> PDB ID Entry </Menu.Item>
-          <Menu.Item key="which_ff"       href="#forcefield"> Forcefield </Menu.Item>
-          <Menu.Item key="which_output"   href="#outputscheme"> Output Naming Scheme </Menu.Item>
-          <Menu.Item key="which_options"  href="#addedoptions"> Additional Options </Menu.Item>
-          <Menu.Item key="which_pka"      href="#pka"><a href="#pka"> pKa Settings (optional) </a></Menu.Item>
+          <Menu.Item key="which_pdb"    ><a href="#pdbid">        PDB ID Entry </a></Menu.Item>
+          <Menu.Item key="which_ff"     ><a href="#forcefield">   Forcefield </a></Menu.Item>
+          <Menu.Item key="which_output" ><a href="#outputscheme"> Output Naming Scheme </a></Menu.Item>
+          <Menu.Item key="which_options"><a href="#addedoptions"> Additional Options </a></Menu.Item>
+          <Menu.Item key="which_pka"    ><a href="#pka">          pKa Settings (optional) </a></Menu.Item>
           {/* <Menu.Item key="submission"     href="#submission"> Start Job </Menu.Item> */}
           {/* <Menu.Item key="submission" style={{ background: '#73d13d' }}> Start Job </Menu.Item> */}
         </Menu>
       </Sider>
+      </Affix>
     )
   }
 
@@ -38,15 +42,27 @@ class ConfigPDB2PQR extends Component{
       {label: 'Make the protein\'s C-terminus neutral (requires PARSE forcefield)', value: 'neutralcterminus'},
       {label: 'Remove the waters from the output file', value: 'removewater'},
     ]
+
+    let optionChecklist = []
+    additionalOptions.forEach(function(element){
+      optionChecklist.push(
+        <div>
+          <Row><Checkbox value={element['value']}> {element['label']} </Checkbox></Row>
+        </div>
+      );
+    });
+
     return(
       <Form>
+        <div id="pdbid">
         <Form.Item
-          id="pdbid"
+          // id="pdbid"
           label="Please enter a PDB ID"
           // label="Please enter a PDB ID or upload your own"
         >
           <Input autoFocus="True" placeholder="PDB ID" />
         </Form.Item>
+        </div>
         
         <Form.Item
           id="forcefield"
@@ -67,13 +83,13 @@ class ConfigPDB2PQR extends Component{
           label="Please choose an output naming scheme to use"
         >
           <Radio.Group defaultValue="internal" buttonStyle="solid">
-            <Radio.Button value="internal">  Internal naming scheme   </Radio.Button>
             <Radio.Button value="amber">  AMBER   </Radio.Button>
             <Radio.Button value="charmm"> CHARMM  </Radio.Button>
             <Radio.Button value="parse">  PARSE   </Radio.Button>
             <Radio.Button value="peoepb"> PEOEPB  </Radio.Button>
             <Radio.Button value="swanson">SWANSON </Radio.Button>
             <Radio.Button value="tyl06">  TYL06   </Radio.Button>
+            <Radio.Button value="internal"> Internal naming scheme   </Radio.Button>
           </Radio.Group>
         </Form.Item>
         
@@ -82,28 +98,30 @@ class ConfigPDB2PQR extends Component{
           label="Additional Options"
         >
           <Checkbox.Group
-            options={additionalOptions}
+            // options={additionalOptions}
             defaultValue={[ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin' ]}
           >
-            <Row><Checkbox value='atomsnotclose'>     Ensure that new atoms are not rebuilt too close to existing atoms</Checkbox></Row>
+            {optionChecklist}
+            {/* <Row><Checkbox value='atomsnotclose'>     Ensure that new atoms are not rebuilt too close to existing atoms</Checkbox></Row>
             <Row><Checkbox value='optimizeHnetwork'>  Optimize the hydrogen bonding network</Checkbox></Row>
             <Row><Checkbox value='assignfrommol2'>    Assign charges to the ligand specified in a MOL2 file</Checkbox></Row>
             <Row><Checkbox value='makeapbsin'>        Create an APBS input file</Checkbox></Row>
-            <Row><Checkbox value='keepchainids'>      Create an APBS input file</Checkbox></Row>
             <Row><Checkbox value='keepchainids'>      Add/keep chain IDs in the PQR file</Checkbox></Row>
             <Row><Checkbox value='insertwhitespace'>  Insert whitespaces between atom name and residue name, between x and y, and between y and z</Checkbox></Row>
-            <Row><Checkbox value='maketypemap'>  Create Typemap output</Checkbox></Row>
+            <Row><Checkbox value='maketypemap'>       Create Typemap output</Checkbox></Row>
             <Row><Checkbox value='neutralnterminus'>  Make the protein's N-terminus neutral (requires PARSE forcefield)</Checkbox></Row>
             <Row><Checkbox value='neutralcterminus'>  Make the protein's C-terminus neutral (requires PARSE forcefield)</Checkbox></Row>
-            <Row><Checkbox value='removewater'>       Remove the waters from the output file</Checkbox></Row>
+            <Row><Checkbox value='removewater'>       Remove the waters from the output file</Checkbox></Row> */}
+
           </Checkbox.Group>
         </Form.Item>
-        
+        <div id="pka">
         <Form.Item
-          id="pka"
+          // id="pka"
           label="pKa Options"
         >
         </Form.Item>
+        </div>
         
         <Form.Item>
           <Button type="primary" htmlType="submit">Start Job</Button>
