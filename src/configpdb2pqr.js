@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import 'antd/dist/antd.css'
-import  { Affix, Layout, Menu, Button, Form,
-          Input, Radio, Checkbox , Row, Col
+import  { Affix, Layout, Menu, Button, Form, Switch,
+          Input, Radio, Checkbox , Row, Col, InputNumber
         } from 'antd';
 const { Content, Sider } = Layout;
 
@@ -60,7 +60,7 @@ class ConfigPDB2PQR extends Component{
           label="Please enter a PDB ID"
           // label="Please enter a PDB ID or upload your own"
         >
-          <Col span={2}><Input autoFocus="True" placeholder="PDB ID" /></Col>
+          <Col span={2}><Input autoFocus="True" placeholder="PDB ID" maxLength={4}/></Col>
         </Form.Item>
         </div>
         
@@ -120,6 +120,9 @@ class ConfigPDB2PQR extends Component{
           // id="pka"
           label="pKa Options"
         >
+          <Switch checkedChildren="pKa Calculation" unCheckedChildren="pKa Calculation" defaultChecked={true} /><br/>
+          pH: <InputNumber min={0} max={14} step={0.5} defaultValue={7} />
+
         </Form.Item>
         </div>
         
