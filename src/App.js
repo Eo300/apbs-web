@@ -4,7 +4,7 @@ import ConfigPDB2PQR from './configpdb2pqr.js';
 import './App.css';
 import 'antd/dist/antd.css';
 
-import { Layout, Menu } from 'antd';
+import { Layout, Col, Menu } from 'antd';
 const { Header, Content, Sider } = Layout;
 
 class MyHeader extends Component{
@@ -19,6 +19,7 @@ class MyHeader extends Component{
 
     return(
       <Header>
+      <Col offset='2'>
         <Menu
           theme="dark"
           mode="horizontal"
@@ -31,38 +32,11 @@ class MyHeader extends Component{
           <Menu.Item onClick={() => this.props.onClick("navbar_apbs")} key="navbar_apbs"> APBS </Menu.Item>
           <Menu.Item onClick={() => this.props.onClick("navbar_about")} key="navbar_about"> About </Menu.Item>
         </Menu>
+      </Col>
       </Header>
     )
   }
 }
-
-// function renderPDB2PQRconfig(){
-//   return(
-//     <Layout id="pdb2pqr">
-//       <Sider width={200} style={{ background: '#fff' }}>
-//       <Menu
-//         // theme="dark"
-//         mode="inline"
-//         defaultSelectedKeys={['which_pdb']}
-//         style={{ height: '100%', borderRight: 0 }}
-//       >
-//         <Menu.Item key="which_pdb"> PDB ID Entry </Menu.Item>
-//         <Menu.Item key="which_ff"> Forcefield </Menu.Item>
-//         <Menu.Item key="which_output"> Output Naming Scheme </Menu.Item>
-//         <Menu.Item key="which_options"> Additional Options </Menu.Item>
-//         <Menu.Item key="which_pka"> pKa Settings (optional) </Menu.Item>
-//         <Menu.Item key="submission"> Start Job </Menu.Item>
-//         {/* <Menu.Item key="submission" style={{ background: '#73d13d' }}> Start Job </Menu.Item> */}
-//       </Menu>
-//       </Sider>
-//       <Layout>
-//         <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
-//           Content goes here
-//         </Content>
-//       </Layout>
-//     </Layout>
-//   )
-// }
 
 class App extends Component {
   constructor(props){

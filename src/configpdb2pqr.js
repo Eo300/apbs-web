@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import 'antd/dist/antd.css'
 import  { Affix, Layout, Menu, Button, Form,
-          Input, Radio, Checkbox , Row
+          Input, Radio, Checkbox , Row, Col
         } from 'antd';
 const { Content, Sider } = Layout;
 
@@ -60,7 +60,7 @@ class ConfigPDB2PQR extends Component{
           label="Please enter a PDB ID"
           // label="Please enter a PDB ID or upload your own"
         >
-          <Input autoFocus="True" placeholder="PDB ID" />
+          <Col span={2}><Input autoFocus="True" placeholder="PDB ID" /></Col>
         </Form.Item>
         </div>
         
