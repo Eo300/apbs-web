@@ -8,8 +8,8 @@ const { Content, Sider } = Layout;
 class ConfigPDB2PQR extends Component{
   renderSidebar(){
     return(
-      <Affix offsetTop="10">
-      <Sider width={200} style={{ background: '#fff' }}>
+      <Affix offsetTop={10}>
+      <Sider width={200} style={{ background: '#ffffff' }}>
         <Menu
         // theme="dark"
         mode="inline"
@@ -57,7 +57,8 @@ class ConfigPDB2PQR extends Component{
         <div id="pdbid">
         <Form.Item
           // id="pdbid"
-          label="Please enter a PDB ID"
+          label="PDB Source"
+          // label="Please enter a PDB ID"
           // label="Please enter a PDB ID or upload your own"
         >
           <Col span={2}><Input autoFocus="True" placeholder="PDB ID" maxLength={4}/></Col>
