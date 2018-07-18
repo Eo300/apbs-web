@@ -54,7 +54,7 @@ class ConfigPDB2PQR extends Component{
 
     return(
       <Form>
-        <div id="pdbid">
+        {/* <div id="pdbid"> */}
         <Form.Item
           // id="pdbid"
           label="PDB Source"
@@ -63,7 +63,7 @@ class ConfigPDB2PQR extends Component{
         >
           <Col span={2}><Input autoFocus="True" placeholder="PDB ID" maxLength={4}/></Col>
         </Form.Item>
-        </div>
+        {/* </div> */}
         
         <Form.Item
           id="forcefield"
@@ -116,7 +116,7 @@ class ConfigPDB2PQR extends Component{
 
           </Checkbox.Group>
         </Form.Item>
-        <div id="pka">
+        {/* <div id="pka"> */}
         <Form.Item
           // id="pka"
           label="pKa Options"
@@ -125,7 +125,7 @@ class ConfigPDB2PQR extends Component{
           pH: <InputNumber min={0} max={14} step={0.5} defaultValue={7} />
 
         </Form.Item>
-        </div>
+        {/* </div> */}
         
         <Form.Item>
           <Button type="primary" htmlType="submit">Start Job</Button>
