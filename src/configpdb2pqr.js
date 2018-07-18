@@ -17,10 +17,10 @@ class ConfigPDB2PQR extends Component{
         style={{ height: '100%', borderRight: 0 }}
         >
           <Menu.Item key="which_pdb"    ><a href="#pdbid">        PDB ID Entry </a></Menu.Item>
+          <Menu.Item key="which_pka"    ><a href="#pka">          pKa Settings (optional) </a></Menu.Item>
           <Menu.Item key="which_ff"     ><a href="#forcefield">   Forcefield </a></Menu.Item>
           <Menu.Item key="which_output" ><a href="#outputscheme"> Output Naming Scheme </a></Menu.Item>
           <Menu.Item key="which_options"><a href="#addedoptions"> Additional Options </a></Menu.Item>
-          <Menu.Item key="which_pka"    ><a href="#pka">          pKa Settings (optional) </a></Menu.Item>
           {/* <Menu.Item key="submission"     href="#submission"> Start Job </Menu.Item> */}
           {/* <Menu.Item key="submission" style={{ background: '#73d13d' }}> Start Job </Menu.Item> */}
         </Menu>
@@ -65,6 +65,17 @@ class ConfigPDB2PQR extends Component{
         </Form.Item>
         {/* </div> */}
         
+        {/* <div id="pka"> */}
+        <Form.Item
+          // id="pka"
+          label="pKa Options"
+        >
+          <Switch checkedChildren="pKa Calculation" unCheckedChildren="pKa Calculation" defaultChecked={true} /><br/>
+          pH: <InputNumber min={0} max={14} step={0.5} defaultValue={7} />
+
+        </Form.Item>
+        {/* </div> */}
+
         <Form.Item
           id="forcefield"
           label="Please choose a forcefield to use"
@@ -116,16 +127,6 @@ class ConfigPDB2PQR extends Component{
 
           </Checkbox.Group>
         </Form.Item>
-        {/* <div id="pka"> */}
-        <Form.Item
-          // id="pka"
-          label="pKa Options"
-        >
-          <Switch checkedChildren="pKa Calculation" unCheckedChildren="pKa Calculation" defaultChecked={true} /><br/>
-          pH: <InputNumber min={0} max={14} step={0.5} defaultValue={7} />
-
-        </Form.Item>
-        {/* </div> */}
         
         <Form.Item>
           <Button type="primary" htmlType="submit">Start Job</Button>
