@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import 'antd/dist/antd.css'
 import  { Affix, Layout, Menu, Button, Form, Switch,
-          Input, Radio, Checkbox , Row, Col, InputNumber
+          Input, Radio, Checkbox , Row, Col, InputNumber,
+          Icon, Tooltip,
         } from 'antd';
 const { Content, Sider } = Layout;
 
@@ -95,13 +96,13 @@ class ConfigPDB2PQR extends Component{
           label="Please choose an output naming scheme to use"
         >
           <Radio.Group defaultValue="internal" buttonStyle="solid">
+            <Radio.Button value="internal"> Internal naming scheme <Tooltip placement="bottomLeft" title="This is placeholder help text to tell the user what this option means"><Icon type="question-circle" /></Tooltip> </Radio.Button>
             <Radio.Button value="amber">  AMBER   </Radio.Button>
             <Radio.Button value="charmm"> CHARMM  </Radio.Button>
             <Radio.Button value="parse">  PARSE   </Radio.Button>
             <Radio.Button value="peoepb"> PEOEPB  </Radio.Button>
             <Radio.Button value="swanson">SWANSON </Radio.Button>
             <Radio.Button value="tyl06">  TYL06   </Radio.Button>
-            <Radio.Button value="internal"> Internal naming scheme   </Radio.Button>
           </Radio.Group>
         </Form.Item>
         
