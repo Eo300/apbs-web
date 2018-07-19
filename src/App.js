@@ -4,6 +4,7 @@ import ConfigPDB2PQR from './configpdb2pqr.js';
 import './App.css';
 import 'antd/dist/antd.css';
 
+import QueueAnim from 'rc-queue-anim';
 import { Layout, Col, Menu } from 'antd';
 const { Header, Content, Sider } = Layout;
 
@@ -115,7 +116,9 @@ class App extends Component {
           onClick={j => this.selectJobClick(j)}            
         />
         <Layout>
+          <QueueAnim>
           {content}
+          </QueueAnim>
         </Layout>
       </Layout>
 
