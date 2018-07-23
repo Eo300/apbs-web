@@ -42,16 +42,16 @@ class ConfigPDB2PQR extends Component{
 
   renderConfigForm(){
     const additionalOptions = [
-      {label: 'Ensure that new atoms are not rebuilt too close to existing atoms', name: 'DEBUMP', value: 'atomsnotclose'},
-      {label: 'Optimize the hydrogen bonding network', name: 'OPT', value: 'optimizeHnetwork'},
-      {label: 'Assign charges to the ligand specified in a MOL2 file', name: 'LIGANDCHECK', value: 'assignfrommol2'},
-      {label: 'Create an APBS input file', name: 'INPUT', value: 'makeapbsin'},
-      {label: 'Add/keep chain IDs in the PQR file', name: 'CHAIN', value: 'keepchainids'},
-      {label: 'Insert whitespaces between atom name and residue name, between x and y, and between y and z', name: 'WHITESPACE', value: 'insertwhitespace'},
-      {label: 'Create Typemap output', name: 'TYPEMAP', value: 'maketypemap'},
-      {label: 'Make the protein\'s N-terminus neutral (requires PARSE forcefield)', name: 'NEUTRALN', value: 'neutralnterminus'},
-      {label: 'Make the protein\'s C-terminus neutral (requires PARSE forcefield)', name: 'NEUTRALC', value: 'neutralcterminus'},
-      {label: 'Remove the waters from the output file', name: 'DROPWATER', value: 'removewater'},
+      {name: 'DEBUMP',      value: 'atomsnotclose',    label: 'Ensure that new atoms are not rebuilt too close to existing atoms'},
+      {name: 'OPT',         value: 'optimizeHnetwork', label: 'Optimize the hydrogen bonding network'},
+      {name: 'LIGANDCHECK', value: 'assignfrommol2',   label: 'Assign charges to the ligand specified in a MOL2 file'},
+      {name: 'INPUT',       value: 'makeapbsin',       label: 'Create an APBS input file'},
+      {name: 'CHAIN',       value: 'keepchainids',     label: 'Add/keep chain IDs in the PQR file'},
+      {name: 'WHITESPACE',  value: 'insertwhitespace', label: 'Insert whitespaces between atom name and residue name, between x and y, and between y and z'},
+      {name: 'TYPEMAP',     value: 'maketypemap',      label: 'Create Typemap output'},
+      {name: 'NEUTRALN',    value: 'neutralnterminus', label: 'Make the protein\'s N-terminus neutral (requires PARSE forcefield)'},
+      {name: 'NEUTRALC',    value: 'neutralcterminus', label: 'Make the protein\'s C-terminus neutral (requires PARSE forcefield)'},
+      {name: 'DROPWATER',   value: 'removewater',      label: 'Remove the waters from the output file'},
     ]
 
     let optionChecklist = []
@@ -78,12 +78,12 @@ class ConfigPDB2PQR extends Component{
           // label="Please enter a PDB ID"
           // label="Please enter a PDB ID or upload your own"
         >
-          <Radio.Group defaultValue="ID">
-            <Radio style={radioVertStyle} name="PDBSOURCE" value="ID"> PDB ID:
-              <Col span={4}><Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4}/></Col>
+          <Radio.Group name="PDBSOURCE" defaultValue="ID">
+            <Radio style={radioVertStyle} value="ID"> PDB ID:&nbsp;
+              <Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4}/>
             </Radio>
 
-            <Radio style={radioVertStyle} name="PDBSOURCE" value="UPLOAD"> Upload a PDB file:
+            <Radio style={radioVertStyle} value="UPLOAD"> Upload a PDB file:
               <Upload>
                 <Button>
                   <Icon type="upload" /> Click to upload
