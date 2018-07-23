@@ -2,11 +2,21 @@ import React, { Component } from 'react';
 import 'antd/dist/antd.css'
 import  { Affix, Layout, Menu, Button, Form, Switch,
           Input, Radio, Checkbox , Row, Col, InputNumber,
-          Icon, Tooltip,
+          Icon, Tooltip, Upload,
         } from 'antd';
 const { Content, Sider } = Layout;
 
 class ConfigPDB2PQR extends Component{
+  handleJobSubmit = (e) => {
+    // e.preventDefault();
+    // <Alert message="Success Text" type="success" />
+    this.setState({
+      job_submit: true
+    })
+    if(this.state.job_submit)
+      alert("submitted: hello world");
+  }
+
   renderSidebar(){
     return(
       <Affix offsetTop={10}>
@@ -32,29 +42,35 @@ class ConfigPDB2PQR extends Component{
 
   renderConfigForm(){
     const additionalOptions = [
-      {label: 'Ensure that new atoms are not rebuilt too close to existing atoms', value: 'atomsnotclose'},
-      {label: 'Optimize the hydrogen bonding network', value: 'optimizeHnetwork'},
-      {label: 'Assign charges to the ligand specified in a MOL2 file', value: 'assignfrommol2'},
-      {label: 'Create an APBS input file', value: 'makeapbsin'},
-      {label: 'Add/keep chain IDs in the PQR file', value: 'keepchainids'},
-      {label: 'Insert whitespaces between atom name and residue name, between x and y, and between y and z', value: 'insertwhitespace'},
-      {label: 'Create Typemap output', value: 'maketypemap'},
-      {label: 'Make the protein\'s N-terminus neutral (requires PARSE forcefield)', value: 'neutralnterminus'},
-      {label: 'Make the protein\'s C-terminus neutral (requires PARSE forcefield)', value: 'neutralcterminus'},
-      {label: 'Remove the waters from the output file', value: 'removewater'},
+      {label: 'Ensure that new atoms are not rebuilt too close to existing atoms', name: 'DEBUMP', value: 'atomsnotclose'},
+      {label: 'Optimize the hydrogen bonding network', name: 'OPT', value: 'optimizeHnetwork'},
+      {label: 'Assign charges to the ligand specified in a MOL2 file', name: 'LIGANDCHECK', value: 'assignfrommol2'},
+      {label: 'Create an APBS input file', name: 'INPUT', value: 'makeapbsin'},
+      {label: 'Add/keep chain IDs in the PQR file', name: 'CHAIN', value: 'keepchainids'},
+      {label: 'Insert whitespaces between atom name and residue name, between x and y, and between y and z', name: 'WHITESPACE', value: 'insertwhitespace'},
+      {label: 'Create Typemap output', name: 'TYPEMAP', value: 'maketypemap'},
+      {label: 'Make the protein\'s N-terminus neutral (requires PARSE forcefield)', name: 'NEUTRALN', value: 'neutralnterminus'},
+      {label: 'Make the protein\'s C-terminus neutral (requires PARSE forcefield)', name: 'NEUTRALC', value: 'neutralcterminus'},
+      {label: 'Remove the waters from the output file', name: 'DROPWATER', value: 'removewater'},
     ]
 
     let optionChecklist = []
     additionalOptions.forEach(function(element){
       optionChecklist.push(
         <div>
-          <Row><Checkbox value={element['value']}> {element['label']} </Checkbox></Row>
+          <Row><Checkbox name={element['name']} value={element['value']}> {element['label']} </Checkbox></Row>
         </div>
       );
     });
 
+    const radioVertStyle = {
+      display:    'block',
+      height:     '25px',
+      lineHeight: '30px',
+    }
+
     return(
-      <Form>
+      <Form action="http://nbcr-222.ucsd.edu/pdb2pqr_2.1.1/pdb2pqr.cgi" method="POST" onSubmit={this.handleJobSubmit} name="thisform">
         {/* <div id="pdbid"> */}
         <Form.Item
           // id="pdbid"
@@ -62,7 +78,19 @@ class ConfigPDB2PQR extends Component{
           // label="Please enter a PDB ID"
           // label="Please enter a PDB ID or upload your own"
         >
-          <Col span={2}><Input autoFocus="True" placeholder="PDB ID" maxLength={4}/></Col>
+          <Radio.Group defaultValue="ID">
+            <Radio style={radioVertStyle} name="PDBSOURCE" value="ID"> PDB ID:
+              <Col span={4}><Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4}/></Col>
+            </Radio>
+
+            <Radio style={radioVertStyle} name="PDBSOURCE" value="UPLOAD"> Upload a PDB file:
+              <Upload>
+                <Button>
+                  <Icon type="upload" /> Click to upload
+                </Button>
+              </Upload>
+            </Radio>
+          </Radio.Group>
         </Form.Item>
         {/* </div> */}
         
@@ -71,8 +99,13 @@ class ConfigPDB2PQR extends Component{
           // id="pka"
           label="pKa Options"
         >
-          <Switch checkedChildren="pKa Calculation" unCheckedChildren="pKa Calculation" defaultChecked={true} /><br/>
-          pH: <InputNumber min={0} max={14} step={0.5} defaultValue={7} />
+          {/* <Switch checkedChildren="pKa Calculation" unCheckedChildren="pKa Calculation" defaultChecked={true} /><br/> */}
+          pH: <InputNumber name="PH" min={0} max={14} step={0.5} defaultValue={7} /><br/>
+          <Radio.Group name="PKACALCMETHOD" defaultValue="pka_propka" >
+            <Radio style={radioVertStyle} value="pka_none">    No pKa calculation </Radio>
+            <Radio style={radioVertStyle} value="pka_propka">  Use PROPKA to assign protonation states at provided pH </Radio>
+            <Radio style={radioVertStyle} value="pka_pdb2pka"> Use PDB2PKA to parametrize ligands and assign pKa values (requires PARSE forcefield) at provided pH </Radio>
+          </Radio.Group>
 
         </Form.Item>
         {/* </div> */}
@@ -81,7 +114,7 @@ class ConfigPDB2PQR extends Component{
           id="forcefield"
           label="Please choose a forcefield to use"
         >
-          <Radio.Group defaultValue="parse" buttonStyle="solid">
+          <Radio.Group name="FF" defaultValue="parse" buttonStyle="solid">
             <Radio.Button value="amber">  AMBER   </Radio.Button>
             <Radio.Button value="charmm"> CHARMM  </Radio.Button>
             <Radio.Button value="parse">  PARSE   </Radio.Button>
@@ -95,7 +128,7 @@ class ConfigPDB2PQR extends Component{
           id="outputscheme"
           label="Please choose an output naming scheme to use"
         >
-          <Radio.Group defaultValue="internal" buttonStyle="solid">
+          <Radio.Group name="FFOUT" defaultValue="internal" buttonStyle="solid">
             <Radio.Button value="internal"> Internal naming scheme <Tooltip placement="bottomLeft" title="This is placeholder help text to tell the user what this option means"><Icon type="question-circle" /></Tooltip> </Radio.Button>
             <Radio.Button value="amber">  AMBER   </Radio.Button>
             <Radio.Button value="charmm"> CHARMM  </Radio.Button>

@@ -4,7 +4,7 @@ import ConfigPDB2PQR from './configpdb2pqr.js';
 import './App.css';
 import 'antd/dist/antd.css';
 
-import { Layout, Col, Menu, Icon, Tooltip } from 'antd';
+import { Layout, Col, Menu, Icon, Tooltip, Alert } from 'antd';
 const { Header, Content, Sider, Footer } = Layout;
 
 class MyHeader extends Component{
@@ -80,10 +80,12 @@ class MyFooter extends Component{
 class App extends Component {
   constructor(props){
       super(props);
-      this.selectJobClick = this.selectJobClick.bind(this)
+      this.selectJobClick = this.selectJobClick.bind(this);
+      // this.handleJobSubmit = this.handleJobSubmit.bind(this);
       this.state = {
           job_type: "navbar_pdb2pqr",
           // job_type: "navbar_home",
+          job_submit: false,
 
           // Maintains state for PDB2PQR configuration in case user hops back and forth
           pdb2pqr_settings: {
@@ -105,6 +107,15 @@ class App extends Component {
           job_type: selected_job
       })
   }
+
+  // handleJobSubmit(){
+  //   // <Alert message="Success Text" type="success" />
+  //   this.setState({
+  //     job_submit: true
+  //   })
+  //   if(this.state.job_submit)
+  //     alert("hello world");
+  // }
 
   render() {
     let navbar_options = new Map();
@@ -134,7 +145,10 @@ class App extends Component {
     else if (this.state.job_type === "navbar_pdb2pqr"){
       // content = "You are in PDB2PQR";
       // content = renderPDB2PQRconfig();
-      content = <ConfigPDB2PQR />
+      content = 
+        <ConfigPDB2PQR
+          // onSubmit={j => this.handleJobSubmit()}
+        />
     }
     
     // Renders configuration elements to set up an APBS job
