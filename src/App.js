@@ -1,81 +1,14 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
+import MyHeader from './myheader.js';
+import MyFooter from './myfooter.js';
 import ConfigPDB2PQR from './configpdb2pqr.js';
 import './App.css';
 import 'antd/dist/antd.css';
 
-import { Layout, Col, Menu, Icon, Tooltip, Alert } from 'antd';
-const { Header, Content, Sider, Footer } = Layout;
-
-class MyHeader extends Component{
-  render(){
-    let all_header_items = [];
-    this.props.navbar_items.forEach(function(value, k, map){
-      // console.log(k)
-      all_header_items.push(
-        <Menu.Item onClick={() => this.props.onClick(k)} key={k}>{value}</Menu.Item>
-      )
-    });
-
-    return(
-      <Header>
-      <Col offset='2'>
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={[this.props.activeItem]}
-          // defaultSelectedKeys={["navbar_pdb2pqr"]}
-          style={{ lineHeight: '64px' }}
-        >
-          <Menu.Item onClick={() => this.props.onClick("navbar_home")} key="navbar_home"> Home </Menu.Item>
-          <Menu.Item onClick={() => this.props.onClick("navbar_pdb2pqr")} key="navbar_pdb2pqr" href="#pdb2pqr"> PDB2PQR </Menu.Item>
-          <Menu.Item onClick={() => this.props.onClick("navbar_apbs")} key="navbar_apbs"> APBS </Menu.Item>
-          <Menu.Item onClick={() => this.props.onClick("navbar_about")} key="navbar_about"> About </Menu.Item>
-        </Menu>
-      </Col>
-      </Header>
-    );
-  }
-}
-
-class MyFooter extends Component{
-  copyCitationToClipboard(){
-    // let copyText = document.getElementById("citation");
-    // copyText.select();
-    // document.execCommand("copy");
-    // alert("copied");
-  }
-
-  render(){
-    let citaitonText =
-      `
-      Dolinsky TJ, Nielsen JE, McCammon JA, Baker NA. PDB2PQR: an automated pipeline for the setup, execution,
-      and analysis of Poisson-Boltzmann electrostatics calculations. Nucleic Acids Research 32 W665-W667 (2004).
-      `
-
-    return(
-      <Footer style={{ textAlign: 'center ', fontSize: 16 }}>
-        <b>If using the PDB2PQR service in a publication, please cite: </b><br/>
-
-        {/* <div style={{ textAlign: 'center', width: '55%' }}> */}
-        {/* <div id="citation"> */}
-          <i>{citaitonText}</i><br/><br/>
-        {/* </div> */}
-
-        <Tooltip title="Copy to clipboard *inoperational*" placement="left">
-          <Icon style={{ fontSize: 26 }} type="copy" value={citaitonText} id="copyCitation" onClick={this.copyCitationToClipboard()}/>
-        </Tooltip>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <Tooltip title="Go to publication" placement="right">
-          <a href="https://academic.oup.com/nar/article/32/suppl_2/W665/1040494" target="BLANK">
-            <Icon style={{ fontSize: 26, color: "#545456" }} type="link" />
-          </a>
-        </Tooltip>
-
-      </Footer>
-    );
-  }
-}
+import { Layout } from 'antd';
+// import { Layout, Col, Menu, Icon, Tooltip, Alert } from 'antd';
+// const { Header, Content, Sider, Footer } = Layout;
 
 class App extends Component {
   constructor(props){

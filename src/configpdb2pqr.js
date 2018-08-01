@@ -70,7 +70,8 @@ class ConfigPDB2PQR extends Component{
     }
 
     return(
-      <Form action="http://nbcr-222.ucsd.edu/pdb2pqr_2.1.1/pdb2pqr.cgi" method="POST" onSubmit={this.handleJobSubmit} name="thisform">
+      <Form action="/jobstatus" method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data">
+      {/* <Form action="http://apbs-1328226216.us-west-2.elb.amazonaws.com/pdb2pqr.cgi" method="POST" onSubmit={this.handleJobSubmit} name="thisform"> */}
         {/* <div id="pdbid"> */}
         <Form.Item
           // id="pdbid"
@@ -79,16 +80,18 @@ class ConfigPDB2PQR extends Component{
           // label="Please enter a PDB ID or upload your own"
         >
           <Radio.Group name="PDBSOURCE" defaultValue="ID">
-            <Radio style={radioVertStyle} value="ID"> PDB ID:&nbsp;
+            <Radio style={radioVertStyle} value="ID"> PDB ID:&nbsp;&nbsp;
               <Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4}/>
             </Radio>
 
-            <Radio style={radioVertStyle} value="UPLOAD"> Upload a PDB file:
-              <Upload>
-                <Button>
-                  <Icon type="upload" /> Click to upload
-                </Button>
-              </Upload>
+            <Radio style={radioVertStyle} value="UPLOAD"> Upload a PDB file:&nbsp;&nbsp;
+              {/* <Upload name="PDB" accept=".pdb"> */}
+                <input type="file" name="PDB" accept=".pdb"/>
+                {/* <Button>
+                  <Icon type="upload" >
+                  </Icon> Click to upload
+                </Button> */}
+              {/* </Upload> */}
             </Radio>
           </Radio.Group>
         </Form.Item>
