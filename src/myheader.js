@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 
 import { Link } from 'react-router-dom';
 
-import { Layout, Col, Row, Menu, Icon } from 'antd';
+import { Layout, Col, Row, Menu, Icon, Affix } from 'antd';
 const { Header } = Layout;
 
 
@@ -18,7 +18,7 @@ class MyHeader extends Component{
     }); 
 
     return(
-      // <div style={{boxShadow: '2px 40px 10px #00000033' }}>
+      <Affix offsetTop={0}>
       <Row style={{boxShadow: '2px 4px 10px #00000033' }}>
       <Header >
         <Col offset='2'>
@@ -49,7 +49,7 @@ class MyHeader extends Component{
         </Col>
       </Header>
       </Row>
-      //{/* </div> */}
+      </Affix>
     );
   }
 }
