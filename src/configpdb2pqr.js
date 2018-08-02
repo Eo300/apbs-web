@@ -19,7 +19,7 @@ class ConfigPDB2PQR extends Component{
 
   renderSidebar(){
     return(
-      <Affix offsetTop={10}>
+      <Affix offsetTop={16}>
       <Sider width={200} style={{ background: '#ffffff' }}>
         <Menu
         // theme="dark"
@@ -174,10 +174,10 @@ class ConfigPDB2PQR extends Component{
       
   render(){
     return(
-      <Layout id="pdb2pqr">
+      <Layout id="pdb2pqr" style={{ padding: '16px 0', background: '#fff', boxShadow: "2px 4px 10px #00000033" }}>
           {this.renderSidebar()}
           <Layout>
-            <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
+            <Content style={{ background: '#fff', padding: 16, margin: 0, minHeight: 280 }}>
               {/* Content goes here */}
               {this.renderConfigForm()}
             </Content>

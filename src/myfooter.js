@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import 'antd/dist/antd.css';
 
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Layout, Icon, Tooltip } from 'antd';
+import { Layout, Icon, Tooltip, Col, Row } from 'antd';
 const { Footer } = Layout;
 
 class MyFooter extends Component{
@@ -29,8 +29,10 @@ class MyFooter extends Component{
         return(
         <Footer style={{ textAlign: 'center ', fontSize: 16 }}>
 
-            <b>If using the PDB2PQR service in a publication, please cite: </b><br/>
-            <i>{citationText}</i><br/><br/>
+            <Row><Col span={20} offset={2}>
+                <b>If using the PDB2PQR service in a publication, please cite: </b><br/>
+                <i>{citationText}</i><br/><br/>
+            </Col></Row>
             
             {/* <Tooltip title="Copy to clipboard" placement="left"> */}
             <Tooltip title={this.state.copyTooltip} placement="left" >

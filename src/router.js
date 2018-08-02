@@ -6,6 +6,7 @@ import {
   Link
 } from 'react-router-dom'
 // import logo from './logo.svg';
+import App from './App';
 import MyHeader from './myheader.js';
 import MyFooter from './myfooter.js';
 import HomePage from './home.js';
@@ -75,17 +76,35 @@ class BasicExample extends Component{
         return(
             <Router>
                 <div>
-                <ul>
+                {/* <ul>
                     <li><Link to="/">Home</Link></li>
+                    <li><Link to="/pdb2pqr">PDB2PQR</Link></li>
+                    <li><Link to="/apbs">APBS</Link></li>
                     <li><Link to="/about">About</Link></li>
-                    <li><Link to="/topics">Topics</Link></li>
                 </ul>
 
-                <hr/>
+                <hr/> */}
 
-                <Route exact path="/" component={Home}/>
-                <Route path="/about" component={MyHeader}/>
-                <Route path="/topics" component={Topics}/>
+                <Route exact path="/" //component={Home}
+                    render={ props => (
+                        <App page="navbar_home"/>
+                    )}                
+                />
+                <Route path="/pdb2pqr"
+                    render={ props => (
+                        <App page="navbar_pdb2pqr"/>
+                    )}
+                />
+                <Route path="/apbs" //component={Topics}
+                    render={ props => (
+                        <App page="navbar_apbs"/>
+                    )}
+                />
+                <Route path="/about" //component={Topics}
+                    render={ props => (
+                        <App page="navbar_about"/>
+                    )}
+                />
                 </div>
             </Router>
         )

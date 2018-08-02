@@ -2,9 +2,11 @@
     text-align: center;
     height: 160px;
     line-height: 160px;
+    /* background: #fff; */
     background: #364d79;
     overflow: hidden;
-    /* box-shadow: 2px 4px 10px #00000033 */
+    /* z-index: -1; */
+    /* box-shadow: 2px 4px 10px #00000033; */
     /* box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2) */
   }
   

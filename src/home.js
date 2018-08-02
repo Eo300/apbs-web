@@ -3,15 +3,23 @@ import 'antd/dist/antd.css';
 import './home.css';
 
 import{ Layout, Col, Menu, Carousel, Row,
-        Card, Icon } from 'antd';
+        Card, Icon, Button, Link } from 'antd';
 // const { HomeLayout } = Layout;
 
 class HomePage extends Component{
     mainBanner(){
         return(
-            <Carousel autoplay >
-                <div><h3>Welcome to the PDB2PQR Server</h3></div>
-            </Carousel>        
+            <Col span={18} offset={3} style={{ boxShadow: "2px 4px 10px #00000033" }} >
+                <Carousel autoplay >
+                    <div>
+                        <h3>
+                            Welcome to the PDB2PQR Server
+                            {/* <Button>Configure </Button> */}
+                        </h3>
+                        
+                    </div>
+                </Carousel>        
+            </Col>
         )
     }
 

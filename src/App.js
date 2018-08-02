@@ -7,7 +7,7 @@ import ConfigPDB2PQR from './configpdb2pqr.js';
 import './App.css';
 import 'antd/dist/antd.css';
 
-import { Layout } from 'antd';
+import { Layout, Breadcrumb, Col } from 'antd';
 // import { Layout, Col, Menu, Icon, Tooltip, Alert } from 'antd';
 // const { Header, Content, Sider, Footer } = Layout;
 
@@ -18,7 +18,8 @@ class App extends Component {
       // this.handleJobSubmit = this.handleJobSubmit.bind(this);
       this.state = {
           // job_type: "navbar_pdb2pqr",
-          job_type: "navbar_home",
+          job_type: this.props.page,
+          // job_type: "navbar_home",
           job_submit: false,
 
           // Maintains state for PDB2PQR configuration in case user hops back and forth
@@ -42,9 +43,27 @@ class App extends Component {
       })
   }
 
+  createServiceBreadcrumb(items){
+    let trail = [];
+    items.forEach(function(value){
+      // console.log(k)
+      trail.push(
+        <Breadcrumb.Item >{value}</Breadcrumb.Item>
+      )
+    });    
+    return(
+      <Breadcrumb style={{ margin: '16px 0' }}>
+        {trail}
+        {/* <Breadcrumb.Item>Services</Breadcrumb.Item>
+        <Breadcrumb.Item>{tail}</Breadcrumb.Item> */}
+      </Breadcrumb>      
+    )
+  }
+
   render() {
     let navbar_options = new Map();
     let content = "";
+    let bcrumb = "";
 
     navbar_options.set("navbar_home",    "Home");
     navbar_options.set("navbar_pdb2pqr", "PDB2PQR");
@@ -72,16 +91,25 @@ class App extends Component {
     else if (this.state.job_type === "navbar_pdb2pqr"){
       // content = "You are in PDB2PQR";
       // content = renderPDB2PQRconfig();
+      bcrumb =
+        // <Col offset={2}>
+          // <Breadcrumb style={{ margin: '16px 0' }}>
+          //   <Breadcrumb.Item>Services</Breadcrumb.Item>
+          //   <Breadcrumb.Item>PDB2PQR</Breadcrumb.Item>
+          // </Breadcrumb>
+          this.createServiceBreadcrumb(['Service', 'PDB2PQR'])
+        {/* </Col>; */}
       content = 
         <ConfigPDB2PQR
           // onSubmit={j => this.handleJobSubmit()}
-        />
+        />;
     }
     
     // Renders configuration elements to set up an APBS job
     else if (this.state.job_type === "navbar_apbs"){
       // content = "You are in APBS";
         // return("Selected APBS")
+      bcrumb = this.createServiceBreadcrumb(['Service', 'APBS'])
     }
 
     else if (this.state.job_type === "navbar_about"){}
@@ -92,9 +120,12 @@ class App extends Component {
         <MyHeader
           activeItem={this.state.job_type}
           navbar_items={navbar_options}
-          onClick={j => this.selectJobClick(j)}            
+          all_header_items={new Array()}
+          onClick={j => this.selectJobClick(j)}
         />
-        <Layout>
+        {/* <Layout> */}
+        <Layout style={{ padding: '0 50px' }}>
+          {bcrumb}
           {content}
         </Layout>
         <MyFooter />
