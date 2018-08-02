@@ -15,22 +15,24 @@ class MyHeader extends Component{
       });
   
       return(
-        <Header>
-        <Col offset='2'>
-          <Menu
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={[this.props.activeItem]}
-            // defaultSelectedKeys={["navbar_pdb2pqr"]}
-            style={{ lineHeight: '64px' }}
-          >
-            <Menu.Item onClick={() => this.props.onClick("navbar_home")} key="navbar_home"> Home </Menu.Item>
-            <Menu.Item onClick={() => this.props.onClick("navbar_pdb2pqr")} key="navbar_pdb2pqr" href="#pdb2pqr"> PDB2PQR </Menu.Item>
-            <Menu.Item onClick={() => this.props.onClick("navbar_apbs")} key="navbar_apbs"> APBS </Menu.Item>
-            <Menu.Item onClick={() => this.props.onClick("navbar_about")} key="navbar_about"> About </Menu.Item>
-          </Menu>
-        </Col>
+        // <div style={{boxShadow: '2px 40px 10px #00000033' }}>
+        <Header >
+          <Col offset='2'>
+            <Menu
+              theme="dark"
+              mode="horizontal"
+              defaultSelectedKeys={[this.props.activeItem]}
+              // defaultSelectedKeys={["navbar_pdb2pqr"]}
+              style={{ lineHeight: '64px' }}
+            >
+              <Menu.Item onClick={() => this.props.onClick("navbar_home")} key="navbar_home"> Home </Menu.Item>
+              <Menu.Item onClick={() => this.props.onClick("navbar_pdb2pqr")} key="navbar_pdb2pqr" href="#pdb2pqr"> PDB2PQR </Menu.Item>
+              <Menu.Item onClick={() => this.props.onClick("navbar_apbs")} key="navbar_apbs"> APBS </Menu.Item>
+              <Menu.Item onClick={() => this.props.onClick("navbar_about")} key="navbar_about"> About </Menu.Item>
+            </Menu>
+          </Col>
         </Header>
+        //{/* </div> */}
       );
     }
 }
