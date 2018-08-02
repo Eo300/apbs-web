@@ -19,7 +19,7 @@ class ConfigPDB2PQR extends Component{
 
   renderSidebar(){
     return(
-      <Affix offsetTop={64}>
+      <Affix offsetTop={80}>
       {/* <Affix offsetTop={16}> */}
       <Sider width={200} style={{ background: '#ffffff' }}>
         <Menu
