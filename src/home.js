@@ -9,7 +9,8 @@ import{ Layout, Col, Menu, Carousel, Row,
 class HomePage extends Component{
     mainBanner(){
         return(
-            <Col span={18} offset={3} style={{ boxShadow: "2px 4px 10px #00000033" }} >
+            <Col style={{ boxShadow: "2px 4px 10px #00000033" }} >
+            {/* <Col span={18} offset={3} style={{ boxShadow: "2px 4px 10px #00000033" }} > */}
                 <Carousel autoplay >
                     <div>
                         <h3>

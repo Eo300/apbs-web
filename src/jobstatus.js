@@ -6,10 +6,11 @@ import  { Affix, Layout, Menu, Button, Form, Switch,
         } from 'antd';
 const { Content, Sider } = Layout;
 
-class ConfigPDB2PQR extends Component{
+class JobStatus extends Component{
   renderJobStatus(){
     return(
       <Layout>
+        Job ID from query string: {this.props.jobid}
       </Layout>
     )
   }
@@ -17,7 +18,8 @@ class ConfigPDB2PQR extends Component{
   render(){
     return(
       <Layout id="pdb2pqr">
-          <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
+          <Content style={{ background: '#fff', padding: 16, marginBottom: 5, minHeight: 280, boxShadow: "2px 4px 10px #00000033" }}>
+          {/* <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}> */}
             {/* Content goes here */}
             {this.renderJobStatus()}
         </Content>
@@ -26,4 +28,4 @@ class ConfigPDB2PQR extends Component{
   }
 }
 
-export default ConfigPDB2PQR;
+export default JobStatus;

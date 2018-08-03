@@ -4,6 +4,7 @@ import MyHeader from './myheader.js';
 import MyFooter from './myfooter.js';
 import HomePage from './home.js';
 import ConfigPDB2PQR from './configpdb2pqr.js';
+import JobStatus from './jobstatus.js';
 import './App.css';
 import 'antd/dist/antd.css';
 
@@ -18,7 +19,8 @@ class App extends Component {
       // this.handleJobSubmit = this.handleJobSubmit.bind(this);
       this.state = {
           // job_type: "navbar_pdb2pqr",
-          job_type: this.props.page,
+          cur_page: this.props.page,
+          query_string: this.props.query,
           // job_type: "navbar_home",
           job_submit: false,
 
@@ -39,7 +41,7 @@ class App extends Component {
   // onClick handler for user selecting a job. Is passed into child componenets
   selectJobClick(selected_job){
       this.setState({
-          job_type: selected_job
+          cur_page: selected_job
       })
   }
 
@@ -72,7 +74,7 @@ class App extends Component {
 
 
     // Renders landing page, with choice to do PDB2PQR or APBS
-    if (this.state.job_type === "navbar_home" || this.state.job_type === null){
+    if (this.state.cur_page === "navbar_home" || this.state.cur_page === null){
       // return(
       //   <Layout>
       //     <MyHeader
@@ -88,7 +90,7 @@ class App extends Component {
     }
     
     // Renders configuration elements to set up an PDB2PQR job
-    else if (this.state.job_type === "navbar_pdb2pqr"){
+    else if (this.state.cur_page === "navbar_pdb2pqr"){
       // content = "You are in PDB2PQR";
       // content = renderPDB2PQRconfig();
       bcrumb =
@@ -106,19 +108,28 @@ class App extends Component {
     }
     
     // Renders configuration elements to set up an APBS job
-    else if (this.state.job_type === "navbar_apbs"){
+    else if (this.state.cur_page === "navbar_apbs"){
       // content = "You are in APBS";
-        // return("Selected APBS")
+      // return("Selected APBS")
       bcrumb = this.createServiceBreadcrumb(['Service', 'APBS'])
     }
 
-    else if (this.state.job_type === "navbar_about"){}
+    else if (this.state.cur_page === "navbar_about"){}
+
+    // Renders job status page
+    else if (this.state.cur_page === "navbar_status"){
+      bcrumb = this.createServiceBreadcrumb(['Service', 'Job Status'])
+      content = 
+        <JobStatus
+          jobid={this.state.query_string}
+        />;
+    }
 
 
     return(
       <Layout>
         <MyHeader
-          activeItem={this.state.job_type}
+          activeItem={this.state.cur_page}
           navbar_items={navbar_options}
           all_header_items={new Array()}
           onClick={j => this.selectJobClick(j)}

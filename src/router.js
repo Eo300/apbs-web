@@ -85,7 +85,7 @@ class BasicExample extends Component{
 
                 <hr/> */}
 
-                <Route exact path="/" //component={Home}
+                <Route exact path="/"
                     render={ props => (
                         <App page="navbar_home"/>
                     )}                
@@ -95,14 +95,19 @@ class BasicExample extends Component{
                         <App page="navbar_pdb2pqr"/>
                     )}
                 />
-                <Route path="/apbs" //component={Topics}
+                <Route path="/apbs"
                     render={ props => (
                         <App page="navbar_apbs"/>
                     )}
                 />
-                <Route path="/about" //component={Topics}
+                <Route path="/about"
                     render={ props => (
                         <App page="navbar_about"/>
+                    )}
+                />
+                <Route path="/jobstatus"
+                    render={ props => (
+                        <App page="navbar_status" query={props.location.search}/>
                     )}
                 />
                 </div>
