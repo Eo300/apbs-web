@@ -25,9 +25,18 @@ class MyFooter extends Component{
         and analysis of Poisson-Boltzmann electrostatics calculations. Nucleic Acids Research 32 W665-W667 (2004).
         `
 
+        // let footerHeight = window.innerHeight;
+        // footerHeight = 0;
+        const footerStyle = {
+            textAlign: 'center',
+            fontSize: 16,
+            // height: 'calc(100% - ' + footerHeight + 'px)',
+            // height: 'calc(100vh - '.concat(footerHeight.toString().concat(')')),
+        }
 
         return(
-        <Footer style={{ textAlign: 'center ', fontSize: 16 }}>
+        <Footer style={footerStyle}>
+        {/* <Footer style={{ textAlign: 'center', fontSize: 16, height: {footerHeight} }}> */}
 
             <Row><Col span={20} offset={2}>
                 <b>If using the PDB2PQR service in a publication, please cite: </b><br/>
