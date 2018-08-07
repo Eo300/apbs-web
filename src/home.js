@@ -34,19 +34,31 @@ class HomePage extends Component{
                 {this.mainBanner()}
                 <Row type="flex" justify="center">
                     <div style={{padding: 25}}>
-                    <Card hoverable cover={<Icon type="book" style={{fontSize: 72}} />} style={{ width: 250, height: 300, padding: 25}}>
-                        Go to User Guide
-                    </Card>
+                        <a href="http://apbs-pdb2pqr.readthedocs.io/en/latest/getting-started.html" target="_blank" rel="noopener noreferrer">
+                        <Card hoverable cover={<Icon type="book" style={{fontSize: 72}} />} style={{ width: 240, height: 250, paddingTop: 25}}>
+                            <div  style={{ paddingTop: 10, textAlign: 'center', fontSize: 18 }}>
+                                Go to User Guide
+                            </div>
+                        </Card>
+                        </a>
                     </div>
                     <div style={{padding: 25}}>
-                    <Card hoverable cover={<Icon type="book" style={{fontSize: 72}} />} style={{ width: 250, height: 300, padding: 25}}>
-                        Go to User Guide
-                    </Card>
+                        <a href="http://eepurl.com/by4eQr" target="_blank" rel="noopener noreferrer">
+                        <Card hoverable cover={<Icon type="form" style={{fontSize: 72}} />} style={{ width: 240, height: 250, paddingTop: 25}}>
+                            <div  style={{ paddingTop: 10, textAlign: 'center', fontSize: 18 }}>
+                                Register to help support PDB2PQR & APBS
+                            </div>
+                        </Card>
+                        </a>
                     </div>
                     <div style={{padding: 25}}>
-                    <Card hoverable cover={<Icon type="book" style={{fontSize: 72}} />} style={{ width: 250, height: 300, padding: 25}}>
-                        Go to User Guide
-                    </Card>
+                        <a href="http://apbs-pdb2pqr.readthedocs.io/en/latest/examples/" target="_blank" rel="noopener noreferrer">
+                        <Card hoverable cover={<Icon type="folder-open" style={{fontSize: 72}} />} style={{ width: 240, height: 250, paddingTop: 25}}>
+                            <div  style={{ paddingTop: 10, textAlign: 'center', fontSize: 18 }}>
+                                See Examples
+                            </div>
+                        </Card>
+                        </a>
                     </div>
                 </Row>
             </Layout>        

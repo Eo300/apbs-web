@@ -40,9 +40,9 @@ class App extends Component {
 
   // onClick handler for user selecting a job. Is passed into child componenets
   selectJobClick(selected_job){
-      this.setState({
-          cur_page: selected_job
-      })
+    this.setState({
+        cur_page: selected_job
+    })
   }
 
   createServiceBreadcrumb(items){
@@ -75,59 +75,41 @@ class App extends Component {
 
     // Renders landing page, with choice to do PDB2PQR or APBS
     if (this.state.cur_page === "navbar_home" || this.state.cur_page === null){
-      // return(
-      //   <Layout>
-      //     <MyHeader
-      //       active={this.state.job_type}
-      //       onClick={j => this.selectJobClick(j)}            
-      //     />
-
-      //   </Layout>
-      // )
-
       // content = "You are in Home";
       content = <HomePage />;
     }
     
     // Renders configuration elements to set up an PDB2PQR job
     else if (this.state.cur_page === "navbar_pdb2pqr"){
-      // content = "You are in PDB2PQR";
-      // content = renderPDB2PQRconfig();
-      bcrumb =
-        // <Col offset={2}>
-          // <Breadcrumb style={{ margin: '16px 0' }}>
-          //   <Breadcrumb.Item>Services</Breadcrumb.Item>
-          //   <Breadcrumb.Item>PDB2PQR</Breadcrumb.Item>
-          // </Breadcrumb>
-          this.createServiceBreadcrumb(['Service', 'PDB2PQR'])
-        {/* </Col>; */}
-      content = 
-        <ConfigPDB2PQR
-          // onSubmit={j => this.handleJobSubmit()}
-        />;
+      bcrumb = this.createServiceBreadcrumb(['Services', 'PDB2PQR Job Configuration'])
+      content = <ConfigPDB2PQR />;
     }
     
     // Renders configuration elements to set up an APBS job
     else if (this.state.cur_page === "navbar_apbs"){
       // content = "You are in APBS";
       // return("Selected APBS")
-      bcrumb = this.createServiceBreadcrumb(['Service', 'APBS'])
+      bcrumb = this.createServiceBreadcrumb(['Services', 'APBS Job Configuration'])
     }
 
     else if (this.state.cur_page === "navbar_about"){}
 
     // Renders job status page
     else if (this.state.cur_page === "navbar_status"){
-      bcrumb = this.createServiceBreadcrumb(['Service', 'Job Status'])
+      let queryParser = require('query-string-es5');
+      let job_id = queryParser.parse(this.state.query_string)['jobid']
+      // let job_id = this.state.query_string.substring(1)
+      bcrumb = this.createServiceBreadcrumb(['Services', 'Job Status'])
       content = 
         <JobStatus
-          jobid={this.state.query_string}
+          jobid={job_id}
+          // jobid={this.state.query_string}
         />;
     }
 
 
     return(
-      <Layout>
+      <Layout style={{ height: '100%' }}>
         <MyHeader
           activeItem={this.state.cur_page}
           navbar_items={navbar_options}
