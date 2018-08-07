@@ -7,12 +7,28 @@ import  { Affix, Layout, Menu, Button, Form, Switch,
 const { Content, Sider } = Layout;
 
 class JobStatus extends Component{
+  // constructor(){
+  //   super(props);
+  //   // this.props.jobid
+  // }
+
   renderJobStatus(){
-    return(
-      <Layout>
-        Job ID from query string: {this.props.jobid}
-      </Layout>
-    )
+    if(!this.props.jobid){
+      return(
+        <Layout>
+          <h2>Missing jobid field</h2>
+          <p>Your request URL is missing the jobid field</p>
+          <p>Usage: /jobstatus?<b>jobid=JOBID</b> </p>
+        </Layout>
+      )
+    }
+    else{
+      return(
+        <Layout>
+          Job ID from query string: {this.props.jobid}
+        </Layout>
+      )
+    }
   }
       
   render(){

@@ -40,7 +40,7 @@ class MyHeader extends Component{
             {/* <Menu.Item onClick={() => this.props.onClick("navbar_pdb2pqr")} key="navbar_pdb2pqr"> <Link to="/pdb2pqr">PDB2PQR</Link> </Menu.Item>
             <Menu.Item onClick={() => this.props.onClick("navbar_apbs")} key="navbar_apbs"> <Link to="/apbs">APBS</Link> </Menu.Item> */}
             <Menu.Item onClick={() => this.props.onClick("navbar_about")} key="navbar_about"> <Link to="/about">About</Link> </Menu.Item>
-            <Menu.SubMenu title={<span>Services&nbsp;&nbsp;<Icon type="down" /></span>}>
+            <Menu.SubMenu key="navbar_services" title={<span>Services&nbsp;&nbsp;<Icon type="down" /></span>}>
               <Menu.Item onClick={() => this.props.onClick("navbar_pdb2pqr")} key="navbar_pdb2pqr"> <Link to="/pdb2pqr">PDB2PQR</Link> </Menu.Item>
               <Menu.Item onClick={() => this.props.onClick("navbar_apbs")} key="navbar_apbs"> <Link to="/apbs">APBS</Link> </Menu.Item>
             </Menu.SubMenu>
