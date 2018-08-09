@@ -21,8 +21,11 @@ class JobStatus extends Component{
     this.colorCompleteStatus  = "#52C41A";
     this.colorRunningStatus   = "#1890FF";
     this.colorErrorStatus     = "#F5222D";
-    this.totalElapsedTime = 0;
+    // this.totalElapsedTime = 0;
     this.state = {
+      totalElapsedTime: 0,
+      pdb2pqrElapsedTime: 0,
+      apbsElapsedTime: 0,
       // full_request: getStatusJSON(this.props.jobid),
       // job_status_response: null
       // job_status_response: "hello world",
@@ -46,18 +49,46 @@ class JobStatus extends Component{
 
 
   componentDidMount(){
-    this.fetchInterval = this.fetchJobStatus();
+    let self = this;
+    // setTimeout(function(){
+    //   self.fetchInterval = self.fetchJobStatus();
+    //   self.elapsedInterval = self.computeElapsedTime('pdb2pqr')
+    // },0)
+
+    this.fetchIntervalPDB2PQR = this.fetchJobStatus('pdb2pqr');
+    this.fetchIntervalAPBS = this.fetchJobStatus('apbs');
+    this.elapsedIntervalPDB2PQR = this.computeElapsedTime('pdb2pqr');//setInterval(this.computeElapsedTime('pdb2pqr'), 1000);
+    this.elapsedIntervalAPBS = this.computeElapsedTime('apbs');//setInterval(this.computeElapsedTime('pdb2pqr'), 1000);
+
+    // this.computeElapsedTime('pdb2pqr');
     // this.fetchInterval = setInterval(this.fetchJobStatus, 1000);
   }
 
   componentWillUnmount(){
-    clearInterval(this.fetchInterval);
+    clearInterval(this.fetchIntervalPDB2PQR);
+    clearInterval(this.elapsedIntervalPDB2PQR);
+    clearInterval(this.fetchIntervalAPBS);
+    clearInterval(this.elapsedIntervalAPBS);
   }
 
   /***  CAN DELETE ***/
   componentDidUpdate(){
-    if(this.state.pdb2pqr.status !== "running" && this.state.apbs.status !== "running")
-      clearInterval(this.fetchInterval);
+    let statuses = ["complete", "error", null];
+    // if(this.state.pdb2pqr.status != "running" && this.state.apbs.status != "running"){
+    if(statuses.includes(this.state.pdb2pqr.status)){//} && statuses.includes(this.state.pdb2pqr.status)){
+      clearInterval(this.fetchIntervalPDB2PQR);
+      // clearInterval(this.elapsedIntervalPDB2PQR);
+    }
+    if(statuses.includes(this.state.apbs.status)){
+      clearInterval(this.fetchIntervalAPBS);
+      // clearInterval(this.elapsedIntervalAPBS);
+    }
+    // if(this.state.pdb2pqr.status !== "complete" && this.state.apbs.status !== "complete"){
+    //   clearInterval(this.elapsedInterval);
+    // }    
+    // if(this.state.pdb2pqr.status !== "error" && this.state.apbs.status !== "error"){
+    //   clearInterval(this.elapsedInterval);
+    // }    
     
     // if(this.state.pdb2pqr.status == "complete") this.setState( {pdb2pqrColor: this.colorCompleteStatus, statusColor: this.colorCompleteStatus} );
     // else if(this.state.pdb2pqr.status == "running") this.setState( {pdb2pqrColor: this.colorRunningStatus, statusColor: this.colorRunningStatus} );
@@ -67,32 +98,42 @@ class JobStatus extends Component{
     // else if(this.state.apbs.status == "running") this.setState( {apbsColor: this.colorRunningStatus, statusColor: this.colorRunningStatus} );
     // else if(this.state.apbs.status == "error") this.setState( {apbsColor: this.colorErrorStatus, statusColor: this.colorErrorStatus} );
 
-    console.log(this.state.pdb2pqr.status)
+    // console.log(this.state.pdb2pqr.status)
+    // console.log(this.state.totalElapsedTime)
   }
 
   /**
    * Fetches job status upon loading, udpating state with results
    */
-  fetchJobStatus(){
+  fetchJobStatus(jobtype){
     let self = this;
     let interval = setInterval(function(){
       // console.log(self.props.jobid)
-      fetch('http://localhost:5000/api/jobstatus?jobid='+self.props.jobid)
+      // console.log("Fetched")
+      fetch('http://localhost:5000/api/jobstatus?jobid='+self.props.jobid +'&'+jobtype+'=true')
         .then(response => response.json())
-        .then(data => self.setState({
-          pdb2pqr: {
-            status: data.pdb2pqr.status,
-            startTime: data.pdb2pqr.startTime,
-            endTime: data.pdb2pqr.endTime,
-            files: data.pdb2pqr.files,         
-          },
-          apbs: {
-            status: data.apbs.status,
-            startTime: data.apbs.startTime,
-            endTime: data.apbs.endTime,
-            files: data.apbs.files,
+        .then(data => {
+          if(jobtype == 'pdb2pqr'){
+            self.setState({
+              pdb2pqr: {
+                status: data.pdb2pqr.status,
+                startTime: data.pdb2pqr.startTime,
+                endTime: data.pdb2pqr.endTime,
+                files: data.pdb2pqr.files,         
+              },
+            });
           }
-        }))
+          else{
+            self.setState({
+              apbs: {
+                status: data.apbs.status,
+                startTime: data.apbs.startTime,
+                endTime: data.apbs.endTime,
+                files: data.apbs.files,
+              }
+            });            
+          }
+        })
         .catch(error => console.log(error));
 
       // if(this.state.pdb2pqr.status == "complete") this.setState( {pdb2pqrColor: this.colorCompleteStatus, statusColor: this.colorCompleteStatus} );
@@ -129,22 +170,46 @@ class JobStatus extends Component{
     return (numString > 9) ? numString : '0'+ numString;
   }
   computeElapsedTime(jobtype){
+    let self = this;
     let start = null;
-    let end = null;
-    if(jobtype == 'pdb2pqr'){
-      start = this.state.pdb2pqr.startTime;
-      end = this.state.pdb2pqr.endTime;
-    }
-    else if(jobtype == 'apbs'){
-      start = this.state.apbs.startTime;
-      end = this.state.apbs.endTime;
-    }
-    let elapsed = (end - start)*1000;
-    let elapsedDate = new Date(elapsed);
-    let elapsedHours = this.prependZeroIfSingleDigit( elapsedDate.getUTCHours().toString() );
-    let elapsedMin = this.prependZeroIfSingleDigit( elapsedDate.getUTCMinutes().toString() );
-    let elapsedSec = this.prependZeroIfSingleDigit( elapsedDate.getUTCSeconds().toString() );
-    return elapsedHours+':'+elapsedMin+':'+elapsedSec;
+    let statuses = ["complete", "error", null];
+    let interval = setInterval(function(){
+      let end = new Date().getTime() / 1000;
+      // console.log(end)
+      if(jobtype == 'pdb2pqr'){
+        start = self.state.pdb2pqr.startTime;
+        if(self.state.pdb2pqr.endTime) end = self.state.pdb2pqr.endTime;
+      }
+      else if(jobtype == 'apbs'){
+        start = self.state.apbs.startTime;
+        if(self.state.pdb2pqr.endTime) end = self.state.apbs.endTime;
+      }
+      // console.log("\njobtype: "+jobtype)
+      // console.log("start: "+start)
+      // console.log("start state: "+self.state.pdb2pqr.startTime)
+      // console.log("end: "+end)
+      let elapsed = (end - start)*1000;
+      // console.log("elapsed: "+elapsed)
+      let elapsedDate = new Date(elapsed);
+      // console.log("elapsedDate: "+elapsedDate)
+      let elapsedHours = self.prependZeroIfSingleDigit( elapsedDate.getUTCHours().toString() );
+      let elapsedMin = self.prependZeroIfSingleDigit( elapsedDate.getUTCMinutes().toString() );
+      let elapsedSec = self.prependZeroIfSingleDigit( elapsedDate.getUTCSeconds().toString() );
+      // return elapsedHours+':'+elapsedMin+':'+elapsedSec;
+
+      if(jobtype == 'pdb2pqr'){
+        self.setState({pdb2pqrElapsedTime: elapsedHours+':'+elapsedMin+':'+elapsedSec});
+        // if(statuses.includes(self.state.pdb2pqr.status)) clearInterval(interval);
+      }
+      else if(jobtype == 'apbs'){
+        self.setState({apbsElapsedTime: elapsedHours+':'+elapsedMin+':'+elapsedSec});
+        // if(statuses.includes(self.state.apbs.status)) clearInterval(interval);
+      }
+      // self.setState({totalElapsedTime: elapsedHours+':'+elapsedMin+':'+elapsedSec});
+      
+    }, 1000);
+    return interval;
+
     // return elapsedDate.getUTCHours().toString()+':'+elapsedDate.getUTCMinutes().toString()+':'+elapsedDate.getUTCSeconds().toString();
     // return elapsed;
   }
@@ -153,8 +218,8 @@ class JobStatus extends Component{
     let status = (jobtype === "pdb2pqr") ? this.state.pdb2pqr.status : this.state.apbs.status;
     if(status !== null){
       return(
-        <div style={{background: '#ffffff'}}>
-          <Row>
+        <div>
+          {/* <Row>
             <h1>Status</h1>
             <h2 style={{color: this.statusColor}}> {
               (jobtype === "pdb2pqr") ? this.state.pdb2pqr.status.charAt(0).toUpperCase() + this.state.pdb2pqr.status.substr(1) // Uppercase first letter
@@ -162,11 +227,10 @@ class JobStatus extends Component{
             }</h2>
             Start time: {this.state.pdb2pqr.startTime}<br/>
             End time: {this.state.pdb2pqr.endTime}<br/>
-            Elapsed time: {this.computeElapsedTime('pdb2pqr')}
-          </Row>
+            Elapsed time (PDB2PQR): {this.state.pdb2pqrElapsedTime}  
+            this.computeElapsedTime('pdb2pqr')
+          </Row> */}
 
-
-          <hr/>
           <h3 style={{ margin: '10px 0' }}>{jobtype.toUpperCase()}:</h3>
           <List
             size="small"
@@ -191,8 +255,28 @@ class JobStatus extends Component{
     if(this.props.jobid){
       // console.log(this.state['full_request']);
       // console.log(full_status);
+      let displayed_status = "";
+      if (this.state.pdb2pqr.status !== null){//} && this.state.pdb2pqr.status != 'complete'){
+        displayed_status = this.state.pdb2pqr.status.charAt(0).toUpperCase() + this.state.pdb2pqr.status.substr(1) // Uppercase first letter
+      }
+      else if(this.state.apbs.status !== null){//} && this.state.apbs.status != 'complete'){
+        displayed_status = this.state.apbs.status.charAt(0).toUpperCase() + this.state.apbs.status.substr(1)       // Uppercase first letter
+      }
       return(
-        <Layout>
+        <Layout style={{background: '#ffffff'}}>
+          <Row>
+            <h1>Status</h1>
+            <h2 style={{color: this.statusColor}}> {
+              displayed_status
+              // (this.state.pdb2pqr.status !== null && this.state.pdb2pqr.status != 'complete') 
+              //     ? this.state.pdb2pqr.status.charAt(0).toUpperCase() + this.state.pdb2pqr.status.substr(1) // Uppercase first letter
+              //     : this.state.apbs.status.charAt(0).toUpperCase() + this.state.apbs.status.substr(1)       // Uppercase first letter
+            }</h2>
+            Start time: {this.state.pdb2pqr.startTime}<br/>
+            End time: {this.state.pdb2pqr.endTime}<br/>
+            Elapsed time (PDB2PQR): {this.state.pdb2pqrElapsedTime}  {/*this.computeElapsedTime('pdb2pqr')*/}
+          </Row>
+          <hr/>
           {/* Job ID from query string: {this.props.jobid}<br/>
           JSON Response (PDB2PQR): {this.state.pdb2pqr.files} */}
           {this.createOutputList('pdb2pqr')}
