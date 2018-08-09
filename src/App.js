@@ -20,7 +20,7 @@ class App extends Component {
       this.state = {
           // job_type: "navbar_pdb2pqr",
           cur_page: this.props.page,
-          query_string: this.props.query,
+          // query_string: this.props.query,
           // job_type: "navbar_home",
           job_submit: false,
 
@@ -97,9 +97,9 @@ class App extends Component {
     // Renders job status page
     else if (this.state.cur_page === "navbar_status"){
       let queryParser = require('query-string-es5');
-      let job_id = queryParser.parse(this.state.query_string)['jobid']
+      let job_id = queryParser.parse(this.props.query)['jobid']
       // let job_id = this.state.query_string.substring(1)
-      bcrumb = this.createServiceBreadcrumb(['Services', 'Job Status'])
+      bcrumb = this.createServiceBreadcrumb(['Services', 'Job Status', job_id])
       content = 
         <JobStatus
           jobid={job_id}
