@@ -104,7 +104,7 @@ class JobStatus extends Component{
       // else if(this.state.apbs.status == "error") this.setState( {apbsColor: this.colorErrorStatus, statusColor: this.colorErrorStatus} );
     
     }, 1000);
-
+    return interval;
     // console.log(this.props.jobid)
     // fetch('http://localhost:5000/api/jobstatus?jobid='+this.props.jobid)
     //   .then(response => response.json())
