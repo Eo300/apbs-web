@@ -6,16 +6,21 @@ import  { Affix, Layout, Menu, Button, Form, Switch,
         } from 'antd';
 const { Content, Sider } = Layout;
 
+/**
+ * Component defining how the PDB2PQR job configuration page is rendered
+ */
 class ConfigPDB2PQR extends Component{
 
   /** If user tries submitting job again, raise alert. */
   handleJobSubmit = (e) => {
-
     // e.preventDefault();
-    this.setState({
-      job_submit: true
-    })
+    if(this.state.job_submit)
       alert("Job is submitted. Redirecting to job status page");
+    else{
+      this.setState({
+        job_submit: true
+      })
+    }
   }
 
   /** Creates and returns the sidebar component. */
@@ -45,6 +50,7 @@ class ConfigPDB2PQR extends Component{
 
   /** Creates and returns the PDB2PQR configuration form. */
   renderConfigForm(){
+    /** Builds checkbox options for the Additional Options header */
     const additionalOptions = [
       {name: 'DEBUMP',      value: 'atomsnotclose',    label: 'Ensure that new atoms are not rebuilt too close to existing atoms'},
       {name: 'OPT',         value: 'optimizeHnetwork', label: 'Optimize the hydrogen bonding network'},
@@ -57,8 +63,7 @@ class ConfigPDB2PQR extends Component{
       {name: 'NEUTRALC',    value: 'neutralcterminus', label: 'Make the protein\'s C-terminus neutral (requires PARSE forcefield)'},
       {name: 'DROPWATER',   value: 'removewater',      label: 'Remove the waters from the output file'},
     ]
-
-    let optionChecklist = []
+    let optionChecklist = [];
     additionalOptions.forEach(function(element){
       optionChecklist.push(
         <div>
@@ -67,6 +72,7 @@ class ConfigPDB2PQR extends Component{
       );
     });
 
+    /** Styling to have radio buttons appear vertical */
     const radioVertStyle = {
       display:    'block',
       height:     '25px',
@@ -74,20 +80,18 @@ class ConfigPDB2PQR extends Component{
     }
 
     return(
-      <Form action="/jobstatus" method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data">
+      <Form action="/jobstatus?submitType=pdb2pqr" method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data">
       {/* <Form action="http://apbs-1328226216.us-west-2.elb.amazonaws.com/pdb2pqr.cgi" method="POST" onSubmit={this.handleJobSubmit} name="thisform"> */}
-        {/* <div id="pdbid"> */}
+
+        {/** Form item for PDB Source (id | upload) */}
         <Form.Item
           // id="pdbid"
           label="PDB Source"
-          // label="Please enter a PDB ID"
-          // label="Please enter a PDB ID or upload your own"
         >
           <Radio.Group name="PDBSOURCE" defaultValue="ID">
             <Radio style={radioVertStyle} value="ID"> PDB ID:&nbsp;&nbsp;
               <Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4}/>
             </Radio>
-
             <Radio style={radioVertStyle} value="UPLOAD"> Upload a PDB file:&nbsp;&nbsp;
               {/* <Upload name="PDB" accept=".pdb"> */}
                 <input type="file" name="PDB" accept=".pdb"/>
@@ -99,24 +103,22 @@ class ConfigPDB2PQR extends Component{
             </Radio>
           </Radio.Group>
         </Form.Item>
-        {/* </div> */}
         
-        {/* <div id="pka"> */}
+        {/** Form item for pKa option*/}
         <Form.Item
           // id="pka"
           label="pKa Options"
         >
           {/* <Switch checkedChildren="pKa Calculation" unCheckedChildren="pKa Calculation" defaultChecked={true} /><br/> */}
           pH: <InputNumber name="PH" min={0} max={14} step={0.5} defaultValue={7} /><br/>
-          <Radio.Group name="PKACALCMETHOD" defaultValue="pka_propka" >
-            <Radio style={radioVertStyle} value="pka_none">    No pKa calculation </Radio>
-            <Radio style={radioVertStyle} value="pka_propka">  Use PROPKA to assign protonation states at provided pH </Radio>
-            <Radio style={radioVertStyle} value="pka_pdb2pka"> Use PDB2PKA to parametrize ligands and assign pKa values (requires PARSE forcefield) at provided pH </Radio>
+          <Radio.Group name="PKACALCMETHOD" defaultValue="propka" >
+            <Radio style={radioVertStyle} id="pka_none" value="none">    No pKa calculation </Radio>
+            <Radio style={radioVertStyle} id="pka_propka" value="propka">  Use PROPKA to assign protonation states at provided pH </Radio>
+            <Radio style={radioVertStyle} id="pka_pdb2pka" value="pdb2pka"> Use PDB2PKA to parametrize ligands and assign pKa values (requires PARSE forcefield) at provided pH </Radio>
           </Radio.Group>
-
         </Form.Item>
-        {/* </div> */}
 
+        {/** Form item for forcefield choice */}
         <Form.Item
           id="forcefield"
           label="Please choose a forcefield to use"
@@ -131,6 +133,7 @@ class ConfigPDB2PQR extends Component{
           </Radio.Group>
         </Form.Item>
 
+        {/** Form item for output scheme choice*/}
         <Form.Item
           id="outputscheme"
           label="Please choose an output naming scheme to use"
@@ -146,32 +149,21 @@ class ConfigPDB2PQR extends Component{
           </Radio.Group>
         </Form.Item>
         
+        {/** Form itme for choosing additional options (defined earlier) */}
         <Form.Item
           id="addedoptions"
           label="Additional Options"
         >
-          <Checkbox.Group
-            // options={additionalOptions}
-            defaultValue={[ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin' ]}
-          >
+          <Checkbox.Group defaultValue={[ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin' ]}>
             {optionChecklist}
-            {/* <Row><Checkbox value='atomsnotclose'>     Ensure that new atoms are not rebuilt too close to existing atoms</Checkbox></Row>
-            <Row><Checkbox value='optimizeHnetwork'>  Optimize the hydrogen bonding network</Checkbox></Row>
-            <Row><Checkbox value='assignfrommol2'>    Assign charges to the ligand specified in a MOL2 file</Checkbox></Row>
-            <Row><Checkbox value='makeapbsin'>        Create an APBS input file</Checkbox></Row>
-            <Row><Checkbox value='keepchainids'>      Add/keep chain IDs in the PQR file</Checkbox></Row>
-            <Row><Checkbox value='insertwhitespace'>  Insert whitespaces between atom name and residue name, between x and y, and between y and z</Checkbox></Row>
-            <Row><Checkbox value='maketypemap'>       Create Typemap output</Checkbox></Row>
-            <Row><Checkbox value='neutralnterminus'>  Make the protein's N-terminus neutral (requires PARSE forcefield)</Checkbox></Row>
-            <Row><Checkbox value='neutralcterminus'>  Make the protein's C-terminus neutral (requires PARSE forcefield)</Checkbox></Row>
-            <Row><Checkbox value='removewater'>       Remove the waters from the output file</Checkbox></Row> */}
-
           </Checkbox.Group>
         </Form.Item>
         
+        {/** Where the submission button lies */}
         <Form.Item>
           <Button type="primary" htmlType="submit">Start Job</Button>
         </Form.Item>
+
       </Form>
     )
   }
@@ -182,7 +174,6 @@ class ConfigPDB2PQR extends Component{
           {this.renderSidebar()}
           <Layout>
             <Content style={{ background: '#fff', padding: 16, margin: 0, minHeight: 280 }}>
-              {/* Content goes here */}
               {this.renderConfigForm()}
             </Content>
           </Layout>
