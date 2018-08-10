@@ -71,9 +71,8 @@ class JobStatus extends Component{
     clearInterval(this.elapsedIntervalAPBS);
   }
 
-  /***  CAN DELETE ***/
   componentDidUpdate(){
-    let statuses = ["complete", "error", null];
+    let statuses = ["complete", "error"]//, null];
     // if(this.state.pdb2pqr.status != "running" && this.state.apbs.status != "running"){
     if(statuses.includes(this.state.pdb2pqr.status)){//} && statuses.includes(this.state.pdb2pqr.status)){
       clearInterval(this.fetchIntervalPDB2PQR);

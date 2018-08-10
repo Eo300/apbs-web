@@ -3,7 +3,9 @@ import React, { Component } from 'react';
 import MyHeader from './myheader.js';
 import MyFooter from './myfooter.js';
 import HomePage from './home.js';
+import AboutPage from './about.js';
 import ConfigPDB2PQR from './configpdb2pqr.js';
+import ConfigAPBS from './configapbs.js';
 import JobStatus from './jobstatus.js';
 import './App.css';
 import 'antd/dist/antd.css';
@@ -47,11 +49,16 @@ class App extends Component {
 
   createServiceBreadcrumb(items){
     let trail = [];
+    let itemNum = 0;
     items.forEach(function(value){
+      itemNum += 1;
       // console.log(k)
-      trail.push(
-        <Breadcrumb.Item >{value}</Breadcrumb.Item>
-      )
+      if(itemNum != items.length){
+        trail.push(<Breadcrumb.Item >{value}</Breadcrumb.Item>)
+      }
+      else{
+        trail.push(<Breadcrumb.Item><b>{value}</b></Breadcrumb.Item>)
+      }
     });    
     return(
       <Breadcrumb style={{ margin: '16px 0' }}>
@@ -79,6 +86,10 @@ class App extends Component {
       content = <HomePage />;
     }
     
+    else if (this.state.cur_page === "navbar_about"){
+      content = <AboutPage />;
+    }
+
     // Renders configuration elements to set up an PDB2PQR job
     else if (this.state.cur_page === "navbar_pdb2pqr"){
       bcrumb = this.createServiceBreadcrumb(['Services', 'PDB2PQR Job Configuration'])
@@ -90,9 +101,8 @@ class App extends Component {
       // content = "You are in APBS";
       // return("Selected APBS")
       bcrumb = this.createServiceBreadcrumb(['Services', 'APBS Job Configuration'])
+      content = <ConfigAPBS />;
     }
-
-    else if (this.state.cur_page === "navbar_about"){}
 
     // Renders job status page
     else if (this.state.cur_page === "navbar_status"){

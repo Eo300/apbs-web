@@ -6,19 +6,17 @@ import  { Affix, Layout, Menu, Button, Form, Switch,
         } from 'antd';
 const { Content, Sider } = Layout;
 
-class ConfigPDB2PQR extends Component{
-
-  /** If user tries submitting job again, raise alert. */
+class ConfigAPBS extends Component{
   handleJobSubmit = (e) => {
-
     // e.preventDefault();
+    // <Alert message="Success Text" type="success" />
     this.setState({
       job_submit: true
     })
-      alert("Job is submitted. Redirecting to job status page");
+    if(this.state.job_submit)
+      alert("submitted: hello world");
   }
 
-  /** Creates and returns the sidebar component. */
   renderSidebar(){
     return(
       <Affix offsetTop={80}>
@@ -43,7 +41,6 @@ class ConfigPDB2PQR extends Component{
     )
   }
 
-  /** Creates and returns the PDB2PQR configuration form. */
   renderConfigForm(){
     const additionalOptions = [
       {name: 'DEBUMP',      value: 'atomsnotclose',    label: 'Ensure that new atoms are not rebuilt too close to existing atoms'},
@@ -191,4 +188,4 @@ class ConfigPDB2PQR extends Component{
   }
 }
 
-export default ConfigPDB2PQR;
+export default ConfigAPBS;
