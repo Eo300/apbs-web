@@ -1,119 +1,58 @@
 import React, { Component } from 'react';
-// import React from 'react'
 import {
   BrowserRouter as Router,
   Route,
-  Link
 } from 'react-router-dom'
-// import logo from './logo.svg';
 import App from './App';
-import MyHeader from './myheader.js';
-import MyFooter from './myfooter.js';
-import HomePage from './home.js';
-import ConfigPDB2PQR from './configpdb2pqr.js';
 import './App.css';
 import 'antd/dist/antd.css';
+import PAGES from './pagenames.js';
 
-import { Layout } from 'antd';
-
-const Home = () => (
-<div>
-    <h2>Home</h2>
-</div>
-)
   
-const About = () => (
-    <div>
-        <h2>About</h2>
-    </div>
-)
-  
-const Topic = ({ match }) => (
-    <div>
-        <h3>{match.params.topicId}</h3>
-    </div>
-)
-  
-const Topics = ({ match }) => (
-    <div>
-        <h2>Topics</h2>
-        <ul>
-        <li>
-            <Link to={`${match.url}/rendering`}>
-            Rendering with React
-            </Link>
-        </li>
-        <li>
-            <Link to={`${match.url}/components`}>
-            Components
-            </Link>
-        </li>
-        <li>
-            <Link to={`${match.url}/props-v-state`}>
-            Props v. State
-            </Link>
-        </li>
-        </ul>
-
-        <Route path={`${match.path}/:topicId`} component={Topic}/>
-        <Route exact path={match.path} render={() => (
-        <h3>Please select a topic.</h3>
-        )}/>
-    </div>
-)
-  
-class BasicExample extends Component{
+class ServerRouter extends Component{
     render(){
 
-        let navbar_options = new Map();
-        let content = "";
+        // let navbar_options = new Map();
+        // let content = "";
 
-        navbar_options.set("navbar_home",    "Home");
-        navbar_options.set("navbar_pdb2pqr", "PDB2PQR");
-        navbar_options.set("navbar_apbs",    "APBS");
-        navbar_options.set("navbar_about",   "About");
+        // navbar_options.set("navbar_home",    "Home");
+        // navbar_options.set("navbar_pdb2pqr", "PDB2PQR");
+        // navbar_options.set("navbar_apbs",    "APBS");
+        // navbar_options.set("navbar_about",   "About");
 
         return(
             <Router>
                 <div>
-                {/* <ul>
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/pdb2pqr">PDB2PQR</Link></li>
-                    <li><Link to="/apbs">APBS</Link></li>
-                    <li><Link to="/about">About</Link></li>
-                </ul>
-
-                <hr/> */}
-
-                <Route exact path="/"
-                    render={ props => (
-                        <App page="navbar_home"/>
-                    )}                
-                />
-                <Route path="/pdb2pqr"
-                    render={ props => (
-                        <App page="navbar_pdb2pqr"/>
-                    )}
-                />
-                <Route path="/apbs"
-                    render={ props => (
-                        <App page="navbar_apbs"/>
-                    )}
-                />
-                <Route path="/about"
-                    render={ props => (
-                        <App page="navbar_about"/>
-                    )}
-                />
-                <Route path="/jobstatus"
-                    render={ props => (
-                        <App page="navbar_status" query={props.location.search}/>
-                    )}
-                />
+                    <Route exact path="/"
+                        render={ props => (
+                            <App page={PAGES.home}/>
+                            // <App page="navbar_home"/>
+                        )}                
+                    />
+                    <Route path="/about"
+                        render={ props => (
+                            <App page={PAGES.about}/>
+                        )}
+                    />
+                    <Route path="/pdb2pqr"
+                        render={ props => (
+                            <App page={PAGES.pdb2pqr}/>
+                        )}
+                    />
+                    <Route path="/apbs"
+                        render={ props => (
+                            <App page={PAGES.apbs}/>
+                        )}
+                    />
+                    <Route path="/jobstatus"
+                        render={ props => (
+                            <App page={PAGES.status} query={props.location.search}/>
+                        )}
+                    />
                 </div>
             </Router>
         )
     }
 }
 
-export default BasicExample
+export default ServerRouter

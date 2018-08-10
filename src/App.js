@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
+import PAGES from './pagenames.js';
 import MyHeader from './myheader.js';
 import MyFooter from './myfooter.js';
 import HomePage from './home.js';
@@ -14,39 +15,34 @@ import { Layout, Breadcrumb, Col } from 'antd';
 // import { Layout, Col, Menu, Icon, Tooltip, Alert } from 'antd';
 // const { Header, Content, Sider, Footer } = Layout;
 
+/**
+ * Main application code.
+ * The page displayed to the user is dependent on the state of the current page.
+ * The current page is determined through the React Router, implemented in router.js
+ */
 class App extends Component {
   constructor(props){
       super(props);
-      this.selectJobClick = this.selectJobClick.bind(this);
+      this.onClickSelectPage = this.onClickSelectPage.bind(this);
       // this.handleJobSubmit = this.handleJobSubmit.bind(this);
       this.state = {
-          // job_type: "navbar_pdb2pqr",
-          cur_page: this.props.page,
-          // query_string: this.props.query,
-          // job_type: "navbar_home",
-          job_submit: false,
-
-          // Maintains state for PDB2PQR configuration in case user hops back and forth
-          pdb2pqr_settings: {
-              pdb_id: null,
-              ff: null,
-              output_scheme: null,
-          },
-          
-          // Maintains state for APBS for same purpose as pdb2pqr_settings
-          apbs_settings: {
-
-          },
+          cur_page: this.props.page,  // Current page
+          job_submit: false,          // Maintains if user tries clicking the Start Job button again
       };
   }
 
-  // onClick handler for user selecting a job. Is passed into child componenets
-  selectJobClick(selected_job){
+  /** 
+   * onClick handler for user selecting a page. Is passed into child componenets
+   */
+  onClickSelectPage(selected_page){
     this.setState({
-        cur_page: selected_job
+        cur_page: selected_page
     })
   }
 
+  /** Builds Breadcrumb component
+   * @param {array} items - list containing the desired items for the breadcrumb
+   */
   createServiceBreadcrumb(items){
     let trail = [];
     let itemNum = 0;
@@ -81,39 +77,36 @@ class App extends Component {
 
 
     // Renders landing page, with choice to do PDB2PQR or APBS
-    if (this.state.cur_page === "navbar_home" || this.state.cur_page === null){
-      // content = "You are in Home";
+    if (this.state.cur_page === PAGES.home || this.state.cur_page === null){
       content = <HomePage />;
     }
     
-    else if (this.state.cur_page === "navbar_about"){
+    // Renders the about page
+    else if (this.state.cur_page === PAGES.about){
       content = <AboutPage />;
     }
 
     // Renders configuration elements to set up an PDB2PQR job
-    else if (this.state.cur_page === "navbar_pdb2pqr"){
+    else if (this.state.cur_page === PAGES.pdb2pqr){
       bcrumb = this.createServiceBreadcrumb(['Services', 'PDB2PQR Job Configuration'])
       content = <ConfigPDB2PQR />;
     }
     
     // Renders configuration elements to set up an APBS job
-    else if (this.state.cur_page === "navbar_apbs"){
-      // content = "You are in APBS";
-      // return("Selected APBS")
+    else if (this.state.cur_page === PAGES.apbs){
       bcrumb = this.createServiceBreadcrumb(['Services', 'APBS Job Configuration'])
       content = <ConfigAPBS />;
     }
 
     // Renders job status page
-    else if (this.state.cur_page === "navbar_status"){
+    else if (this.state.cur_page === PAGES.status){
       let queryParser = require('query-string-es5');
       let job_id = queryParser.parse(this.props.query)['jobid']
-      // let job_id = this.state.query_string.substring(1)
+
       bcrumb = this.createServiceBreadcrumb(['Services', 'Job Status', job_id])
       content = 
         <JobStatus
           jobid={job_id}
-          // jobid={this.state.query_string}
         />;
     }
 
@@ -124,9 +117,8 @@ class App extends Component {
           activeItem={this.state.cur_page}
           navbar_items={navbar_options}
           all_header_items={new Array()}
-          onClick={j => this.selectJobClick(j)}
+          onClick={j => this.onClickSelectPage(j)}
         />
-        {/* <Layout> */}
         <Layout style={{ padding: '0 50px' }}>
           {bcrumb}
           {content}
