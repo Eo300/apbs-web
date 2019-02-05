@@ -149,7 +149,7 @@ class ConfigPDB2PQR extends Component{
           </Radio.Group>
         </Form.Item>
         
-        {/** Form itme for choosing additional options (defined earlier) */}
+        {/** Form item for choosing additional options (defined earlier) */}
         <Form.Item
           id="addedoptions"
           label="Additional Options"
