@@ -52,16 +52,16 @@ class ConfigPDB2PQR extends Component{
   renderConfigForm(){
     /** Builds checkbox options for the Additional Options header */
     const additionalOptions = [
-      {name: 'DEBUMP',      value: 'atomsnotclose',    label: 'Ensure that new atoms are not rebuilt too close to existing atoms'},
-      {name: 'OPT',         value: 'optimizeHnetwork', label: 'Optimize the hydrogen bonding network'},
-      {name: 'LIGANDCHECK', value: 'assignfrommol2',   label: 'Assign charges to the ligand specified in a MOL2 file'},
-      {name: 'INPUT',       value: 'makeapbsin',       label: 'Create an APBS input file'},
-      {name: 'CHAIN',       value: 'keepchainids',     label: 'Add/keep chain IDs in the PQR file'},
-      {name: 'WHITESPACE',  value: 'insertwhitespace', label: 'Insert whitespaces between atom name and residue name, between x and y, and between y and z'},
-      {name: 'TYPEMAP',     value: 'maketypemap',      label: 'Create Typemap output'},
-      {name: 'NEUTRALN',    value: 'neutralnterminus', label: 'Make the protein\'s N-terminus neutral (requires PARSE forcefield)'},
-      {name: 'NEUTRALC',    value: 'neutralcterminus', label: 'Make the protein\'s C-terminus neutral (requires PARSE forcefield)'},
-      {name: 'DROPWATER',   value: 'removewater',      label: 'Remove the waters from the output file'},
+      {name: 'DEBUMP',      value: 'atomsnotclose',    onClickFunc: '', label: 'Ensure that new atoms are not rebuilt too close to existing atoms'},
+      {name: 'OPT',         value: 'optimizeHnetwork', onClickFunc: '', label: 'Optimize the hydrogen bonding network'},
+      {name: 'LIGANDCHECK', value: 'assignfrommol2',   onClickFunc: '', label: 'Assign charges to the ligand specified in a MOL2 file'},
+      {name: 'INPUT',       value: 'makeapbsin',       onClickFunc: '', label: 'Create an APBS input file'},
+      {name: 'CHAIN',       value: 'keepchainids',     onClickFunc: '', label: 'Add/keep chain IDs in the PQR file'},
+      {name: 'WHITESPACE',  value: 'insertwhitespace', onClickFunc: '', label: 'Insert whitespaces between atom name and residue name, between x and y, and between y and z'},
+      {name: 'TYPEMAP',     value: 'maketypemap',      onClickFunc: '', label: 'Create Typemap output'},
+      {name: 'NEUTRALN',    value: 'neutralnterminus', onClickFunc: '', label: 'Make the protein\'s N-terminus neutral (requires PARSE forcefield)'},
+      {name: 'NEUTRALC',    value: 'neutralcterminus', onClickFunc: '', label: 'Make the protein\'s C-terminus neutral (requires PARSE forcefield)'},
+      {name: 'DROPWATER',   value: 'removewater',      onClickFunc: '', label: 'Remove the waters from the output file'},
     ]
     let optionChecklist = [];
     additionalOptions.forEach(function(element){

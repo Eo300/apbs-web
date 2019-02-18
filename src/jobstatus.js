@@ -18,13 +18,18 @@ const { Content, Sider } = Layout;
 class JobStatus extends Component{
   constructor(props){
     super(props);
+    this.fetchIntervalPDB2PQR = null;
+    this.fetchIntervalAPBS = null;
+    this.elapsedIntervalPDB2PQR = null;
+    this.elapsedIntervalAPBS = null;
+
     this.colorCompleteStatus  = "#52C41A";
     this.colorRunningStatus   = "#1890FF";
     this.colorErrorStatus     = "#F5222D";
     // this.totalElapsedTime = 0;
     this.state = {
       totalElapsedTime: 0,
-      pdb2pqrElapsedTime: 0,
+      pdb2pqrElapsedTime: this.elapsedIntervalPDB2PQR,
       apbsElapsedTime: 0,
       // full_request: getStatusJSON(this.props.jobid),
       // job_status_response: null
@@ -33,13 +38,13 @@ class JobStatus extends Component{
       apbsColor: null,
       pdb2pqr: {
         // status: "pdb2pqrStatus",
-        status: null,
+        status: 'no_job',
         startTime: null, // in seconds
         endTime: null, // in seconds
         files: [],
       },
       apbs: {
-        status: null,
+        status: 'no_job',
         startTime: null, // in seconds
         endTime: null, // in seconds
         files: [],
@@ -59,6 +64,7 @@ class JobStatus extends Component{
     this.fetchIntervalAPBS = this.fetchJobStatus('apbs');
     this.elapsedIntervalPDB2PQR = this.computeElapsedTime('pdb2pqr');//setInterval(this.computeElapsedTime('pdb2pqr'), 1000);
     this.elapsedIntervalAPBS = this.computeElapsedTime('apbs');//setInterval(this.computeElapsedTime('pdb2pqr'), 1000);
+    // console.log("lakj;sdfiuaofjayleihfujosk");
 
     // this.computeElapsedTime('pdb2pqr');
     // this.fetchInterval = setInterval(this.fetchJobStatus, 1000);
@@ -72,15 +78,16 @@ class JobStatus extends Component{
   }
 
   componentDidUpdate(){
-    let statuses = ["complete", "error"]//, null];
+    let statuses = ["complete", "error", null];
     // if(this.state.pdb2pqr.status != "running" && this.state.apbs.status != "running"){
     if(statuses.includes(this.state.pdb2pqr.status)){//} && statuses.includes(this.state.pdb2pqr.status)){
       clearInterval(this.fetchIntervalPDB2PQR);
-      // clearInterval(this.elapsedIntervalPDB2PQR);
+      // console.log("lakj;sdfiuaofjayleihfujosk");
+      clearInterval(this.elapsedIntervalPDB2PQR);
     }
     if(statuses.includes(this.state.apbs.status)){
       clearInterval(this.fetchIntervalAPBS);
-      // clearInterval(this.elapsedIntervalAPBS);
+      clearInterval(this.elapsedIntervalAPBS);
     }
     // if(this.state.pdb2pqr.status !== "complete" && this.state.apbs.status !== "complete"){
     //   clearInterval(this.elapsedInterval);
@@ -175,26 +182,46 @@ class JobStatus extends Component{
     let interval = setInterval(function(){
       let end = new Date().getTime() / 1000;
       // console.log(end)
+      
+      console.log("\njobtype: "+jobtype)
       if(jobtype == 'pdb2pqr'){
         start = self.state.pdb2pqr.startTime;
         if(self.state.pdb2pqr.endTime) end = self.state.pdb2pqr.endTime;
+        console.log("status: "+self.state.pdb2pqr.status)
       }
       else if(jobtype == 'apbs'){
         start = self.state.apbs.startTime;
-        if(self.state.pdb2pqr.endTime) end = self.state.apbs.endTime;
+        if(self.state.apbs.endTime) end = self.state.apbs.endTime;
+        console.log("status: "+self.state.apbs.status)
       }
-      // console.log("\njobtype: "+jobtype)
-      // console.log("start: "+start)
+      console.log("start: "+start)
+      console.log("end: "+end)
       // console.log("start state: "+self.state.pdb2pqr.startTime)
-      // console.log("end: "+end)
-      let elapsed = (end - start)*1000;
-      // console.log("elapsed: "+elapsed)
-      let elapsedDate = new Date(elapsed);
-      // console.log("elapsedDate: "+elapsedDate)
-      let elapsedHours = self.prependZeroIfSingleDigit( elapsedDate.getUTCHours().toString() );
-      let elapsedMin = self.prependZeroIfSingleDigit( elapsedDate.getUTCMinutes().toString() );
-      let elapsedSec = self.prependZeroIfSingleDigit( elapsedDate.getUTCSeconds().toString() );
-      // return elapsedHours+':'+elapsedMin+':'+elapsedSec;
+
+
+      let elapsed = null;
+      let elapsedDate = null;
+      let elapsedHours = null;
+      let elapsedMin = null;
+      let elapsedSec = null;
+      if(start != null){
+        let elapsed = (end - start)*1000;
+        console.log("elapsed: "+elapsed)
+        
+        elapsedDate = new Date(elapsed);
+        console.log("elapsedDate: "+elapsedDate)
+        
+        elapsedHours = self.prependZeroIfSingleDigit( elapsedDate.getUTCHours().toString() );
+        elapsedMin = self.prependZeroIfSingleDigit( elapsedDate.getUTCMinutes().toString() );
+        elapsedSec = self.prependZeroIfSingleDigit( elapsedDate.getUTCSeconds().toString() );
+        // return elapsedHours+':'+elapsedMin+':'+elapsedSec;
+
+      }
+      else{
+        elapsedHours = '00';
+        elapsedMin = '00';
+        elapsedSec = '00';
+      }
 
       if(jobtype == 'pdb2pqr'){
         self.setState({pdb2pqrElapsedTime: elapsedHours+':'+elapsedMin+':'+elapsedSec});
