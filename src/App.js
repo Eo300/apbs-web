@@ -76,28 +76,33 @@ class App extends Component {
     navbar_options.set("navbar_about",   "About");
 
 
+    // HOME page
     // Renders landing page, with choice to do PDB2PQR or APBS
     if (this.state.cur_page === PAGES.home || this.state.cur_page === null){
       content = <HomePage />;
     }
     
+    // ABOUT page
     // Renders the about page
     else if (this.state.cur_page === PAGES.about){
       content = <AboutPage />;
     }
 
+    // PDB2PQR page
     // Renders configuration elements to set up an PDB2PQR job
     else if (this.state.cur_page === PAGES.pdb2pqr){
       bcrumb = this.createServiceBreadcrumb(['Services', 'PDB2PQR Job Configuration'])
       content = <ConfigPDB2PQR />;
     }
     
+    // APBS page
     // Renders configuration elements to set up an APBS job
     else if (this.state.cur_page === PAGES.apbs){
       bcrumb = this.createServiceBreadcrumb(['Services', 'APBS Job Configuration'])
       content = <ConfigAPBS />;
     }
 
+    // JOB STATUS page
     // Renders job status page
     else if (this.state.cur_page === PAGES.status){
       let queryParser = require('query-string-es5');
