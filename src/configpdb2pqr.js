@@ -11,6 +11,69 @@ const { Content, Sider } = Layout;
  */
 class ConfigPDB2PQR extends Component{
 
+  constructor(props){
+    super(props);
+    this.state = {
+      pdb_upload_hidden: true,
+      ff_upload_hidden: true,
+
+      PDBSOURCE_value:      "ID",
+      PH_value:             7,
+      PKACALCMETHOD_value:  "propka",
+      FF_value:             "parse",
+      FFOUT_value:          "internal",
+      OPTIONS_value:        [ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin' ]
+
+    }
+    // this.handleJobSubmit = this.handleJobSubmit.bind(this);
+    this.changeFormValue = this.changeFormValue.bind(this)
+  }
+
+  /** Updates current state of form values when changed */
+  changeFormValue = (e) => {
+    let itemValue = e.target.value;
+    let itemName  = e.target.name;
+    console.log(itemValue);
+    switch(itemName){
+      case "PDBSOURCE":
+        this.setState({
+          PDBSOURCE_value: itemValue
+        });
+        (itemValue == "UPLOAD") ? this.togglePdbUploadButton(true) : this.togglePdbUploadButton(false);
+        break;
+
+      case "PH":
+        this.setState({
+          PH_value: itemValue
+        });
+        break;
+
+      case "PKACALCMETHOD":
+        this.setState({
+          PKACALCMETHOD_value: itemValue
+        });
+        break;
+
+      case "FF":
+        this.setState({
+          FF_value: itemValue
+        });
+        break;
+
+      case "FFOUT":
+        this.setState({
+          FFOUT_value: itemValue
+        });
+        break;
+        
+      case "OPTIONS":
+        this.setState({
+          OPTIONS_value: itemValue
+        });
+        break;
+    }
+  }
+
   /** If user tries submitting job again, raise alert. */
   handleJobSubmit = (e) => {
     // e.preventDefault();
