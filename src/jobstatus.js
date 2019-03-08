@@ -19,6 +19,9 @@ const { Content, Sider } = Layout;
 class JobStatus extends Component{
   constructor(props){
     super(props);
+    /** RENAME TO REAL DOMAIN BEFORE PRODUCTION */
+    this.jobServerDomain = "http://localhost:5000"
+    /********************************************/
     this.fetchIntervalPDB2PQR = null;
     this.fetchIntervalAPBS = null;
     this.elapsedIntervalPDB2PQR = null;
@@ -118,7 +121,7 @@ class JobStatus extends Component{
     let interval = setInterval(function(){
       // console.log(self.props.jobid)
       // console.log("Fetched")
-      fetch('http://localhost:5000/api/jobstatus?jobid='+self.props.jobid +'&'+jobtype+'=true')
+      fetch(self.jobServerDomain+'/api/jobstatus?jobid='+self.props.jobid +'&'+jobtype+'=true')
         .then(response => response.json())
         .then(data => {
 
@@ -134,7 +137,7 @@ class JobStatus extends Component{
             });
           }
           else{
-            // Update PDB2PQR component states
+            // Update APBS component states
             self.setState({
               apbs: {
                 status: data.apbs.status,
