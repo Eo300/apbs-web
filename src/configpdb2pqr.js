@@ -16,6 +16,7 @@ class ConfigPDB2PQR extends Component{
     this.state = {
       pdb_upload_hidden: true,
       ff_upload_hidden: true,
+      mol2_upload_hidden: true,
 
       PDBSOURCE_value:      "ID",
       PH_value:             7,
@@ -27,13 +28,17 @@ class ConfigPDB2PQR extends Component{
     }
     // this.handleJobSubmit = this.handleJobSubmit.bind(this);
     this.changeFormValue = this.changeFormValue.bind(this)
+    // this.renderConfigForm = this.renderConfigForm.bind(this)
   }
 
   /** Updates current state of form values when changed */
-  changeFormValue = (e) => {
-    let itemValue = e.target.value;
-    let itemName  = e.target.name;
-    console.log(itemValue);
+  changeFormValue = (e, nameString) => {
+    let itemName  = (nameString === undefined) ? e.target.name : nameString;
+    let itemValue = (e.target !== undefined) ? e.target.value : e;
+    // let itemValue = e.target.value;
+    // let itemName  = e.target.name;
+
+    console.log(itemName +": "+ itemValue);
     switch(itemName){
       case "PDBSOURCE":
         this.setState({
@@ -58,6 +63,7 @@ class ConfigPDB2PQR extends Component{
         this.setState({
           FF_value: itemValue
         });
+        (itemValue == "user") ? this.toggleUserForcefieldUploadButton(true) : this.toggleUserForcefieldUploadButton(false);
         break;
 
       case "FFOUT":
@@ -70,6 +76,7 @@ class ConfigPDB2PQR extends Component{
         this.setState({
           OPTIONS_value: itemValue
         });
+        (itemValue.includes("assignfrommol2")) ? this.toggleMol2UploadButton(true) : this.toggleMol2UploadButton(false);
         break;
     }
   }
@@ -85,6 +92,64 @@ class ConfigPDB2PQR extends Component{
       })
     }
   }
+
+  handlePdbSourceChoice = (e) => {
+    // if ()
+  }
+  
+  togglePdbUploadButton(show_upload){
+    this.setState({
+      pdb_upload_hidden: !show_upload
+    });
+  }
+  toggleUserForcefieldUploadButton(show_upload){
+    // console.log(this.state.ff_upload_hidden)
+    this.setState({
+      ff_upload_hidden: !show_upload
+    });
+  }
+  toggleMol2UploadButton(show_upload){
+    this.setState({
+      mol2_upload_hidden: !show_upload
+    });
+  }
+  // togglePdbUploadButton = (e) => {
+  //   this.setState({
+  //     pdb_upload_hidden: !this.state.pdb_upload_hidden
+  //   })
+  // }
+
+  renderPdbUploadButton(){
+    if(this.state.pdb_upload_hidden) return;
+    else{
+      return(
+        <input type="file" name="PDB" accept=".pdb"/>
+        )
+    }
+  }
+
+  renderUserForcefieldUploadButton(){
+    // console.log("hello world")
+    if(this.state.ff_upload_hidden) { return; }
+    else{
+      return(
+        <div>
+          Forcefield file: <input type="file" name="USERFF" />
+          Names file (*.names): <input type="file" name="USERNAMES" accept=".names" />
+        </div>
+      );
+    }
+  }
+  
+  renderMol2UploadButton(){
+    if(this.state.mol2_upload_hidden) return;
+    else{
+      return(
+        <input type="file" name="LIGAND"/>
+      )
+    }
+  }
+
 
   /** Creates and returns the sidebar component. */
   renderSidebar(){
@@ -115,24 +180,36 @@ class ConfigPDB2PQR extends Component{
   renderConfigForm(){
     /** Builds checkbox options for the Additional Options header */
     const additionalOptions = [
-      {name: 'DEBUMP',      value: 'atomsnotclose',    onClickFunc: '', label: 'Ensure that new atoms are not rebuilt too close to existing atoms'},
-      {name: 'OPT',         value: 'optimizeHnetwork', onClickFunc: '', label: 'Optimize the hydrogen bonding network'},
-      {name: 'LIGANDCHECK', value: 'assignfrommol2',   onClickFunc: '', label: 'Assign charges to the ligand specified in a MOL2 file'},
-      {name: 'INPUT',       value: 'makeapbsin',       onClickFunc: '', label: 'Create an APBS input file'},
-      {name: 'CHAIN',       value: 'keepchainids',     onClickFunc: '', label: 'Add/keep chain IDs in the PQR file'},
-      {name: 'WHITESPACE',  value: 'insertwhitespace', onClickFunc: '', label: 'Insert whitespaces between atom name and residue name, between x and y, and between y and z'},
-      {name: 'TYPEMAP',     value: 'maketypemap',      onClickFunc: '', label: 'Create Typemap output'},
-      {name: 'NEUTRALN',    value: 'neutralnterminus', onClickFunc: '', label: 'Make the protein\'s N-terminus neutral (requires PARSE forcefield)'},
-      {name: 'NEUTRALC',    value: 'neutralcterminus', onClickFunc: '', label: 'Make the protein\'s C-terminus neutral (requires PARSE forcefield)'},
-      {name: 'DROPWATER',   value: 'removewater',      onClickFunc: '', label: 'Remove the waters from the output file'},
-    ]
+      {name: 'DEBUMP',      value: 'atomsnotclose',    onClickFunc: '', uploadFieldName: null,      label: 'Ensure that new atoms are not rebuilt too close to existing atoms'},
+      {name: 'OPT',         value: 'optimizeHnetwork', onClickFunc: '', uploadFieldName: null,      label: 'Optimize the hydrogen bonding network'},
+      {name: 'LIGANDCHECK', value: 'assignfrommol2',   onClickFunc: '', uploadFieldName: 'LIGAND',  label: 'Assign charges to the ligand specified in a MOL2 file'},
+      {name: 'INPUT',       value: 'makeapbsin',       onClickFunc: '', uploadFieldName: null,      label: 'Create an APBS input file'},
+      {name: 'CHAIN',       value: 'keepchainids',     onClickFunc: '', uploadFieldName: null,      label: 'Add/keep chain IDs in the PQR file'},
+      {name: 'WHITESPACE',  value: 'insertwhitespace', onClickFunc: '', uploadFieldName: null,      label: 'Insert whitespaces between atom name and residue name, between x and y, and between y and z'},
+      {name: 'TYPEMAP',     value: 'maketypemap',      onClickFunc: '', uploadFieldName: null,      label: 'Create Typemap output'},
+      {name: 'NEUTRALN',    value: 'neutralnterminus', onClickFunc: '', uploadFieldName: null,      label: 'Make the protein\'s N-terminus neutral (requires PARSE forcefield)'},
+      {name: 'NEUTRALC',    value: 'neutralcterminus', onClickFunc: '', uploadFieldName: null,      label: 'Make the protein\'s C-terminus neutral (requires PARSE forcefield)'},
+      {name: 'DROPWATER',   value: 'removewater',      onClickFunc: '', uploadFieldName: null,      label: 'Remove the waters from the output file'},
+    ]     
     let optionChecklist = [];
     additionalOptions.forEach(function(element){
-      optionChecklist.push(
-        <div>
-          <Row><Checkbox name={element['name']} value={element['value']}> {element['label']} </Checkbox></Row>
-        </div>
-      );
+      if (element['name'] == 'LIGANDCHECK'){
+        optionChecklist.push(
+          <div>
+            <Row>
+              <Checkbox name={element['name']} value={element['value']}> {element['label']} </Checkbox>
+              {/* {this.renderMol2UploadButton()} */}
+            </Row>
+          </div>
+        );
+      }
+      else{
+        optionChecklist.push(
+          <div>
+            <Row><Checkbox name={element['name']} value={element['value']}> {element['label']} </Checkbox></Row>
+          </div>
+        );
+      }
     });
 
     /** Styling to have radio buttons appear vertical */
@@ -162,7 +239,8 @@ class ConfigPDB2PQR extends Component{
               <Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4}/>
             </Radio>
             <Radio style={radioVertStyle} value="UPLOAD"> Upload a PDB file:&nbsp;&nbsp;
-              <input type="file" name="PDB" accept=".pdb" hidden={this.state.pdb_upload_hidden}/>
+              {this.renderPdbUploadButton()}
+              {/* <input type="file" name="PDB" accept=".pdb" hidden={this.state.pdb_upload_hidden}/> */}
               {/* <Row><Upload name="PDB" accept=".pdb" customRequest={dummyRequest} >
                 <Button>
                   <Icon type="upload" >
@@ -192,14 +270,18 @@ class ConfigPDB2PQR extends Component{
           id="forcefield"
           label="Please choose a forcefield to use"
         >
-          <Radio.Group name="FF" defaultValue={this.state.FF_value} buttonStyle="solid">
+          <Radio.Group name="FF" defaultValue={this.state.FF_value} buttonStyle="solid" onChange={this.changeFormValue}>
             <Radio.Button value="amber">  AMBER   </Radio.Button>
             <Radio.Button value="charmm"> CHARMM  </Radio.Button>
             <Radio.Button value="parse">  PARSE   </Radio.Button>
             <Radio.Button value="peoepb"> PEOEPB  </Radio.Button>
             <Radio.Button value="swanson">SWANSON </Radio.Button>
             <Radio.Button value="tyl06">  TYL06   </Radio.Button>
-          </Radio.Group>
+            <Radio.Button value="user">  User-defined Forcefield </Radio.Button>
+          </Radio.Group><br/>
+          {this.renderUserForcefieldUploadButton()}
+          {/* Forcefield file: <input type="file" name="USERFF" />
+          Names file (*.names): <input type="file" name="USERNAMES" accept=".names" /> */}
         </Form.Item>
 
         {/** Form item for output scheme choice*/}
@@ -207,7 +289,7 @@ class ConfigPDB2PQR extends Component{
           id="outputscheme"
           label="Please choose an output naming scheme to use"
         >
-          <Radio.Group name="FFOUT" defaultValue={this.state.FFOUT_value} buttonStyle="solid">
+          <Radio.Group name="FFOUT" defaultValue={this.state.FFOUT_value} buttonStyle="solid" onChange={this.changeFormValue}>
             <Radio.Button value="internal"> Internal naming scheme <Tooltip placement="bottomLeft" title="This is placeholder help text to tell the user what this option means"><Icon type="question-circle" /></Tooltip> </Radio.Button>
             <Radio.Button value="amber">  AMBER   </Radio.Button>
             <Radio.Button value="charmm"> CHARMM  </Radio.Button>
@@ -223,7 +305,7 @@ class ConfigPDB2PQR extends Component{
           id="addedoptions"
           label="Additional Options"
         >
-          <Checkbox.Group defaultValue={this.state.OPTIONS_value}>
+          <Checkbox.Group name="OPTIONS" defaultValue={this.state.OPTIONS_value} onChange={(e) => this.changeFormValue(e, "OPTIONS")}>
             {optionChecklist}
           </Checkbox.Group>
         </Form.Item>
