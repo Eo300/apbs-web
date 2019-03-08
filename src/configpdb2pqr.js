@@ -142,6 +142,12 @@ class ConfigPDB2PQR extends Component{
       lineHeight: '30px',
     }
 
+    const dummyRequest = ({ file, onSuccess }) => {
+      setTimeout(() => {
+        onSuccess("ok");
+      }, 0);
+    };
+
     return(
       <Form action="/jobstatus?submitType=pdb2pqr" method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data">
       {/* <Form action="http://apbs-1328226216.us-west-2.elb.amazonaws.com/pdb2pqr.cgi" method="POST" onSubmit={this.handleJobSubmit} name="thisform"> */}
@@ -151,18 +157,18 @@ class ConfigPDB2PQR extends Component{
           // id="pdbid"
           label="PDB Source"
         >
-          <Radio.Group name="PDBSOURCE" defaultValue="ID">
+          <Radio.Group name="PDBSOURCE" defaultValue={this.state.PDBSOURCE_value} onChange={this.changeFormValue}>
             <Radio style={radioVertStyle} value="ID"> PDB ID:&nbsp;&nbsp;
               <Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4}/>
             </Radio>
             <Radio style={radioVertStyle} value="UPLOAD"> Upload a PDB file:&nbsp;&nbsp;
-              {/* <Upload name="PDB" accept=".pdb"> */}
-                <input type="file" name="PDB" accept=".pdb"/>
-                {/* <Button>
+              <input type="file" name="PDB" accept=".pdb" hidden={this.state.pdb_upload_hidden}/>
+              {/* <Row><Upload name="PDB" accept=".pdb" customRequest={dummyRequest} >
+                <Button>
                   <Icon type="upload" >
                   </Icon> Click to upload
-                </Button> */}
-              {/* </Upload> */}
+                </Button>
+              </Upload></Row> */}
             </Radio>
           </Radio.Group>
         </Form.Item>
@@ -173,8 +179,8 @@ class ConfigPDB2PQR extends Component{
           label="pKa Options"
         >
           {/* <Switch checkedChildren="pKa Calculation" unCheckedChildren="pKa Calculation" defaultChecked={true} /><br/> */}
-          pH: <InputNumber name="PH" min={0} max={14} step={0.5} defaultValue={7} /><br/>
-          <Radio.Group name="PKACALCMETHOD" defaultValue="propka" >
+          pH: <InputNumber name="PH" min={0} max={14} step={0.5} defaultValue={this.state.PH_value} /><br/>
+          <Radio.Group name="PKACALCMETHOD" defaultValue={this.state.PKACALCMETHOD_value} onChange={this.changeFormValue} >
             <Radio style={radioVertStyle} id="pka_none" value="none">    No pKa calculation </Radio>
             <Radio style={radioVertStyle} id="pka_propka" value="propka">  Use PROPKA to assign protonation states at provided pH </Radio>
             <Radio style={radioVertStyle} id="pka_pdb2pka" value="pdb2pka"> Use PDB2PKA to parametrize ligands and assign pKa values (requires PARSE forcefield) at provided pH </Radio>
@@ -186,7 +192,7 @@ class ConfigPDB2PQR extends Component{
           id="forcefield"
           label="Please choose a forcefield to use"
         >
-          <Radio.Group name="FF" defaultValue="parse" buttonStyle="solid">
+          <Radio.Group name="FF" defaultValue={this.state.FF_value} buttonStyle="solid">
             <Radio.Button value="amber">  AMBER   </Radio.Button>
             <Radio.Button value="charmm"> CHARMM  </Radio.Button>
             <Radio.Button value="parse">  PARSE   </Radio.Button>
@@ -201,7 +207,7 @@ class ConfigPDB2PQR extends Component{
           id="outputscheme"
           label="Please choose an output naming scheme to use"
         >
-          <Radio.Group name="FFOUT" defaultValue="internal" buttonStyle="solid">
+          <Radio.Group name="FFOUT" defaultValue={this.state.FFOUT_value} buttonStyle="solid">
             <Radio.Button value="internal"> Internal naming scheme <Tooltip placement="bottomLeft" title="This is placeholder help text to tell the user what this option means"><Icon type="question-circle" /></Tooltip> </Radio.Button>
             <Radio.Button value="amber">  AMBER   </Radio.Button>
             <Radio.Button value="charmm"> CHARMM  </Radio.Button>
@@ -217,7 +223,7 @@ class ConfigPDB2PQR extends Component{
           id="addedoptions"
           label="Additional Options"
         >
-          <Checkbox.Group defaultValue={[ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin' ]}>
+          <Checkbox.Group defaultValue={this.state.OPTIONS_value}>
             {optionChecklist}
           </Checkbox.Group>
         </Form.Item>
