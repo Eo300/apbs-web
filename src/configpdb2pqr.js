@@ -17,6 +17,8 @@ class ConfigPDB2PQR extends Component{
       pdb_upload_hidden: true,
       ff_upload_hidden: true,
       mol2_upload_hidden: true,
+      only_parse: false,
+      no_NC_terminus: false,
 
       PDBSOURCE_value:      "ID",
       PH_value:             7,
@@ -57,12 +59,14 @@ class ConfigPDB2PQR extends Component{
         this.setState({
           PKACALCMETHOD_value: itemValue
         });
+        (itemValue == "pdb2pka") ? this.toggleMustUseParse(true) : this.toggleMustUseParse(false);
         break;
 
       case "FF":
         this.setState({
           FF_value: itemValue
         });
+        (itemValue != "parse")? this.toggleDisableForNoParse(true) : this.toggleDisableForNoParse(false);
         (itemValue == "user") ? this.toggleUserForcefieldUploadButton(true) : this.toggleUserForcefieldUploadButton(false);
         break;
 
@@ -77,6 +81,7 @@ class ConfigPDB2PQR extends Component{
           OPTIONS_value: itemValue
         });
         (itemValue.includes("assignfrommol2")) ? this.toggleMol2UploadButton(true) : this.toggleMol2UploadButton(false);
+        (["neutralnterminus", "neutralcterminus"].some(opt=>itemValue.includes(opt))) ? this.toggleMustUseParse(true) : this.toggleMustUseParse(false);
         break;
     }
   }
@@ -113,6 +118,25 @@ class ConfigPDB2PQR extends Component{
       mol2_upload_hidden: !show_upload
     });
   }
+
+  toggleMustUseParse(to_disable){
+    if(to_disable){
+      this.setState({
+        only_parse: to_disable,
+        FF_value: "parse",
+        ff_upload_hidden: true,
+      })
+    }
+    this.setState({
+      only_parse: to_disable,
+    })
+  }
+  toggleDisableForNoParse(to_disable){
+    this.setState({
+      no_NC_terminus: to_disable
+    })
+  }
+
   // togglePdbUploadButton = (e) => {
   //   this.setState({
   //     pdb_upload_hidden: !this.state.pdb_upload_hidden
@@ -180,16 +204,16 @@ class ConfigPDB2PQR extends Component{
   renderConfigForm(){
     /** Builds checkbox options for the Additional Options header */
     const additionalOptions = [
-      {name: 'DEBUMP',      value: 'atomsnotclose',    onClickFunc: '', uploadFieldName: null,      label: 'Ensure that new atoms are not rebuilt too close to existing atoms'},
-      {name: 'OPT',         value: 'optimizeHnetwork', onClickFunc: '', uploadFieldName: null,      label: 'Optimize the hydrogen bonding network'},
-      {name: 'LIGANDCHECK', value: 'assignfrommol2',   onClickFunc: '', uploadFieldName: 'LIGAND',  label: 'Assign charges to the ligand specified in a MOL2 file'},
-      {name: 'INPUT',       value: 'makeapbsin',       onClickFunc: '', uploadFieldName: null,      label: 'Create an APBS input file'},
-      {name: 'CHAIN',       value: 'keepchainids',     onClickFunc: '', uploadFieldName: null,      label: 'Add/keep chain IDs in the PQR file'},
-      {name: 'WHITESPACE',  value: 'insertwhitespace', onClickFunc: '', uploadFieldName: null,      label: 'Insert whitespaces between atom name and residue name, between x and y, and between y and z'},
-      {name: 'TYPEMAP',     value: 'maketypemap',      onClickFunc: '', uploadFieldName: null,      label: 'Create Typemap output'},
-      {name: 'NEUTRALN',    value: 'neutralnterminus', onClickFunc: '', uploadFieldName: null,      label: 'Make the protein\'s N-terminus neutral (requires PARSE forcefield)'},
-      {name: 'NEUTRALC',    value: 'neutralcterminus', onClickFunc: '', uploadFieldName: null,      label: 'Make the protein\'s C-terminus neutral (requires PARSE forcefield)'},
-      {name: 'DROPWATER',   value: 'removewater',      onClickFunc: '', uploadFieldName: null,      label: 'Remove the waters from the output file'},
+      {name: 'DEBUMP',      value: 'atomsnotclose',    label: 'Ensure that new atoms are not rebuilt too close to existing atoms',  disabled: false},
+      {name: 'OPT',         value: 'optimizeHnetwork', label: 'Optimize the hydrogen bonding network',                              disabled: false},
+      {name: 'LIGANDCHECK', value: 'assignfrommol2',   label: 'Assign charges to the ligand specified in a MOL2 file',              disabled: false},
+      {name: 'INPUT',       value: 'makeapbsin',       label: 'Create an APBS input file',                                          disabled: false},
+      {name: 'CHAIN',       value: 'keepchainids',     label: 'Add/keep chain IDs in the PQR file',                                 disabled: false},
+      {name: 'WHITESPACE',  value: 'insertwhitespace', label: 'Insert whitespaces between atom name and residue name, between x and y, and between y and z', disabled: false},
+      {name: 'TYPEMAP',     value: 'maketypemap',      label: 'Create Typemap output',                                              disabled: false},
+      {name: 'NEUTRALN',    value: 'neutralnterminus', label: 'Make the protein\'s N-terminus neutral (requires PARSE forcefield)', disabled: this.state.no_NC_terminus, },
+      {name: 'NEUTRALC',    value: 'neutralcterminus', label: 'Make the protein\'s C-terminus neutral (requires PARSE forcefield)', disabled: this.state.no_NC_terminus, },
+      {name: 'DROPWATER',   value: 'removewater',      label: 'Remove the waters from the output file',                             disabled: false},
     ]     
     let optionChecklist = [];
     additionalOptions.forEach(function(element){
@@ -198,19 +222,20 @@ class ConfigPDB2PQR extends Component{
           <div>
             <Row>
               <Checkbox name={element['name']} value={element['value']}> {element['label']} </Checkbox>
-              {/* {this.renderMol2UploadButton()} */}
+              {this.renderMol2UploadButton()}
             </Row>
           </div>
         );
       }
+
       else{
         optionChecklist.push(
           <div>
-            <Row><Checkbox name={element['name']} value={element['value']}> {element['label']} </Checkbox></Row>
+            <Row><Checkbox name={element['name']} value={element['value']} disabled={element['disabled']}> {element['label']} </Checkbox></Row>
           </div>
         );
       }
-    });
+    }.bind(this));
 
     /** Styling to have radio buttons appear vertical */
     const radioVertStyle = {
@@ -261,7 +286,7 @@ class ConfigPDB2PQR extends Component{
           <Radio.Group name="PKACALCMETHOD" defaultValue={this.state.PKACALCMETHOD_value} onChange={this.changeFormValue} >
             <Radio style={radioVertStyle} id="pka_none" value="none">    No pKa calculation </Radio>
             <Radio style={radioVertStyle} id="pka_propka" value="propka">  Use PROPKA to assign protonation states at provided pH </Radio>
-            <Radio style={radioVertStyle} id="pka_pdb2pka" value="pdb2pka"> Use PDB2PKA to parametrize ligands and assign pKa values (requires PARSE forcefield) at provided pH </Radio>
+            <Radio style={radioVertStyle} id="pka_pdb2pka" value="pdb2pka"> Use PDB2PKA to parametrize ligands and assign pKa values <b>(requires PARSE forcefield)</b> at provided pH </Radio>
           </Radio.Group>
         </Form.Item>
 
@@ -270,14 +295,14 @@ class ConfigPDB2PQR extends Component{
           id="forcefield"
           label="Please choose a forcefield to use"
         >
-          <Radio.Group name="FF" defaultValue={this.state.FF_value} buttonStyle="solid" onChange={this.changeFormValue}>
-            <Radio.Button value="amber">  AMBER   </Radio.Button>
-            <Radio.Button value="charmm"> CHARMM  </Radio.Button>
+          <Radio.Group name="FF" value={this.state.FF_value} buttonStyle="solid" onChange={this.changeFormValue}>
+            <Radio.Button disabled={this.state.only_parse} value="amber">  AMBER   </Radio.Button>
+            <Radio.Button disabled={this.state.only_parse} value="charmm"> CHARMM  </Radio.Button>
+            <Radio.Button disabled={this.state.only_parse} value="peoepb"> PEOEPB  </Radio.Button>
             <Radio.Button value="parse">  PARSE   </Radio.Button>
-            <Radio.Button value="peoepb"> PEOEPB  </Radio.Button>
-            <Radio.Button value="swanson">SWANSON </Radio.Button>
-            <Radio.Button value="tyl06">  TYL06   </Radio.Button>
-            <Radio.Button value="user">  User-defined Forcefield </Radio.Button>
+            <Radio.Button disabled={this.state.only_parse} value="swanson">SWANSON </Radio.Button>
+            <Radio.Button disabled={this.state.only_parse} value="tyl06">  TYL06   </Radio.Button>
+            <Radio.Button disabled={this.state.only_parse} value="user">   User-defined Forcefield </Radio.Button>
           </Radio.Group><br/>
           {this.renderUserForcefieldUploadButton()}
           {/* Forcefield file: <input type="file" name="USERFF" />
