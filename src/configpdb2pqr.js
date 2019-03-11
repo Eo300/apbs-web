@@ -119,21 +119,22 @@ class ConfigPDB2PQR extends Component{
     });
   }
 
-  toggleMustUseParse(to_disable){
-    if(to_disable){
+  toggleMustUseParse(do_disable){
+    if(do_disable){
       this.setState({
-        only_parse: to_disable,
+        only_parse: do_disable,
         FF_value: "parse",
         ff_upload_hidden: true,
+        no_NC_terminus: !do_disable
       })
     }
     this.setState({
-      only_parse: to_disable,
+      only_parse: do_disable,
     })
   }
-  toggleDisableForNoParse(to_disable){
+  toggleDisableForNoParse(do_disable){
     this.setState({
-      no_NC_terminus: to_disable
+      no_NC_terminus: do_disable
     })
   }
 
