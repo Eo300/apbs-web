@@ -68,6 +68,7 @@ class ConfigPDB2PQR extends Component{
         });
         (itemValue != "parse")? this.toggleDisableForNoParse(true) : this.toggleDisableForNoParse(false);
         (itemValue == "user") ? this.toggleUserForcefieldUploadButton(true) : this.toggleUserForcefieldUploadButton(false);
+        this.uncheckTerminusOptions()
         break;
 
       case "FFOUT":
@@ -136,8 +137,24 @@ class ConfigPDB2PQR extends Component{
     this.setState({
       no_NC_terminus: do_disable
     })
+    if(do_disable == false){
+      this.uncheckTerminusOptions()
+    }
   }
 
+  uncheckTerminusOptions(){
+      let new_OPTIONS = [];
+      // this.state.OPTIONS_value.forEach()
+      for(let element of this.state.OPTIONS_value){
+        if( !["neutralnterminus", "neutralcterminus"].some(opt => {return element == opt;}) ){
+          console.log(element);
+          new_OPTIONS.push(element)
+        }
+      }
+      this.setState({
+        OPTIONS_value: new_OPTIONS
+      }) 
+  }
   // togglePdbUploadButton = (e) => {
   //   this.setState({
   //     pdb_upload_hidden: !this.state.pdb_upload_hidden
@@ -287,7 +304,9 @@ class ConfigPDB2PQR extends Component{
           <Radio.Group name="PKACALCMETHOD" defaultValue={this.state.PKACALCMETHOD_value} onChange={this.changeFormValue} >
             <Radio style={radioVertStyle} id="pka_none" value="none">    No pKa calculation </Radio>
             <Radio style={radioVertStyle} id="pka_propka" value="propka">  Use PROPKA to assign protonation states at provided pH </Radio>
-            <Radio style={radioVertStyle} id="pka_pdb2pka" value="pdb2pka"> Use PDB2PKA to parametrize ligands and assign pKa values <b>(requires PARSE forcefield)</b> at provided pH </Radio>
+            <Tooltip placement="right" title="requires PARSE forcefield">
+              <Radio style={radioVertStyle} id="pka_pdb2pka" value="pdb2pka"> Use PDB2PKA to parametrize ligands and assign pKa values <b>(requires PARSE forcefield)</b> at provided pH </Radio>
+            </Tooltip>
           </Radio.Group>
         </Form.Item>
 
@@ -331,7 +350,7 @@ class ConfigPDB2PQR extends Component{
           id="addedoptions"
           label="Additional Options"
         >
-          <Checkbox.Group name="OPTIONS" defaultValue={this.state.OPTIONS_value} onChange={(e) => this.changeFormValue(e, "OPTIONS")}>
+          <Checkbox.Group name="OPTIONS" value={this.state.OPTIONS_value} onChange={(e) => this.changeFormValue(e, "OPTIONS")}>
             {optionChecklist}
           </Checkbox.Group>
         </Form.Item>
