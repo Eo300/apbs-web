@@ -88,6 +88,16 @@ class App extends Component {
       content = <AboutPage />;
     }
 
+    // DOCUMENTATION page
+    // Renders the about page
+    // Directs user to the APBS-PDB2PQR documentation
+    else if (this.state.cur_page === PAGES.documentation){
+      bcrumb = this.createServiceBreadcrumb(['Documentation'])
+      content = <embed 
+        height={600}
+        src="https://apbs-pdb2pqr.readthedocs.io/en/latest/"/>;
+    }
+
     // PDB2PQR page
     // Renders configuration elements to set up an PDB2PQR job
     else if (this.state.cur_page === PAGES.pdb2pqr){

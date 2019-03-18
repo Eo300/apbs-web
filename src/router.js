@@ -34,6 +34,11 @@ class ServerRouter extends Component{
                             <App page={PAGES.about}/>
                         )}
                     />
+                    <Route path="/documentation"
+                        render={ props => (
+                            <App page={PAGES.documentation}/>
+                        )}
+                    />
                     <Route path="/pdb2pqr"
                         render={ props => (
                             <App page={PAGES.pdb2pqr}/>
