@@ -94,7 +94,7 @@ class App extends Component {
     else if (this.state.cur_page === PAGES.documentation){
       bcrumb = this.createServiceBreadcrumb(['Documentation'])
       content = <embed 
-        height={600}
+        style={{height: '70vh'}}
         src="https://apbs-pdb2pqr.readthedocs.io/en/latest/"/>;
     }
 
