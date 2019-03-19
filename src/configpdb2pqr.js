@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import 'antd/dist/antd.css'
 import  { Affix, Layout, Menu, Button, Form, Switch,
           Input, Radio, Checkbox , Row, Col, InputNumber,
-          Icon, Tooltip, Upload,
+          Icon, Tooltip, Upload, Spin
         } from 'antd';
 const { Content, Sider } = Layout;
 
@@ -25,8 +25,9 @@ class ConfigPDB2PQR extends Component{
       PKACALCMETHOD_value:  "propka",
       FF_value:             "parse",
       FFOUT_value:          "internal",
-      OPTIONS_value:        [ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin' ]
+      OPTIONS_value:        [ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin' ],
 
+      job_submit: false
     }
     // this.handleJobSubmit = this.handleJobSubmit.bind(this);
     this.changeFormValue = this.changeFormValue.bind(this)
@@ -218,6 +219,17 @@ class ConfigPDB2PQR extends Component{
     )
   }
 
+  /** Submission button rendered by default. If submission button's pressed,
+   *  button text changes with spinning icon to indicate data has been sent
+   */
+  renderSubmitButton(){
+    if (!this.state.job_submit)
+      return <Button type="primary" htmlType="submit"> Start Job </Button>
+    else
+      return <div><Button type="primary" htmlType="submit"> Submitting job... </Button>  <Spin hidden={!this.state.job_submit}/></div>
+    
+  }
+
   /** Creates and returns the PDB2PQR configuration form. */
   renderConfigForm(){
     /** Builds checkbox options for the Additional Options header */
@@ -357,7 +369,7 @@ class ConfigPDB2PQR extends Component{
         
         {/** Where the submission button lies */}
         <Form.Item>
-          <Button type="primary" htmlType="submit">Start Job</Button>
+          {this.renderSubmitButton()}
         </Form.Item>
 
       </Form>
