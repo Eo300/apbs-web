@@ -2,10 +2,10 @@
 FROM node:10 as react-build
 WORKDIR /app
 COPY . ./
-RUN yarn install
-RUN yarn build
-# RUN npm install
-# RUN npm run build
+# RUN yarn install
+# RUN yarn build
+RUN npm install
+RUN npm run build
 
 # stage: 2 — the production environment
 FROM nginx:alpine

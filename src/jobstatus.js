@@ -20,7 +20,7 @@ class JobStatus extends Component{
   constructor(props){
     super(props);
     /** RENAME TO REAL DOMAIN BEFORE PRODUCTION */
-    this.jobServerDomain = "http://localhost:5000"
+    this.jobServerDomain = "http://localhost:7000"
     /********************************************/
     this.fetchIntervalPDB2PQR = null;
     this.fetchIntervalAPBS = null;
