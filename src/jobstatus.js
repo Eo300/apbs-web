@@ -121,7 +121,8 @@ class JobStatus extends Component{
     let interval = setInterval(function(){
       // console.log(self.props.jobid)
       // console.log("Fetched")
-      fetch(self.jobServerDomain+'/api/jobstatus?jobid='+self.props.jobid +'&'+jobtype+'=true')
+      // fetch(self.jobServerDomain+'/api/jobstatus?jobid='+self.props.jobid +'&'+jobtype+'=true')
+      fetch(window._env_.API_URL+'/api/jobstatus?jobid='+self.props.jobid +'&'+jobtype+'=true')
         .then(response => response.json())
         .then(data => {
 

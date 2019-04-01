@@ -281,7 +281,8 @@ class ConfigPDB2PQR extends Component{
     };
 
     return(
-      <Form action="http://localhost:7000/jobstatus?submitType=pdb2pqr" method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data">
+      <Form action={window._env_.API_URL + "/jobstatus?submitType=pdb2pqr"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data">
+      {/* <Form action={"http://localhost:7000/jobstatus?submitType=pdb2pqr"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data"> */}
       {/* <Form action="/jobstatus?submitType=pdb2pqr" method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data"> */}
       {/* <Form action="http://apbs-1328226216.us-west-2.elb.amazonaws.com/pdb2pqr.cgi" method="POST" onSubmit={this.handleJobSubmit} name="thisform"> */}
 
