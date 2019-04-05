@@ -6,7 +6,7 @@ import {
 import App from './App';
 import './App.css';
 import 'antd/dist/antd.css';
-import PAGES from './pagenames.js';
+import PAGES from './common/pagenames.js';
 
   
 class ServerRouter extends Component{

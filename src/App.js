@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
-import PAGES from './pagenames.js';
-import MyHeader from './myheader.js';
-import MyFooter from './myfooter.js';
-import HomePage from './home.js';
-import AboutPage from './about.js';
-import ConfigPDB2PQR from './configpdb2pqr.js';
-import ConfigAPBS from './configapbs.js';
-import JobStatus from './jobstatus.js';
+import PAGES from './common/pagenames.js';
+import MyHeader from './common/myheader.js';
+import MyFooter from './common/myfooter.js';
+import HomePage from './body/home.js';
+import AboutPage from './body/about.js';
+import ConfigPDB2PQR from './body/configpdb2pqr.js';
+import ConfigAPBS from './body/configapbs.js';
+import JobStatus from './body/jobstatus.js';
 import './App.css';
 import 'antd/dist/antd.css';
 
