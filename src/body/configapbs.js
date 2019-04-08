@@ -3,16 +3,53 @@ import 'antd/dist/antd.css'
 import  { Affix, Layout, Menu, Button, Form, Switch,
           Input, Radio, Checkbox , Row, Col, InputNumber,
           Icon, Tooltip, Upload,
-          Collapse
+          Collapse, Spin
         } from 'antd';
-import RadioGroup from 'antd/lib/radio/group';
+// import Radio.Group from 'antd/lib/radio/group';
+import ConfigForm from './utils/formutils';
+import { MgAuto, MgPara, MgManual, FeManual, MgDummy
+       } from './apbs/calculationtypes';
+
 const { Content, Sider } = Layout;
 const Panel = Collapse.Panel;
 
 /**
  * Component defining how the APBS job configuration page is rendered
  */
-class ConfigAPBS extends Component{
+class ConfigAPBS extends ConfigForm {
+
+  constructor(props){
+    super(props);
+    this.state = {
+      allCollapsed : true,
+
+      /**
+       elec_calctype: 'mg-auto',
+       calculate_energy: 'total',
+       calculate_forces: 'no',
+       output_scalar: [],
+       output_format: 'dx',
+      */
+
+      type: 'mg-auto',
+      calcenergy: 'total',
+      calcforce: 'no',
+      output_scalar: [],
+      writeformat: 'dx',
+    }
+    // this.changeFormValue = this.changeFormValue.bind(this)
+  }
+
+  /** Updates current state of form values when changed */
+  changeFormValue = (e, nameString) => {
+    let itemName  = (nameString === undefined) ? e.target.name : nameString;
+    let itemValue = (e.target !== undefined) ? e.target.value : e;
+    console.log('itemName:  ' + itemName)
+    console.log('itemValue: ' + itemValue)
+    this.setState({
+      [itemName] : itemValue
+    })
+  }
 
   /** Creates and returns the sidebar component. */
   renderSidebar(){
@@ -38,14 +75,145 @@ class ConfigAPBS extends Component{
    *    options:      array collection of form objects to display within Panel
    */
   renderCollapsePanel(panelHeader, optionObjs){
-    // for (option of optionObjs){
-
-    // }
     return(
       <Panel header={panelHeader} forceRender={true}>
         {optionObjs}
       </Panel>
     );
+  }
+
+  renderCalcChoices(){
+    let header = 'CALCULATION METHOD TO USE:';
+    let outputNameField = 'type';
+    let radioOptions = [];
+    let outputOptions = 
+      {
+        'mg-auto'   : 'mg-auto',
+        'mg-para'   : 'mg-para',
+        'mg-manual' : 'mg-manual',
+        'fe-manual' : 'fe-manual',
+        'mg-dummy'  : 'mg-dummy',
+      }
+
+      for (let optVal in outputOptions){
+        radioOptions.push(
+          <Radio.Button value={optVal}> {outputOptions[optVal]} </Radio.Button>
+        )
+      }
+      let outputGroup = 
+        <Radio.Group name={outputNameField} defaultValue={this.state.type} onChange={this.changeFormValue} buttonStyle='solid'> {radioOptions} </Radio.Group>
+      ;
+  
+      // return this.renderCollapsePanel(header, outputGroup);
+      return outputGroup;
+  }
+
+  /** Renders the majority of the configuration options depending calculation method in use.
+   * 
+   *  The variable components of configuring each form is delegated to
+   *  separate class files, with the intent to keep the form setups separated
+   */
+  renderMethodFormItems(){
+    console.log("Calculation Method Type: " + this.state.type)
+    switch(this.state.type){
+      case "mg-auto":
+        return <MgAuto/>
+
+      case "mg-para":
+        return <MgPara/>
+
+      case "mg-manual":
+        return <MgManual/>
+
+      case "fe-manual":
+        return <FeManual/>
+
+      case "mg-dummy":
+        return <MgDummy/>
+    }
+  }
+
+  renderCalcEnergy(){
+    let header = 'CALCULATION OF ELECTROSTATIC ENERGY FROM A PBE CALCULATION:';
+    let outputNameField = 'calcenergy';
+    let radioOptions = [];
+    let outputOptions = 
+      { 'no'   : 'Don\'t calculate any energies', 
+        'total': 'Calculate and return total electrostatic energy for the entire molecule',
+        'comps': 'Calculate and return total electrostatic energy for the entire molecule as well as energy components for each atom'
+      };
+
+    for (let optVal in outputOptions){
+      radioOptions.push(
+        <Radio style={this.radioVertStyle} value={optVal}> {outputOptions[optVal]} </Radio>
+      )
+    }
+    let outputGroup = 
+      <Radio.Group name={outputNameField} defaultValue={this.state.calcenergy} onChange={this.changeFormValue}> {radioOptions} </Radio.Group>
+    ;
+
+    return this.renderCollapsePanel(header, outputGroup);
+  }
+
+
+  renderCalcForces(){
+    let header = 'CALCULATION OF ELECTROSTATIC AND APOLAR FORCE OUTPUTS FROM A PBE CALCULATION:';
+    let outputNameField = 'calcforce';
+    let radioOptions = [];
+    let outputOptions = 
+      { 'no'   : 'Don\'t calculate any forces', 
+        'total': 'Calculate and return total electrostatic and apolar forces for the entire molecule',
+        'comps': 'Calculate and return total electrostatic and apolar forces for the entire molecule as well as force components for each atom'
+      };
+
+    for (let optVal in outputOptions){
+      radioOptions.push(
+        <Radio style={this.radioVertStyle} value={optVal}> {outputOptions[optVal]} </Radio>
+      )
+    }
+    let outputGroup = 
+      <Radio.Group name={outputNameField} defaultValue={this.state.calcforce} onChange={this.changeFormValue}> {radioOptions} </Radio.Group>
+    ;
+
+    return this.renderCollapsePanel(header, outputGroup);
+  }
+
+  renderOutputScalar(){
+    let header = 'OUTPUT OF SCALAR DATA CALCULATED DURING THE PB RUN:';
+    let outputNameField = 'output_scalar';
+    let checkboxOptions = [];
+    let outputOptions = 
+      { 
+        // 'dx'  : 'OpenDX', 
+        // 'avs' : 'AVS UCD',
+        // 'uhbd': 'UBHD',
+
+        'writecharge': 'Write out the biomolecular charge distribution in units of ec (multigrid only)',
+        'writepot'   : 'Write out the electrostatic potential in units of kbT/ec (multigrid and finite element)',
+        'writesmol'  : 'Write out the solvent accessibility defined by the molecular surface definition',
+        'writesspl'  : 'Write out the spline-based solvent accessibility',
+        'writevdw'   : 'Write out the van der Waals-based solvent accessibility',
+        'writeivdw'  : 'Write out the inflated van der Waals-based ion accessibility',
+        'writelap'   : 'Write out the Laplacian of the potential in units of kBT/ec/A2 (multigrid only)',
+        'writeedens' : 'Write out the "energy density" in units of kBT/ec/A2 (multigrid only)',
+        'writendens' : 'Write out the mobile ion number density for m ion species in units of M (multigrid only)',
+        'writegdens' : 'Write out the mobile charge density for m ion species in units of ec M (multigrid only)',
+        'writedielx' : 'Write out the dielectric map shifted by 1/2 grid spacing in the x-direction',
+        'writediely' : 'Write out the dielectric map shifted by 1/2 grid spacing in the y-direction',
+        'writedielz' : 'Write out the dielectric map shifted by 1/2 grid spacing in the z-direction',
+        'writekappa' : 'Write out the ion-accessibility kappa map',
+      };
+
+    for (let optVal in outputOptions){
+      checkboxOptions.push(
+        <Checkbox style={this.radioVertStyle} name={optVal} value={optVal}> {outputOptions[optVal]} </Checkbox>
+      )
+    }
+    let outputGroup = 
+      <Checkbox.Group name={outputNameField} value={this.state.output_scalar} onChange={(e) => this.changeFormValue(e, outputNameField)}> {checkboxOptions} </Checkbox.Group>
+    ;
+
+    return this.renderCollapsePanel(header, outputGroup);
   }
 
   renderOutputFormat(){
@@ -64,7 +232,7 @@ class ConfigAPBS extends Component{
       )
     }
     let outputGroup = 
-      <RadioGroup name={outputNameField}> {radioOptions} </RadioGroup>
+      <Radio.Group name={outputNameField} defaultValue={this.state.writeformat} onChange={this.changeFormValue}> {radioOptions} </Radio.Group>
     ;
 
     return this.renderCollapsePanel(header, outputGroup);
@@ -84,19 +252,39 @@ class ConfigAPBS extends Component{
     //   );
     // });
 
-    /** Styling to have radio buttons appear vertical */
-    const radioVertStyle = {
-      display:    'block',
-      height:     '25px',
-      lineHeight: '30px',
-    }
 
     return(
-      <Form action="/jobstatus?submitType=apbs" method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data">
-        {/** Choose the calculation type */}
+      <Form action="http://localhost:5000/jobstatus?submitType=apbs" method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data">
+        {/** Choose the calculation method */}
         <Form.Item label='Calculation Type'>
+          {/* <Collapse> */}
+            {this.renderCalcChoices()}
+          {/* </Collapse> */}
         </Form.Item>
 
+        {/** Choose calculation method-specific options */}
+        {this.renderMethodFormItems()}
+
+        {/** Choose whether to calculate electrostatic energy from PBE calculation */}
+        <Form.Item label='Energy Calculations'>
+          <Collapse>
+            {this.renderCalcEnergy()}
+          </Collapse>
+        </Form.Item>
+
+        {/** Choose whether to calculate electrostatic and apolar forces from PBE calculation */}
+        <Form.Item label='Force Calculations'>
+          <Collapse>
+            {this.renderCalcForces()}
+          </Collapse>
+        </Form.Item>
+
+        {/** Choose output of scalar data */}
+        <Form.Item label='Scalar data output'>
+          <Collapse>
+            {this.renderOutputScalar()}
+          </Collapse>
+        </Form.Item>
 
         {/** Choose format of the data output */}
         <Form.Item label='Output'>
@@ -107,7 +295,7 @@ class ConfigAPBS extends Component{
 
         {/** Where the submission button lies */}
         <Form.Item>
-          <Button type="primary" htmlType="submit">Start Job</Button>
+          {this.renderSubmitButton()}
         </Form.Item>
       </Form>
     )
