@@ -34,14 +34,14 @@ class ConfigAPBS extends ConfigForm {
       type: 'mg-auto',
       calcenergy: 'total',
       calcforce: 'no',
-      output_scalar: [],
+      output_scalar: ['writepot'],
       writeformat: 'dx',
     }
-    // this.changeFormValue = this.changeFormValue.bind(this)
+    // this.handleFormChange = this.handleFormChange.bind(this)
   }
 
   /** Updates current state of form values when changed */
-  changeFormValue = (e, nameString) => {
+  handleFormChange = (e, nameString) => {
     let itemName  = (nameString === undefined) ? e.target.name : nameString;
     let itemValue = (e.target !== undefined) ? e.target.value : e;
     console.log('itemName:  ' + itemName)
@@ -76,7 +76,7 @@ class ConfigAPBS extends ConfigForm {
    */
   renderCollapsePanel(panelHeader, optionObjs){
     return(
-      <Panel header={panelHeader} forceRender={true}>
+      <Panel header={panelHeader} isActive={true} forceRender={true}>
         {optionObjs}
       </Panel>
     );
@@ -101,7 +101,7 @@ class ConfigAPBS extends ConfigForm {
         )
       }
       let outputGroup = 
-        <Radio.Group name={outputNameField} defaultValue={this.state.type} onChange={this.changeFormValue} buttonStyle='solid'> {radioOptions} </Radio.Group>
+        <Radio.Group name={outputNameField} defaultValue={this.state.type} onChange={this.handleFormChange} buttonStyle='solid'> {radioOptions} </Radio.Group>
       ;
   
       // return this.renderCollapsePanel(header, outputGroup);
@@ -149,7 +149,7 @@ class ConfigAPBS extends ConfigForm {
       )
     }
     let outputGroup = 
-      <Radio.Group name={outputNameField} defaultValue={this.state.calcenergy} onChange={this.changeFormValue}> {radioOptions} </Radio.Group>
+      <Radio.Group name={outputNameField} defaultValue={this.state.calcenergy} onChange={this.handleFormChange}> {radioOptions} </Radio.Group>
     ;
 
     return this.renderCollapsePanel(header, outputGroup);
@@ -172,7 +172,7 @@ class ConfigAPBS extends ConfigForm {
       )
     }
     let outputGroup = 
-      <Radio.Group name={outputNameField} defaultValue={this.state.calcforce} onChange={this.changeFormValue}> {radioOptions} </Radio.Group>
+      <Radio.Group name={outputNameField} defaultValue={this.state.calcforce} onChange={this.handleFormChange}> {radioOptions} </Radio.Group>
     ;
 
     return this.renderCollapsePanel(header, outputGroup);
@@ -210,7 +210,7 @@ class ConfigAPBS extends ConfigForm {
       )
     }
     let outputGroup = 
-      <Checkbox.Group name={outputNameField} value={this.state.output_scalar} onChange={(e) => this.changeFormValue(e, outputNameField)}> {checkboxOptions} </Checkbox.Group>
+      <Checkbox.Group name={outputNameField} value={this.state.output_scalar} onChange={(e) => this.handleFormChange(e, outputNameField)}> {checkboxOptions} </Checkbox.Group>
     ;
 
     return this.renderCollapsePanel(header, outputGroup);
@@ -232,7 +232,7 @@ class ConfigAPBS extends ConfigForm {
       )
     }
     let outputGroup = 
-      <Radio.Group name={outputNameField} defaultValue={this.state.writeformat} onChange={this.changeFormValue}> {radioOptions} </Radio.Group>
+      <Radio.Group name={outputNameField} defaultValue={this.state.writeformat} onChange={this.handleFormChange}> {radioOptions} </Radio.Group>
     ;
 
     return this.renderCollapsePanel(header, outputGroup);
@@ -264,6 +264,9 @@ class ConfigAPBS extends ConfigForm {
 
         {/** Choose calculation method-specific options */}
         {this.renderMethodFormItems()}
+        {/* <Form.Item label='Remove water from calculations and visualizations'>
+          <Switch name='removewater' value='on'/>
+        </Form.Item> */}
 
         {/** Choose whether to calculate electrostatic energy from PBE calculation */}
         <Form.Item label='Energy Calculations'>
