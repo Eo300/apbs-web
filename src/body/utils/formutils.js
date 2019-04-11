@@ -46,7 +46,7 @@ class ConfigForm extends Component{
     if (!this.state.job_submit)
       return <Button type="primary" htmlType="submit"> Start Job </Button>
     else
-      return <div><Button type="primary" htmlType="submit"> Submitting job... </Button>  <Spin hidden={!this.state.job_submit}/></div>
+      return <div><Button type="primary" htmlType="submit" loading> Submitting job... </Button> </div>
     
   }
 
