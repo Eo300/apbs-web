@@ -197,7 +197,7 @@ class ConfigAPBS extends ConfigForm {
         'writelap'   : 'Write out the Laplacian of the potential in units of kBT/ec/A2 (multigrid only)',
         'writeedens' : 'Write out the "energy density" in units of kBT/ec/A2 (multigrid only)',
         'writendens' : 'Write out the mobile ion number density for m ion species in units of M (multigrid only)',
-        'writegdens' : 'Write out the mobile charge density for m ion species in units of ec M (multigrid only)',
+        'writegdens' : 'Write out the mobile charge density for m ion species in units of e\u209C\u1d9c M (multigrid only)',
         'writedielx' : 'Write out the dielectric map shifted by 1/2 grid spacing in the x-direction',
         'writediely' : 'Write out the dielectric map shifted by 1/2 grid spacing in the y-direction',
         'writedielz' : 'Write out the dielectric map shifted by 1/2 grid spacing in the z-direction',
