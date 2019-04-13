@@ -20,8 +20,11 @@ class JobStatus extends Component{
   constructor(props){
     super(props);
     /** RENAME TO REAL DOMAIN BEFORE PRODUCTION */
-    this.jobServerDomain = "http://localhost:7000"
+    // this.jobServerDomain = "http://localhost:7000"
+    
     /********************************************/
+    this.jobServerDomain = window._env_.API_URL
+
     this.fetchIntervalPDB2PQR = null;
     this.fetchIntervalAPBS = null;
     this.elapsedIntervalPDB2PQR = null;
@@ -121,8 +124,8 @@ class JobStatus extends Component{
     let interval = setInterval(function(){
       // console.log(self.props.jobid)
       // console.log("Fetched")
-      // fetch(self.jobServerDomain+'/api/jobstatus?jobid='+self.props.jobid +'&'+jobtype+'=true')
-      fetch(window._env_.API_URL+'/api/jobstatus?jobid='+self.props.jobid +'&'+jobtype+'=true')
+      // fetch(window._env_.API_URL+'/api/jobstatus?jobid='+self.props.jobid +'&'+jobtype+'=true')
+      fetch(self.jobServerDomain+'/api/jobstatus?jobid='+self.props.jobid +'&'+jobtype+'=true')
         .then(response => response.json())
         .then(data => {
 
@@ -149,7 +152,7 @@ class JobStatus extends Component{
             });     
           }
         })
-        .catch(error => console.log(error));
+        .catch(error => console.error(error));
 
       // if(this.state.pdb2pqr.status == "complete") this.setState( {pdb2pqrColor: this.colorCompleteStatus, statusColor: this.colorCompleteStatus} );
       // else if(this.state.pdb2pqr.status == "running") this.setState( {pdb2pqrColor: this.colorRunningStatus, statusColor: this.colorRunningStatus} );

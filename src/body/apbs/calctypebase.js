@@ -21,9 +21,9 @@ class CalctypeBase extends Component{
   /** Generic function to render numerical input field,
    *    using passed-in parameter objects
    */
-  renderNumericalField(placeholderText, fieldName){
+  renderNumericalField(placeholderText, fieldName, defaultVal=null){
     return(
-      <Input name={fieldName} placeholder={placeholderText} onChange={this.handleFormChange}/>
+      <Input name={fieldName} placeholder={placeholderText} defaultValue={defaultVal} onChange={this.handleFormChange}/>
     )
   }
 

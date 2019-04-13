@@ -41,6 +41,8 @@ class MgAuto extends CalctypeBase{
       radius1     : '',
       radius2     : '',
 
+      // Values filled in by APBS fetch request
+      // temp : this.props.autofill.temperature
 
     }
 
@@ -129,9 +131,9 @@ class MgAuto extends CalctypeBase{
     else if(this.state.fgcent == 'coord'){
       inputFields = 
         <div>
-          <Input name='fgxcent' placeholder='x-coordinate' onChange={this.handleFormChange}/>
-          <Input name='fgycent' placeholder='y-coordinate' onChange={this.handleFormChange}/>
-          <Input name='fgzcent' placeholder='z-coordinate' onChange={this.handleFormChange}/>
+          <Input name='fgxcent' placeholder='x-coordinate' defaultValue={this.state.fgxcent} onChange={this.handleFormChange}/>
+          <Input name='fgycent' placeholder='y-coordinate' defaultValue={this.state.fgycent} onChange={this.handleFormChange}/>
+          <Input name='fgzcent' placeholder='z-coordinate' defaultValue={this.state.fgzcent} onChange={this.handleFormChange}/>
         </div>
     }
 
@@ -237,6 +239,7 @@ class MgAuto extends CalctypeBase{
    *        whether the user opens it. 
    */
   render(){
+    console.log(this.props.autofill['temperature'])
     return(
       <div>
         <Form.Item label='mg-auto Configuration'>
@@ -296,7 +299,7 @@ class MgAuto extends CalctypeBase{
             </Panel>
             
             <Panel forceRender={true} header='TEMPERATURE FOR PBE CALCULATION (IN K)'>
-              <Col span={4}> {this.renderNumericalField('', 'temp')} </Col>
+              <Col span={4}> {this.renderNumericalField('in Kelvin', 'temp', )} </Col>
             </Panel>
 
           </Collapse>

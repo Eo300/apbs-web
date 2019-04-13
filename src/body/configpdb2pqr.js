@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import 'antd/dist/antd.css'
 import  { Affix, Layout, Menu, Button, Form, Switch,
           Input, Radio, Checkbox , Row, Col, InputNumber,
-          Icon, Tooltip, Upload, Spin
+          Icon, Tooltip, Upload, Spin, message
         } from 'antd';
 import ConfigForm from './utils/formutils';
 const { Content, Sider } = Layout;
@@ -163,13 +163,47 @@ class ConfigPDB2PQR extends ConfigForm{
   //   })
   // }
 
-  renderPdbUploadButton(){
-    if(this.state.pdb_upload_hidden) return;
-    else{
-      return(
-        <input type="file" name="PDB" accept=".pdb"/>
-        )
+  beforeUpload(file, fileList){
+    console.log("we in beforeUpload")
+    console.log(file)
+    console.log(file.name.endsWith('.pdb'))
+    if(!file.name.endsWith('.pfdb')){
+      message.error('You can only upload a PDB (*.pdb) file!');
     }
+    return false;
+  }
+  renderPdbSourceInput(){
+    // if(this.state.pdb_upload_hidden) return;
+    let return_element = null
+    if(this.state.PDBSOURCE_value == 'ID'){
+      return_element = 
+          <Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4}/>
+    }
+    else{
+      // <Upload name="PDB" beforeUpload='false' accept=".pdb">
+      /**
+       return_element = 
+       <Upload 
+         name="PDB"
+         accept=".pdb"
+         // action=""
+         beforeUpload={this.beforeUpload}
+       >
+         <Button>
+           <Icon type="upload"/> Select File
+         </Button>
+       </Upload>
+       */
+
+        return_element = <input className='ant-button' type="file" name="PDB" accept=".pdb"/>
+    }
+    return (
+      <Row>
+        <Col span={4}>
+          {return_element}
+        </Col>
+      </Row> 
+    );
   }
 
   renderUserForcefieldUploadButton(){
@@ -282,7 +316,7 @@ class ConfigPDB2PQR extends ConfigForm{
     };
 
     return(
-      <Form action={window._env_.API_URL + "/jobstatus?submitType=pdb2pqr"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data">
+      <Form action={window._env_.API_URL + "/jobstatus?submitType=pdb2pqr"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data">
       {/* <Form action={"http://localhost:7000/jobstatus?submitType=pdb2pqr"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data"> */}
       {/* <Form action="/jobstatus?submitType=pdb2pqr" method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data"> */}
       {/* <Form action="http://apbs-1328226216.us-west-2.elb.amazonaws.com/pdb2pqr.cgi" method="POST" onSubmit={this.handleJobSubmit} name="thisform"> */}
@@ -292,12 +326,14 @@ class ConfigPDB2PQR extends ConfigForm{
           // id="pdbid"
           label="PDB Source"
         >
-          <Radio.Group name="PDBSOURCE" defaultValue={this.state.PDBSOURCE_value} onChange={this.changeFormValue}>
-            <Radio style={radioVertStyle} value="ID"> PDB ID:&nbsp;&nbsp;
-              <Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4}/>
-            </Radio>
-            <Radio style={radioVertStyle} value="UPLOAD"> Upload a PDB file:&nbsp;&nbsp;
-              {this.renderPdbUploadButton()}
+          <Radio.Group name="PDBSOURCE" defaultValue={this.state.PDBSOURCE_value} buttonStyle='solid' onChange={this.changeFormValue}>
+            <Radio.Button  value="ID"> PDB ID
+            {/* <Radio.Button  value="ID"> PDB ID:&nbsp;&nbsp; */}
+              {/* <Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4}/> */}
+            </Radio.Button>
+            <Radio.Button  value="UPLOAD"> Upload a PDB file
+            {/* <Radio.Button  value="UPLOAD"> Upload a PDB file:&nbsp;&nbsp; */}
+              {/* {this.renderPdbSourceInput()} */}
               {/* <input type="file" name="PDB" accept=".pdb" hidden={this.state.pdb_upload_hidden}/> */}
               {/* <Row><Upload name="PDB" accept=".pdb" customRequest={dummyRequest} >
                 <Button>
@@ -305,8 +341,9 @@ class ConfigPDB2PQR extends ConfigForm{
                   </Icon> Click to upload
                 </Button>
               </Upload></Row> */}
-            </Radio>
+            </Radio.Button>
           </Radio.Group>
+          {this.renderPdbSourceInput()}
         </Form.Item>
         
         {/** Form item for pKa option*/}
@@ -372,7 +409,11 @@ class ConfigPDB2PQR extends ConfigForm{
         
         {/** Where the submission button lies */}
         <Form.Item>
-          {this.renderSubmitButton()}
+          <Col offset={18}>
+            <Affix offsetBottom={100}>
+              {this.renderSubmitButton()}
+            </Affix>
+          </Col>
         </Form.Item>
 
       </Form>

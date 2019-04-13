@@ -108,8 +108,11 @@ class App extends Component {
     // APBS page
     // Renders configuration elements to set up an APBS job
     else if (this.state.cur_page === PAGES.apbs){
+      let queryParser = require('query-string-es5');
+      let job_id = queryParser.parse(this.props.query)['jobid']
+
       bcrumb = this.createServiceBreadcrumb(['Services', 'APBS Job Configuration'])
-      content = <ConfigAPBS />;
+      content = <ConfigAPBS jobid={job_id}/>;
     }
 
     // JOB STATUS page

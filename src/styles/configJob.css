@@ -1,0 +1,16 @@
+/* @import "../../node_modules/antd/dist/antd.css"; */
+
+.config-submit{
+    background-color: #52c41a;
+    border-color: #52c41a;
+    /* box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045); */
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.3);
+
+    /* margin-bottom: 100%; */
+}
+
+.config-submit:hover,
+.config-submit:focus{
+  background-color: #73d13d;
+  border-color: #73d13d;
+}

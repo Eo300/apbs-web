@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import 'antd/dist/antd.css';
-import './home.css';
+import '../styles/home.css';
 
 import{ Layout, Col, Menu, Carousel, Row,
         Card, Icon, Button, Link } from 'antd';

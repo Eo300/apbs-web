@@ -36,8 +36,31 @@ class ConfigAPBS extends ConfigForm {
       calcforce: 'no',
       output_scalar: ['writepot'],
       writeformat: 'dx',
+
     }
     // this.handleFormChange = this.handleFormChange.bind(this)
+  }
+
+  componentDidMount(){
+    if(this.props.jobid){
+      console.log('jobid: '+ this.props.jobid)
+      let server_domain = window._env_.API_URL;
+      console.log(server_domain.concat('/api/autofill/jobs/apbs/',this.props.jobid))
+
+      // let immediateObj = setImmediate(function(){
+        fetch(server_domain.concat('/api/autofill/jobs/apbs/',this.props.jobid))
+          .then(response => response.json())
+          .then(data => {
+            this.setState({
+              autofill_data: data
+            })
+            // for(let key in data){
+            //   console.log(key.concat(':\n    ', data[key],'\n'))
+            // }
+          })
+          .catch(error => console.error(error));
+      // });
+    }
   }
 
   /** Updates current state of form values when changed */
@@ -117,7 +140,7 @@ class ConfigAPBS extends ConfigForm {
     console.log("Calculation Method Type: " + this.state.type)
     switch(this.state.type){
       case "mg-auto":
-        return <MgAuto/>
+        return <MgAuto autofill={this.state.autofill_data}/>
 
       case "mg-para":
         return <MgPara/>
@@ -298,7 +321,11 @@ class ConfigAPBS extends ConfigForm {
 
         {/** Where the submission button lies */}
         <Form.Item>
-          {this.renderSubmitButton()}
+          <Col offset={20}>
+          <Affix offsetBottom={100}>
+            {this.renderSubmitButton()}
+          </Affix>
+          </Col>
         </Form.Item>
       </Form>
     )

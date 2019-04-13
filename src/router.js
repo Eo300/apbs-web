@@ -46,7 +46,7 @@ class ServerRouter extends Component{
                     />
                     <Route path="/apbs"
                         render={ props => (
-                            <App page={PAGES.apbs}/>
+                            <App page={PAGES.apbs} query={props.location.search}/>
                         )}
                     />
                     <Route path="/jobstatus"

@@ -26,7 +26,7 @@ class MyHeader extends Component{
       <Affix offsetTop={0}>
       <Row style={{boxShadow: '2px 4px 10px #00000033' }}>
       <Header >
-        <Col offset='2'>
+        <Col offset={2}>
           <Menu
             theme="dark"
             mode="horizontal"

@@ -6,6 +6,9 @@ import  { Affix, Layout, Menu, Button, Form, Switch,
           Collapse, Spin
         } from 'antd';
 import RadioGroup from 'antd/lib/radio/group';
+import '../../styles/configJob.css';
+
+
 const { Content, Sider } = Layout;
 const Panel = Collapse.Panel;
 
@@ -18,10 +21,15 @@ class ConfigForm extends Component{
     }
 
     /** Styling to have radio buttons appear vertical */
-    this. radioVertStyle = {
+    this.radioVertStyle = {
       display:    'block',
       height:     '25px',
       lineHeight: '30px',
+    }
+
+    this.submitButtonStyle = {
+      backgroundColor: '#52c41a',
+      borderColor: '#52c41a',
     }
 
   }
@@ -44,9 +52,17 @@ class ConfigForm extends Component{
    */
   renderSubmitButton(){
     if (!this.state.job_submit)
-      return <Button type="primary" htmlType="submit"> Start Job </Button>
+      return (
+        <Button className='config-submit' type="primary" htmlType="submit" size='large' shape='round' >
+          Start Job
+        </Button>
+      )
     else
-      return <div><Button type="primary" htmlType="submit" loading> Submitting job... </Button> </div>
+      return (
+        <Button className='config-submit' type="primary" htmlType="submit" size='large' shape='round' loading>
+          Submitting job...
+        </Button>
+      )
     
   }
 
