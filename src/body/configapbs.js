@@ -31,12 +31,20 @@ class ConfigAPBS extends ConfigForm {
        output_format: 'dx',
       */
 
+      read_type: 'mol',
+
       type: 'mg-auto',
       calcenergy: 'total',
       calcforce: 'no',
       output_scalar: ['writepot'],
       writeformat: 'dx',
 
+      autofill_data: {},
+  
+      /** Hidden element holdovers from original website */
+      hiddencheck: 'local',
+      // pdb2pqrid: null,
+      mol: '1',
     }
     // this.handleFormChange = this.handleFormChange.bind(this)
   }
@@ -73,6 +81,9 @@ class ConfigAPBS extends ConfigForm {
       [itemName] : itemValue
     })
   }
+
+  /** Creates button to upload a PQR file to use as base for  */
+  renderPqrUpload(){}
 
   /** Creates and returns the sidebar component. */
   renderSidebar(){
@@ -327,6 +338,12 @@ class ConfigAPBS extends ConfigForm {
           </Affix>
           </Col>
         </Form.Item>
+
+        {/** Hidden element holdovers from original website */}
+        {/**   obscure to server-side later */}
+        <input type='hidden' name='hiddencheck' value={this.state.hiddencheck} />
+        <input type='hidden' name='pdb2pqrid' value={this.props.jobid} />
+        <input type='hidden' name='mol' value={this.state.mol} />
       </Form>
     )
   }

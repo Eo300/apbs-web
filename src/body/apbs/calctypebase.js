@@ -23,7 +23,7 @@ class CalctypeBase extends Component{
    */
   renderNumericalField(placeholderText, fieldName, defaultVal=null){
     return(
-      <Input name={fieldName} placeholder={placeholderText} defaultValue={defaultVal} onChange={this.handleFormChange}/>
+      <Input name={fieldName} placeholder={placeholderText} value={defaultVal} onChange={this.handleFormChange}/>
     )
   }
 
