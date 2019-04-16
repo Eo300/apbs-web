@@ -50,7 +50,12 @@ class MgAuto extends CalctypeBase{
   // static getDerivedStateFromProps(props, state){
   componentDidUpdate(){
     
-    if (!this.state.fields_autofilled && this.props.autofill){
+    // if (!this.state.fields_autofilled && this.props.autofill){
+    if (!this.state.fields_autofilled && ( Object.keys(this.props.autofill).length > 0 )){
+      console.log(this.state.fields_autofilled)
+      console.log(typeof this.state.fields_autofilled)
+      console.log(this.props.autofill)
+      console.log(typeof this.props.autofill)
       this.setState({
         // Values filled in by APBS fetch request
         pdie        : this.props.autofill.biomolecularDielectricConstant,
