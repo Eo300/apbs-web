@@ -101,7 +101,7 @@ class App extends Component {
     // PDB2PQR page
     // Renders configuration elements to set up an PDB2PQR job
     else if (this.state.cur_page === PAGES.pdb2pqr){
-      bcrumb = this.createServiceBreadcrumb(['Services', 'PDB2PQR Job Configuration'])
+      bcrumb = this.createServiceBreadcrumb(['Tools', 'PDB2PQR Job Configuration'])
       content = <ConfigPDB2PQR />;
     }
     
@@ -111,7 +111,7 @@ class App extends Component {
       let queryParser = require('query-string-es5');
       let job_id = queryParser.parse(this.props.query)['jobid']
 
-      bcrumb = this.createServiceBreadcrumb(['Services', 'APBS Job Configuration'])
+      bcrumb = this.createServiceBreadcrumb(['Tools', 'APBS Job Configuration'])
       content = <ConfigAPBS jobid={job_id}/>;
     }
 
@@ -121,7 +121,7 @@ class App extends Component {
       let queryParser = require('query-string-es5');
       let job_id = queryParser.parse(this.props.query)['jobid']
 
-      bcrumb = this.createServiceBreadcrumb(['Services', 'Job Status', job_id])
+      bcrumb = this.createServiceBreadcrumb(['Tools', 'Job Status', job_id])
       content = 
         <JobStatus
           jobid={job_id}
