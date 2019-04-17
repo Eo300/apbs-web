@@ -48,14 +48,20 @@ class MgPara extends CalctypeBase{
   // }
 
   // static getDerivedStateFromProps(props, state){
-  componentDidUpdate(){
-    
-    // if (!this.state.fields_autofilled && this.props.autofill){
-    if (!this.state.fields_autofilled && ( Object.keys(this.props.autofill).length > 0 )){
-      console.log(this.state.fields_autofilled)
-      console.log(typeof this.state.fields_autofilled)
-      console.log(this.props.autofill)
-      console.log(typeof this.props.autofill)
+    componentDidUpdate(){
+
+      if (!this.state.fields_autofilled && ( Object.keys(this.props.autofill).length > 0 )){
+        // console.log(this.state.fields_autofilled)
+        // console.log(typeof this.state.fields_autofilled)
+        // console.log(this.props.autofill)
+        // console.log(typeof this.props.autofill)
+        this.autofill_component()
+        console.log("Component autofilled.")
+      }
+  
+    }
+  
+    autofill_component(){
       this.setState({
         // Values filled in by APBS fetch request
         pdie        : this.props.autofill.biomolecularDielectricConstant,
@@ -64,7 +70,7 @@ class MgPara extends CalctypeBase{
         srad        : this.props.autofill.solventRadius,  
         swin        : this.props.autofill.surfaceDefSupportSize,  
         temp        : this.props.autofill.temperature,
-
+  
         dimenx      : this.props.autofill.dime[0],
         dimeny      : this.props.autofill.dime[1],
         dimenz      : this.props.autofill.dime[2],
@@ -77,9 +83,9 @@ class MgPara extends CalctypeBase{
   
         fgcentid    : this.props.autofill.fineGridCenterMoleculeID,
         cgcentid    : this.props.autofill.coarseGridCenterMoleculeID,
-
+  
         fields_autofilled : true,
-
+  
         /** Holdovers: work-around this later in rebuild */
         ofrac       : this.props.autofill.processorMeshOverlap,
         glenx       : this.props.autofill.glen[0],
@@ -89,12 +95,10 @@ class MgPara extends CalctypeBase{
         pdimey      : this.props.autofill.pdime[1],
         pdimez      : this.props.autofill.pdime[2],
         gcent : this.props.autofill.gridCenterMethod,
-
+  
       })
     }
-
-  }
-
+  
   handleFormChange = (e, nameString) => {
     let itemName  = (nameString === undefined) ? e.target.name : nameString;
     let itemValue = (e.target !== undefined) ? e.target.value : e;
