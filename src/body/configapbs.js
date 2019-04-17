@@ -359,7 +359,7 @@ class ConfigAPBS extends ConfigForm {
     // this.calc_method_component = this.renderMethodFormItems();
 
     return(
-      <Form action="http://localhost:5000/jobstatus?submitType=apbs" method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data">
+      <Form action={window._env_.API_URL + "/jobstatus?submitType=apbs"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data">
         {/** Load data from PQR file */}
         {this.renderPqrUpload()}
 
