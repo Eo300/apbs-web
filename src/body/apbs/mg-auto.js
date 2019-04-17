@@ -31,6 +31,7 @@ class MgAuto extends CalctypeBase{
       radius1     : '',
       radius2     : '',
 
+      autofill : this.props.autofill
     }
 
     this.formItemLayout = {
@@ -49,50 +50,54 @@ class MgAuto extends CalctypeBase{
 
   // static getDerivedStateFromProps(props, state){
   componentDidUpdate(){
-    
-    // if (!this.state.fields_autofilled && this.props.autofill){
+
     if (!this.state.fields_autofilled && ( Object.keys(this.props.autofill).length > 0 )){
-      console.log(this.state.fields_autofilled)
-      console.log(typeof this.state.fields_autofilled)
-      console.log(this.props.autofill)
-      console.log(typeof this.props.autofill)
-      this.setState({
-        // Values filled in by APBS fetch request
-        pdie        : this.props.autofill.biomolecularDielectricConstant,
-        sdie        : this.props.autofill.dielectricSolventConstant,
-        sdens       : this.props.autofill.surfaceConstructionResolution,
-        srad        : this.props.autofill.solventRadius,  
-        swin        : this.props.autofill.surfaceDefSupportSize,  
-        temp        : this.props.autofill.temperature,
-
-        dimenx      : this.props.autofill.dime[0],
-        dimeny      : this.props.autofill.dime[1],
-        dimenz      : this.props.autofill.dime[2],
-        fglenx      : this.props.autofill.fineGridLength[0],
-        fgleny      : this.props.autofill.fineGridLength[1],
-        fglenz      : this.props.autofill.fineGridLength[2],
-        cglenx      : this.props.autofill.coarseGridLength[0],
-        cgleny      : this.props.autofill.coarseGridLength[1],
-        cglenz      : this.props.autofill.coarseGridLength[2],
-  
-        fgcentid    : this.props.autofill.fineGridCenterMoleculeID,
-        cgcentid    : this.props.autofill.coarseGridCenterMoleculeID,
-
-        fields_autofilled : true,
-
-        /** Holdovers: work-around this later in rebuild */
-        ofrac       : this.props.autofill.processorMeshOverlap,
-        glenx       : this.props.autofill.glen[0],
-        gleny       : this.props.autofill.glen[1],
-        glenz       : this.props.autofill.glen[2],
-        pdimex      : this.props.autofill.pdime[0],
-        pdimey      : this.props.autofill.pdime[1],
-        pdimez      : this.props.autofill.pdime[2],
-        gcent : this.props.autofill.gridCenterMethod,
-
-      })
+      // console.log(this.state.fields_autofilled)
+      // console.log(typeof this.state.fields_autofilled)
+      // console.log(this.props.autofill)
+      // console.log(typeof this.props.autofill)
+      this.autofill_component()
+      console.log("Component autofilled.")
     }
 
+  }
+
+  autofill_component(){
+    this.setState({
+      // Values filled in by APBS fetch request
+      pdie        : this.props.autofill.biomolecularDielectricConstant,
+      sdie        : this.props.autofill.dielectricSolventConstant,
+      sdens       : this.props.autofill.surfaceConstructionResolution,
+      srad        : this.props.autofill.solventRadius,  
+      swin        : this.props.autofill.surfaceDefSupportSize,  
+      temp        : this.props.autofill.temperature,
+
+      dimenx      : this.props.autofill.dime[0],
+      dimeny      : this.props.autofill.dime[1],
+      dimenz      : this.props.autofill.dime[2],
+      fglenx      : this.props.autofill.fineGridLength[0],
+      fgleny      : this.props.autofill.fineGridLength[1],
+      fglenz      : this.props.autofill.fineGridLength[2],
+      cglenx      : this.props.autofill.coarseGridLength[0],
+      cgleny      : this.props.autofill.coarseGridLength[1],
+      cglenz      : this.props.autofill.coarseGridLength[2],
+
+      fgcentid    : this.props.autofill.fineGridCenterMoleculeID,
+      cgcentid    : this.props.autofill.coarseGridCenterMoleculeID,
+
+      fields_autofilled : true,
+
+      /** Holdovers: work-around this later in rebuild */
+      ofrac       : this.props.autofill.processorMeshOverlap,
+      glenx       : this.props.autofill.glen[0],
+      gleny       : this.props.autofill.glen[1],
+      glenz       : this.props.autofill.glen[2],
+      pdimex      : this.props.autofill.pdime[0],
+      pdimey      : this.props.autofill.pdime[1],
+      pdimez      : this.props.autofill.pdime[2],
+      gcent : this.props.autofill.gridCenterMethod,
+
+    })
   }
 
   handleFormChange = (e, nameString) => {

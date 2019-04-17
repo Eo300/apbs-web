@@ -325,6 +325,7 @@ class ConfigPDB2PQR extends ConfigForm{
         <Form.Item
           // id="pdbid"
           label="PDB Source"
+          required={true}
         >
           <Radio.Group name="PDBSOURCE" defaultValue={this.state.PDBSOURCE_value} buttonStyle='solid' onChange={this.changeFormValue}>
             <Radio.Button  value="ID"> PDB ID

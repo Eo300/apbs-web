@@ -3,7 +3,7 @@ import 'antd/dist/antd.css'
 import  { Affix, Layout, Menu, Button, Form, Switch,
           Input, Radio, Checkbox , Row, Col, InputNumber,
           Icon, Tooltip, Upload,
-          Collapse, Spin
+          Collapse, Spin, message
         } from 'antd';
 // import Radio.Group from 'antd/lib/radio/group';
 import ConfigForm from './utils/formutils';
@@ -22,6 +22,10 @@ class ConfigAPBS extends ConfigForm {
     super(props);
     this.state = {
       allCollapsed : true,
+      
+      /** state variables related to PQR upload */
+      jobid: this.props.jobid,
+
 
       /**
        elec_calctype: 'mg-auto',
@@ -47,28 +51,57 @@ class ConfigAPBS extends ConfigForm {
       mol: '1',
     }
     // this.handleFormChange = this.handleFormChange.bind(this)
+    // this.handlePqrUpload = this.handlePqrUpload.bind(this);
+    // this.calc_method_component = this.renderMethodFormItems();
   }
 
   componentDidMount(){
     if(this.props.jobid){
-      console.log('jobid: '+ this.props.jobid)
-      let server_domain = window._env_.API_URL;
-      console.log(server_domain.concat('/api/autofill/jobs/apbs/',this.props.jobid))
+      this.fetchAutofillData(this.state.jobid)
+      this.setState({ to_fill: false })
 
-      // let immediateObj = setImmediate(function(){
-        fetch(server_domain.concat('/api/autofill/jobs/apbs/',this.props.jobid))
-          .then(response => response.json())
-          .then(data => {
-            this.setState({
-              autofill_data: data
-            })
-            // for(let key in data){
-            //   console.log(key.concat(':\n    ', data[key],'\n'))
-            // }
-          })
-          .catch(error => console.error(error));
+      // console.log('jobid: '+ this.props.jobid)
+      // let server_domain = window._env_.API_URL;
+      // console.log(server_domain.concat('/api/autofill/jobs/apbs/',this.props.jobid))
+
+      // // let immediateObj = setImmediate(function(){
+      //   fetch(server_domain.concat('/api/autofill/jobs/apbs/',this.props.jobid))
+      //     .then(response => response.json())
+      //     .then(data => {
+      //       this.setState({
+      //         autofill_data: data
+      //       })
+      //       // for(let key in data){
+      //       //   console.log(key.concat(':\n    ', data[key],'\n'))
+      //       // }
+      //     })
+      //     .catch(error => console.error(error));
       // });
     }
+  }
+
+  fetchAutofillData(jobid){
+    let self = this
+    let server_domain = window._env_.API_URL;
+
+    console.log('jobid: '+ jobid)
+    console.log('comp: ')
+    // console.log(self.calc_method_component)
+    // this.calc_method_component = this.renderMethodFormItems()
+    console.log(server_domain.concat('/api/autofill/jobs/apbs/',jobid))
+
+    fetch(server_domain.concat('/api/autofill/jobs/apbs/',jobid))
+      .then(response => response.json())
+      .then(data => {
+        self.setState({
+          autofill_data: data
+        })
+        // for(let key in data){
+        //   console.log(key.concat(':\n    ', data[key],'\n'))
+        // }
+        console.log(data)
+      })
+      .catch(error => console.error(error));
   }
 
   /** Updates current state of form values when changed */
@@ -83,7 +116,44 @@ class ConfigAPBS extends ConfigForm {
   }
 
   /** Creates button to upload a PQR file to use as base for  */
-  renderPqrUpload(){}
+  renderPqrUpload(){
+
+    return(
+      <Form.Item label="Autofill with PQR file">
+        <Upload
+          name='file'
+          accept='.pqr'
+          action={window._env_.API_URL+'/api/upload/autofill/pqr'}
+          // action={'http://jsonplaceholder.typicode.com/posts/'}
+          onChange={ (e) => this.handlePqrUpload(e, this)}
+        >
+          <Button>
+            <Icon type='upload'/> Click to Upload PQR File
+          </Button>
+        </Upload>
+      </Form.Item>
+    )
+  }
+  handlePqrUpload(info, self){
+    if (info.file.status !== 'uploading') {
+      console.log('uploading')
+      // console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`);
+      console.log(`${info.file.name} file uploaded successfully`)
+      console.log(info)
+      console.log('jobid (pre-upload):  '+self.state.jobid)
+      self.setState({
+        jobid: info.file.response['job_id']
+      })
+      console.log('jobid (post-upload): '+self.state.jobid)
+      self.fetchAutofillData(this.state.jobid);
+      this.setState({ to_fill: false })
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  }
 
   /** Creates and returns the sidebar component. */
   renderSidebar(){
@@ -151,19 +221,19 @@ class ConfigAPBS extends ConfigForm {
     console.log("Calculation Method Type: " + this.state.type)
     switch(this.state.type){
       case "mg-auto":
-        return <MgAuto autofill={this.state.autofill_data}/>
+        return <MgAuto   autofill={this.state.autofill_data} />
 
       case "mg-para":
-        return <MgPara/>
+        return <MgPara   autofill={this.state.autofill_data} />
 
       case "mg-manual":
-        return <MgManual/>
+        return <MgManual autofill={this.state.autofill_data} />
 
       case "fe-manual":
-        return <FeManual/>
+        return <FeManual autofill={this.state.autofill_data} />
 
       case "mg-dummy":
-        return <MgDummy/>
+        return <MgDummy  autofill={this.state.autofill_data} />
     }
   }
 
@@ -286,9 +356,13 @@ class ConfigAPBS extends ConfigForm {
     //   );
     // });
 
+    // this.calc_method_component = this.renderMethodFormItems();
 
     return(
-      <Form action="http://localhost:5000/jobstatus?submitType=apbs" method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data">
+      <Form action="http://localhost:5000/jobstatus?submitType=apbs" method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data">
+        {/** Load data from PQR file */}
+        {this.renderPqrUpload()}
+
         {/** Choose the calculation method */}
         <Form.Item label='Calculation Type'>
           {/* <Collapse> */}
@@ -297,6 +371,7 @@ class ConfigAPBS extends ConfigForm {
         </Form.Item>
 
         {/** Choose calculation method-specific options */}
+        {/* {this.calc_method_component} */}
         {this.renderMethodFormItems()}
         {/* <Form.Item label='Remove water from calculations and visualizations'>
           <Switch name='removewater' value='on'/>
@@ -342,7 +417,7 @@ class ConfigAPBS extends ConfigForm {
         {/** Hidden element holdovers from original website */}
         {/**   obscure to server-side later */}
         <input type='hidden' name='hiddencheck' value={this.state.hiddencheck} />
-        <input type='hidden' name='pdb2pqrid' value={this.props.jobid} />
+        <input type='hidden' name='pdb2pqrid' value={this.state.jobid} />
         <input type='hidden' name='mol' value={this.state.mol} />
       </Form>
     )
