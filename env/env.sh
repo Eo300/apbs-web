@@ -1,11 +1,18 @@
 #!/bin/bash
 
 # Recreate config file
-rm -rf ./env-config.js
-touch ./env-config.js
+rm -rf ./env-config*.js
+# touch ./env-config.js
+
+# Create unique environment file name
+current_time=$(date "+%s%N")
+env_config_filename=/env-config_$(echo $current_time).js
+env_config_filename=./env-config.js
+touch $env_config_filename
 
 # Add assignment 
-echo "window._env_ = {" >> ./env-config.js
+echo "window._env_ = {" >> $env_config_filename
+# echo "window._env_ = {" >> ./env-config.js
 
 # Read each line in .env file
 # Each line represents key=value pairs
@@ -23,7 +30,11 @@ do
   [[ -z $value ]] && value=${varvalue}
   
   # Append configuration property to JS file
-  echo "  $varname: \"$value\"," >> ./env-config.js
+  echo "  $varname: \"$value\"," >> $env_config_filename
+  # echo "  $varname: \"$value\"," >> ./env-config.js
 done < ./.env
+# echo $env_config_filename
+# sed -i 's/env-config.js/'$env_config_filename'/g' ../public/index.html
 
-echo "}" >> ./env-config.js
+echo "}" >> $env_config_filename
+# echo "}" >> ./env-config.js

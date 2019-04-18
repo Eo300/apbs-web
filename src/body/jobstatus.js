@@ -275,8 +275,8 @@ class JobStatus extends Component{
             bordered
             dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
             renderItem={ item => (
-                <List.Item actions={[<a href={item}><Button type="primary" icon="download">Download</Button></a>]}>
-                  {item}
+                <List.Item actions={[<a href={window._env_.API_URL+'/download/'+item}><Button type="primary" icon="download">Download</Button></a>]}>
+                  {window._env_.API_URL+'/download/'+item}
                 </List.Item>
               )}
           />
