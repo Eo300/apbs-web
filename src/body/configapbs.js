@@ -127,8 +127,8 @@ class ConfigAPBS extends ConfigForm {
           // action={'http://jsonplaceholder.typicode.com/posts/'}
           onChange={ (e) => this.handlePqrUpload(e, this)}
         >
-          <Button>
-            <Icon type='upload'/> Click to Upload PQR File
+          <Button icon="upload">
+            Click to Upload PQR File
           </Button>
         </Upload>
       </Form.Item>

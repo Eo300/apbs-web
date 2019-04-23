@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import 'antd/dist/antd.css'
 import  { Affix, Layout, Menu, Button, Form, Switch,
           Input, Radio, Checkbox , Row, Col, InputNumber,
-          Icon, Tooltip, Upload, List,
+          Icon, Tooltip, Upload, List, message,
         } from 'antd';
+import { stat } from 'fs';
 const { Content, Sider } = Layout;
 
 // function getStatusJSON(jobid){
@@ -15,6 +16,11 @@ const { Content, Sider } = Layout;
 //   json_text = fetch('http://localhost:5000/api/jobstatus?jobid='+jobid).body;
 //   return json_text;
 // }
+
+// message.config({
+//   maxCount: 2,
+//   // duration: .5
+// })
 
 class JobStatus extends Component{
   constructor(props){
@@ -38,6 +44,10 @@ class JobStatus extends Component{
       totalElapsedTime: 0,
       pdb2pqrElapsedTime: this.elapsedIntervalPDB2PQR,
       apbsElapsedTime: 0,
+      elapsedTime: {
+        apbs: this.elapsedIntervalAPBS,
+        pdb2pqr: this.elapsedIntervalPDB2PQR,
+      },
       // full_request: getStatusJSON(this.props.jobid),
       // job_status_response: null
       // job_status_response: "hello world",
@@ -237,10 +247,22 @@ class JobStatus extends Component{
 
       if(jobtype == 'pdb2pqr'){
         self.setState({pdb2pqrElapsedTime: elapsedHours+':'+elapsedMin+':'+elapsedSec});
+        self.setState({
+          elapsedTime: {
+            apbs: self.state.elapsedTime.apbs,
+            pdb2pqr: elapsedHours+':'+elapsedMin+':'+elapsedSec
+          } 
+        });
         if(statuses.includes(self.state.pdb2pqr.status)) clearInterval(interval);
       }
       else if(jobtype == 'apbs'){
         self.setState({apbsElapsedTime: elapsedHours+':'+elapsedMin+':'+elapsedSec});
+        self.setState({
+          elapsedTime: {
+            apbs: elapsedHours+':'+elapsedMin+':'+elapsedSec,
+            pdb2pqr: self.state.elapsedTime.pdb2pqr,
+          } 
+        });
         if(statuses.includes(self.state.apbs.status)) clearInterval(interval);
       }
       // self.setState({totalElapsedTime: elapsedHours+':'+elapsedMin+':'+elapsedSec});
@@ -253,39 +275,54 @@ class JobStatus extends Component{
   }
 
   createOutputList(jobtype){
-    let status = (jobtype === "pdb2pqr") ? this.state.pdb2pqr.status : this.state.apbs.status;
-    if(status !== null){
-      return(
-        <div>
-          {/* <Row>
-            <h1>Status</h1>
-            <h2 style={{color: this.statusColor}}> {
-              (jobtype === "pdb2pqr") ? this.state.pdb2pqr.status.charAt(0).toUpperCase() + this.state.pdb2pqr.status.substr(1) // Uppercase first letter
-                                      : this.state.apbs.status.charAt(0).toUpperCase() + this.state.apbs.status.substr(1)       // Uppercase first letter
-            }</h2>
-            Start time: {this.state.pdb2pqr.startTime}<br/>
-            End time: {this.state.pdb2pqr.endTime}<br/>
-            Elapsed time (PDB2PQR): {this.state.pdb2pqrElapsedTime}  
-            this.computeElapsedTime('pdb2pqr')
-          </Row> */}
+    // let status = (jobtype === "pdb2pqr") ? this.state.pdb2pqr.status : this.state.apbs.status;
+    let completion_status = this.state[jobtype].status;
+    let outputList = null;
+    
+    // console.log(new Date(this.state[jobtype].startTime*1000))
+    
+    let displayed_job_state = '';
+    let running_icon = null;
+    if(completion_status !== null){
+      displayed_job_state = completion_status.charAt(0).toUpperCase() + completion_status.substr(1)
+      if(completion_status == 'running')
+        running_icon = <Icon type='loading'/>
+      // else if(completion_status == 'complete')
+      //   message.success(jobtype.toUpperCase()+' job completed')
+    }
 
-          <h3 style={{ margin: '10px 0' }}>{jobtype.toUpperCase()}:</h3>
-          <List
-            size="small"
-            bordered
-            dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
-            renderItem={ item => (
-                <List.Item actions={[<a href={window._env_.API_URL+'/download/'+item}><Button type="primary" icon="download">Download</Button></a>]}>
-                  {window._env_.API_URL+'/download/'+item}
-                </List.Item>
-              )}
-          />
-        </div>
-      )
-    }
-    else{
-      return null;
-    }
+    outputList =  <div>
+                    <h2 style={{ margin: '10px 0' }}>{jobtype.toUpperCase()}:</h2>
+
+                    <Row>
+                      <h3 style={{color: this.statusColor}}>
+                        {displayed_job_state} &nbsp;&nbsp; {running_icon}
+                      </h3>
+                      Start time: {this.state[jobtype].startTime}<br/>
+                      End time: {this.state[jobtype].endTime}<br/>
+                      {/* Elapsed time ({jobtype.toUpperCase()}): {this.state.pdb2pqrElapsedTime} */}
+                      <h3>{this.state.elapsedTime[jobtype]}</h3>
+                      {/* Elapsed time ({jobtype.toUpperCase()}): <strong>{this.state.elapsedTime[jobtype]}</strong> */}
+                    </Row>
+
+                    <List
+                      size="small"
+                      bordered
+                      dataSource={this.state[jobtype].files}
+                      // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
+                      renderItem={ item => (
+                          <List.Item actions={[<a href={window._env_.API_URL+'/download/'+item}><Button type="primary" icon="download">Download</Button></a>]}>
+                            {/* {window._env_.API_URL+'/download/'+item} */}
+                            {item.split('/')[1]}
+                          </List.Item>
+                        )}
+                    />
+                  </div>
+    return (
+      <Col span={12}>
+        {outputList}
+      </Col>
+    );
   }
 
   createJobStatus(){
@@ -303,8 +340,9 @@ class JobStatus extends Component{
       return(
         <Layout style={{background: '#ffffff'}}>
           <Row>
-            <h1>Status</h1>
-            <h2 style={{color: this.statusColor}}> {
+            <h1>ID: {this.props.jobid}</h1>
+            {/* <h1>Status</h1> */}
+            {/* <h2 style={{color: this.statusColor}}> {
               displayed_status
               // (this.state.pdb2pqr.status !== null && this.state.pdb2pqr.status != 'complete') 
               //     ? this.state.pdb2pqr.status.charAt(0).toUpperCase() + this.state.pdb2pqr.status.substr(1) // Uppercase first letter
@@ -312,13 +350,16 @@ class JobStatus extends Component{
             }</h2>
             Start time: {this.state.pdb2pqr.startTime}<br/>
             End time: {this.state.pdb2pqr.endTime}<br/>
-            Elapsed time (PDB2PQR): {this.state.pdb2pqrElapsedTime}  {/*this.computeElapsedTime('pdb2pqr')*/}
+            Elapsed time (PDB2PQR): {this.state.pdb2pqrElapsedTime}  */}
           </Row>
           <hr/>
           {/* Job ID from query string: {this.props.jobid}<br/>
           JSON Response (PDB2PQR): {this.state.pdb2pqr.files} */}
-          {this.createOutputList('pdb2pqr')}
-          {this.createOutputList('apbs')}
+
+          <Row gutter={24}>
+            {this.createOutputList('pdb2pqr')}
+            {this.createOutputList('apbs')}
+          </Row>
           {null}
         </Layout>
       )

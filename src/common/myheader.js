@@ -4,8 +4,10 @@ import PAGES from './pagenames.js';
 
 import { Link } from 'react-router-dom';
 
-import { Layout, Col, Row, Menu, Icon, Affix } from 'antd';
+import { Layout, Col, Row, Menu, Icon, Affix, Input } from 'antd';
+
 const { Header } = Layout;
+const Search = Input.Search;
 
 /**
  * This is the navbar component. Serves as header for every page
@@ -33,6 +35,15 @@ class MyHeader extends Component{
             defaultSelectedKeys={[this.props.activeItem]}
             style={{ lineHeight: '64px' }}
           >
+            {/* <Menu.Item>
+              <Col  width={4}>
+                <Search
+                  placeholder='Search Job ID'
+                  style={{width: 200}}
+                />
+              </Col>
+            </Menu.Item> */}
+            
             <Menu.Item onClick={() => this.props.onClick(PAGES.home)} key={PAGES.home}> <Link to="/">Home</Link> </Menu.Item>
             {/* <Menu.Item onClick={() => this.props.onClick("navbar_pdb2pqr")} key="navbar_pdb2pqr"> <Link to="/pdb2pqr">PDB2PQR</Link> </Menu.Item>
             <Menu.Item onClick={() => this.props.onClick("navbar_apbs")} key="navbar_apbs"> <Link to="/apbs">APBS</Link> </Menu.Item> */}
@@ -42,7 +53,7 @@ class MyHeader extends Component{
               <Menu.Item onClick={() => this.props.onClick(PAGES.pdb2pqr)} key={PAGES.pdb2pqr}> <Link to="/pdb2pqr">PDB2PQR</Link> </Menu.Item>
               <Menu.Item onClick={() => this.props.onClick(PAGES.apbs)} key={PAGES.apbs}> <Link to="/apbs">APBS</Link> </Menu.Item>
             </Menu.SubMenu>
-            
+
           </Menu>
         </Col>
       </Header>

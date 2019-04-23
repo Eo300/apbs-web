@@ -15,7 +15,7 @@ class AboutPage extends Component{
                     This server enables a user to convert PDB files into PQR files. PQR files are PDB files where the occupancy and B-factor columns have been replaced by per-atom charge and radius.
                     pKa calculations are performed by PROPKA.
 
-                    <h3>The PDB2PQR application and web server was written by:</h3>
+                    <h3>The original PDB2PQR application and web server was written by:</h3>
                     <ul>
                         <li>Jens Erik Nielsen</li>
                         <li>Todd Dolinsky</li>
