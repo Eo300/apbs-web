@@ -295,14 +295,16 @@ class JobStatus extends Component{
                     <h2 style={{ margin: '10px 0' }}>{jobtype.toUpperCase()}:</h2>
 
                     <Row>
-                      <h3 style={{color: this.statusColor}}>
-                        {displayed_job_state} &nbsp;&nbsp; {running_icon}
-                      </h3>
-                      Start time: {this.state[jobtype].startTime}<br/>
-                      End time: {this.state[jobtype].endTime}<br/>
-                      {/* Elapsed time ({jobtype.toUpperCase()}): {this.state.pdb2pqrElapsedTime} */}
-                      <h3>{this.state.elapsedTime[jobtype]}</h3>
-                      {/* Elapsed time ({jobtype.toUpperCase()}): <strong>{this.state.elapsedTime[jobtype]}</strong> */}
+                      <Col span={12}>
+                        <h3 style={{color: this.statusColor}}>
+                          {displayed_job_state} &nbsp;&nbsp; {running_icon}
+                        </h3>
+                        Start time: {this.state[jobtype].startTime}<br/>
+                        End time: {this.state[jobtype].endTime}<br/>
+                        {/* Elapsed time ({jobtype.toUpperCase()}): {this.state.pdb2pqrElapsedTime} */}
+                        <h3>{this.state.elapsedTime[jobtype]}</h3>
+                        {/* Elapsed time ({jobtype.toUpperCase()}): <strong>{this.state.elapsedTime[jobtype]}</strong> */}
+                      </Col>
                     </Row>
 
                     <List
@@ -360,7 +362,6 @@ class JobStatus extends Component{
             {this.createOutputList('pdb2pqr')}
             {this.createOutputList('apbs')}
           </Row>
-          {null}
         </Layout>
       )
     }
