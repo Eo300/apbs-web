@@ -31,31 +31,16 @@ class MgManual extends CalctypeBase{
       radius1     : '',
       radius2     : '',
 
-      autofill : this.props.autofill
     }
 
     this.formItemLayout = {
      labelCol: { span: 7 },
      wrapperCol: { span: 12 },
    };
-
-  //  this.insertKeyId = this.insertKeyId.bind(this);
   }
 
-  // componentDidUpdate(){
-  //   if(this.props.autofill != null){
-  //     // this.setState
-  //   }
-  // }
-
-  // static getDerivedStateFromProps(props, state){
   componentDidUpdate(){
-
-    if (!this.state.fields_autofilled && ( Object.keys(this.props.autofill).length > 0 )){
-      // console.log(this.state.fields_autofilled)
-      // console.log(typeof this.state.fields_autofilled)
-      // console.log(this.props.autofill)
-      // console.log(typeof this.props.autofill)
+    if (this.state.response_id !== this.props.autofill.response_id){
       this.autofill_component()
       console.log("Component autofilled.")
     }
@@ -85,7 +70,9 @@ class MgManual extends CalctypeBase{
       fgcentid    : this.props.autofill.fineGridCenterMoleculeID,
       cgcentid    : this.props.autofill.coarseGridCenterMoleculeID,
 
+      // Miscellaneous values for flagging
       fields_autofilled : true,
+      response_id: this.props.autofill.response_id,
 
       /** Holdovers: work-around this later in rebuild */
       ofrac       : this.props.autofill.processorMeshOverlap,

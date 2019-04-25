@@ -27,7 +27,6 @@ class ConfigAPBS extends ConfigForm {
       /** state variables related to PQR upload */
       jobid: this.props.jobid,
 
-
       /**
        elec_calctype: 'mg-auto',
        calculate_energy: 'total',
@@ -59,25 +58,6 @@ class ConfigAPBS extends ConfigForm {
   componentDidMount(){
     if(this.props.jobid){
       this.fetchAutofillData(this.state.jobid)
-      this.setState({ to_fill: false })
-
-      // console.log('jobid: '+ this.props.jobid)
-      // let server_domain = window._env_.API_URL;
-      // console.log(server_domain.concat('/api/autofill/jobs/apbs/',this.props.jobid))
-
-      // // let immediateObj = setImmediate(function(){
-      //   fetch(server_domain.concat('/api/autofill/jobs/apbs/',this.props.jobid))
-      //     .then(response => response.json())
-      //     .then(data => {
-      //       this.setState({
-      //         autofill_data: data
-      //       })
-      //       // for(let key in data){
-      //       //   console.log(key.concat(':\n    ', data[key],'\n'))
-      //       // }
-      //     })
-      //     .catch(error => console.error(error));
-      // });
     }
   }
 
@@ -94,8 +74,9 @@ class ConfigAPBS extends ConfigForm {
     fetch(server_domain.concat('/api/autofill/jobs/apbs/',jobid))
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         self.setState({
-          autofill_data: data
+          autofill_data: data,
         })
         // for(let key in data){
         //   console.log(key.concat(':\n    ', data[key],'\n'))
@@ -150,7 +131,6 @@ class ConfigAPBS extends ConfigForm {
       })
       console.log('jobid (post-upload): '+self.state.jobid)
       self.fetchAutofillData(this.state.jobid);
-      this.setState({ to_fill: false })
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name} file upload failed.`);
     }
@@ -348,17 +328,6 @@ class ConfigAPBS extends ConfigForm {
    */
   renderConfigForm(){
 
-    // let optionChecklist = []
-    // additionalOptions.forEach(function(element){
-    //   optionChecklist.push(
-    //     <div>
-    //       <Row><Checkbox name={element['name']} value={element['value']}> {element['label']} </Checkbox></Row>
-    //     </div>
-    //   );
-    // });
-
-    // this.calc_method_component = this.renderMethodFormItems();
-
     return(
       <Form action={window._env_.API_URL + "/submit/apbs"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data">
       {/* <Form action={window._env_.API_URL + "/jobstatus?submitType=apbs"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data"> */}
@@ -373,7 +342,6 @@ class ConfigAPBS extends ConfigForm {
         </Form.Item>
 
         {/** Choose calculation method-specific options */}
-        {/* {this.calc_method_component} */}
         {this.renderMethodFormItems()}
         {/* <Form.Item label='Remove water from calculations and visualizations'>
           <Switch name='removewater' value='on'/>
@@ -462,9 +430,6 @@ class ConfigAPBS extends ConfigForm {
                 {/** Choose calculation method-specific options */}
                 {/* {this.calc_method_component} */}
                 {this.renderMethodFormItems()}
-                {/* <Form.Item label='Remove water from calculations and visualizations'>
-                  <Switch name='removewater' value='on'/>
-                </Form.Item> */}
 
               </TabPane>
 
@@ -473,6 +438,14 @@ class ConfigAPBS extends ConfigForm {
                 forceRender={true}
                 tab={<span><Icon type="setting" />Misc Options</span>}
               >
+                {/** Choose whether to remove water from the calculations */}
+                <Form.Item>
+                  <Checkbox name='removewater' value='on'>Remove water from calculations and visualizations</Checkbox>
+                </Form.Item>
+                {/* <Form.Item label='Remove water from calculations and visualizations'>
+                  <Switch name='removewater' value='on' checked={true}/>
+                </Form.Item> */}
+
                 {/** Choose whether to calculate electrostatic energy from PBE calculation */}
                 <Form.Item label='Energy Calculations'>
                   <Collapse>
