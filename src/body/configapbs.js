@@ -26,6 +26,9 @@ class ConfigAPBS extends ConfigForm {
       
       /** state variables related to PQR upload */
       jobid: this.props.jobid,
+      autofill_data: {},
+      did_fetch: false,
+      fileList: [],
 
       /**
        elec_calctype: 'mg-auto',
@@ -43,8 +46,6 @@ class ConfigAPBS extends ConfigForm {
       output_scalar: ['writepot'],
       writeformat: 'dx',
 
-      autofill_data: {},
-  
       /** Hidden element holdovers from original website */
       hiddencheck: 'local',
       // pdb2pqrid: null,
@@ -77,6 +78,7 @@ class ConfigAPBS extends ConfigForm {
         console.log(data)
         self.setState({
           autofill_data: data,
+          did_fetch: true,
         })
         // for(let key in data){
         //   console.log(key.concat(':\n    ', data[key],'\n'))
@@ -99,7 +101,6 @@ class ConfigAPBS extends ConfigForm {
 
   /** Creates button to upload a PQR file to use as base for  */
   renderPqrUpload(){
-
     return(
       <Form.Item label="Autofill with PQR file">
         <Upload
@@ -107,6 +108,8 @@ class ConfigAPBS extends ConfigForm {
           accept='.pqr'
           action={window._env_.API_URL+'/api/upload/autofill/pqr'}
           // action={'http://jsonplaceholder.typicode.com/posts/'}
+          fileList={this.state.fileList}
+          beforeUpload={(e) => this.doubleUploadConfirm(e, this)}
           onChange={ (e) => this.handlePqrUpload(e, this)}
         >
           <Button icon="upload">
@@ -116,6 +119,16 @@ class ConfigAPBS extends ConfigForm {
       </Form.Item>
     )
   }
+
+  doubleUploadConfirm(file, self){
+    if(self.state.did_fetch){
+      console.log(self.state.did_fetch)
+      return window.confirm('Uploading a new file will overwrite ALL values within form. Continue?');
+    }
+    else
+      return true;
+  }
+  
   handlePqrUpload(info, self){
     if (info.file.status !== 'uploading') {
       console.log('uploading')
@@ -124,16 +137,19 @@ class ConfigAPBS extends ConfigForm {
     if (info.file.status === 'done') {
       message.success(`${info.file.name} file uploaded successfully`);
       console.log(`${info.file.name} file uploaded successfully`)
-      console.log(info)
-      console.log('jobid (pre-upload):  '+self.state.jobid)
       self.setState({
-        jobid: info.file.response['job_id']
+        jobid: info.file.response['job_id'],
       })
-      console.log('jobid (post-upload): '+self.state.jobid)
       self.fetchAutofillData(this.state.jobid);
-    } else if (info.file.status === 'error') {
+    }
+    else if (info.file.status === 'error') {
       message.error(`${info.file.name} file upload failed.`);
     }
+
+    // fileList: info.fileList.slice(-1),
+    console.log(this.state.fileList)
+    this.setState({ fileList: info.fileList.slice(-1) })
+    console.log(this.state.fileList)
   }
 
   /** Creates and returns the sidebar component. */
