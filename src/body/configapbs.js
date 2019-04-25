@@ -3,7 +3,7 @@ import 'antd/dist/antd.css'
 import  { Affix, Layout, Menu, Button, Form, Switch,
           Input, Radio, Checkbox , Row, Col, InputNumber,
           Icon, Tooltip, Upload,
-          Collapse, Spin, message
+          Collapse, Spin, message, Tabs
         } from 'antd';
 // import Radio.Group from 'antd/lib/radio/group';
 import ConfigForm from './utils/formutils';
@@ -12,6 +12,7 @@ import { MgAuto, MgPara, MgManual, FeManual, MgDummy
 
 const { Content, Sider } = Layout;
 const Panel = Collapse.Panel;
+const TabPane = Tabs.TabPane;
 
 /**
  * Component defining how the APBS job configuration page is rendered
@@ -423,6 +424,113 @@ class ConfigAPBS extends ConfigForm {
       </Form>
     )
   }
+
+  renderConfigFormTabular(){
+    return(
+      <Form action={window._env_.API_URL + "/submit/apbs"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data">
+        <Row>
+          <Col span={22} offset={1}>
+          {/* <Col span={21} offset={1}> */}
+            <Tabs
+              defaultActiveKey='1'
+              tabPosition='top'
+              // tabPosition='left'
+              // style={{ height: 220 }}
+            >
+              <TabPane
+                key="1" 
+                forceRender={true} 
+                tab={<span><Icon type="upload" />Input</span>}
+              >
+                {/** Load data from PQR file */}
+                {this.renderPqrUpload()}
+
+                {/** Choose the calculation method */}
+                <Form.Item label='Calculation Type'>
+                  {/* <Collapse> */}
+                    {this.renderCalcChoices()}
+                  {/* </Collapse> */}
+                </Form.Item>
+              </TabPane>
+
+              <TabPane
+                key="2" 
+                forceRender={true} 
+                tab={<span><Icon type="setting" />{this.state.type + ' Options'}</span>}
+                // tab={<span><Icon type="setting" />Advanced Options</span>}
+              >
+                {/** Choose calculation method-specific options */}
+                {/* {this.calc_method_component} */}
+                {this.renderMethodFormItems()}
+                {/* <Form.Item label='Remove water from calculations and visualizations'>
+                  <Switch name='removewater' value='on'/>
+                </Form.Item> */}
+
+              </TabPane>
+
+              <TabPane
+                key="3"
+                forceRender={true}
+                tab={<span><Icon type="setting" />Misc Options</span>}
+              >
+                {/** Choose whether to calculate electrostatic energy from PBE calculation */}
+                <Form.Item label='Energy Calculations'>
+                  <Collapse>
+                    {this.renderCalcEnergy()}
+                  </Collapse>
+                </Form.Item>
+
+                {/** Choose whether to calculate electrostatic and apolar forces from PBE calculation */}
+                <Form.Item label='Force Calculations'>
+                  <Collapse>
+                    {this.renderCalcForces()}
+                  </Collapse>
+                </Form.Item>
+
+              </TabPane>
+
+              <TabPane
+                key="4" 
+                forceRender={true} 
+                tab={<span><Icon type="export" />Output Settings</span>}
+              >
+                {/** Choose output of scalar data */}
+                <Form.Item label='Scalar data output'>
+                  <Collapse>
+                    {this.renderOutputScalar()}
+                  </Collapse>
+                </Form.Item>
+
+                {/** Choose format of the data output */}
+                <Form.Item label='Output'>
+                  <Collapse>
+                    {this.renderOutputFormat()}
+                  </Collapse>
+                </Form.Item>
+              </TabPane>
+
+            </Tabs>
+          </Col>
+        </Row>
+
+
+        {/** Where the submission button lies */}
+        <Form.Item>
+          <Col offset={20}>
+          <Affix offsetBottom={100}>
+            {this.renderSubmitButton()}
+          </Affix>
+          </Col>
+        </Form.Item>
+
+        {/** Hidden element holdovers from original website */}
+        {/**   obscure to server-side later */}
+        <input type='hidden' name='hiddencheck' value={this.state.hiddencheck} />
+        <input type='hidden' name='pdb2pqrid' value={this.state.jobid} />
+        <input type='hidden' name='mol' value={this.state.mol} />
+      </Form>
+    )
+  }
       
   render(){
     return(
@@ -431,7 +539,8 @@ class ConfigAPBS extends ConfigForm {
           <Layout>
             <Content style={{ background: '#fff', padding: 16, margin: 0, minHeight: 280 }}>
               {/* Content goes here */}
-              {this.renderConfigForm()}
+              {/* {this.renderConfigForm()} */}
+              {this.renderConfigFormTabular()}
             </Content>
           </Layout>
         </Layout>    
