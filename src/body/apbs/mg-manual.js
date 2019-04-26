@@ -240,21 +240,21 @@ class MgManual extends CalctypeBase{
         </Row>
         
         <Row gutter={16} style={{marginBottom: 8}}>
-          <Col  span={6}>{this.renderNumericalField('Ion 1','charge0')}</Col>
-          <Col  span={6}>{this.renderNumericalField('Ion 1','conc0')}</Col>
-          <Col  span={6}>{this.renderNumericalField('Ion 1','radius0')}</Col>
+          <Col  span={6}>{this.renderNumericalField('Ion 1','charge0', this.state.charge0)}</Col>
+          <Col  span={6}>{this.renderNumericalField('Ion 1','conc0', this.state.conc0)}</Col>
+          <Col  span={6}>{this.renderNumericalField('Ion 1','radius0', this.state.radius0)}</Col>
         </Row>
         
         <Row gutter={16} style={{marginBottom: 8}}>
-          <Col  span={6}>{this.renderNumericalField('Ion 2','charge1')}</Col>
-          <Col  span={6}>{this.renderNumericalField('Ion 2','conc1')}</Col>
-          <Col  span={6}>{this.renderNumericalField('Ion 2','radius1')}</Col>
+          <Col  span={6}>{this.renderNumericalField('Ion 2','charge1', this.state.charge1)}</Col>
+          <Col  span={6}>{this.renderNumericalField('Ion 2','conc1', this.state.conc1)}</Col>
+          <Col  span={6}>{this.renderNumericalField('Ion 2','radius1', this.state.radius1)}</Col>
         </Row>
 
         <Row gutter={16} style={{marginBottom: 8}}>
-          <Col  span={6}>{this.renderNumericalField('Ion 3','charge2')}</Col>
-          <Col  span={6}>{this.renderNumericalField('Ion 3','conc2')}</Col>
-          <Col  span={6}>{this.renderNumericalField('Ion 3','radius2')}</Col>
+          <Col  span={6}>{this.renderNumericalField('Ion 3','charge2', this.state.charge2)}</Col>
+          <Col  span={6}>{this.renderNumericalField('Ion 3','conc2', this.state.conc2)}</Col>
+          <Col  span={6}>{this.renderNumericalField('Ion 3','radius2', this.state.radius2)}</Col>
         </Row>
       </Col>
     )
