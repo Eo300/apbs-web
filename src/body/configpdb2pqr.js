@@ -316,7 +316,8 @@ class ConfigPDB2PQR extends ConfigForm{
     };
 
     return(
-      <Form action={window._env_.API_URL + "/submit/pdb2pqr"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data">
+      <Form action={window._env_.API_URL + "/submit/pdb2pqr/json"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data">
+      {/* <Form action={window._env_.API_URL + "/submit/pdb2pqr"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data"> */}
       {/* <Form action={window._env_.API_URL + "/jobstatus?submitType=pdb2pqr"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data"> */}
       {/* <Form action={"http://localhost:7000/jobstatus?submitType=pdb2pqr"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data"> */}
       {/* <Form action="/jobstatus?submitType=pdb2pqr" method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data"> */}

@@ -37,19 +37,27 @@ class ConfigAPBS extends ConfigForm {
        output_scalar: [],
        output_format: 'dx',
       */
+      
+      parent_form_values: {
+        /** state variables related to form user input */
+        // read_type: 'mol',
+        type: 'mg-auto',
+        calcenergy: 'total',
+        calcforce: 'no',
+        output_scalar: ['writepot'],
+        writeformat: 'dx',
 
-      read_type: 'mol',
+        /** Hidden element holdovers from original website */
+        hiddencheck: 'local',
+        // pdb2pqrid: null,
+        mol: '1',
+      },
 
-      type: 'mg-auto',
-      calcenergy: 'total',
-      calcforce: 'no',
-      output_scalar: ['writepot'],
-      writeformat: 'dx',
+      removewater: 'on',
 
-      /** Hidden element holdovers from original website */
-      hiddencheck: 'local',
-      // pdb2pqrid: null,
-      mol: '1',
+      child_form_values: {},
+
+      
     }
     // this.handleFormChange = this.handleFormChange.bind(this)
     // this.handlePqrUpload = this.handlePqrUpload.bind(this);
@@ -76,6 +84,7 @@ class ConfigAPBS extends ConfigForm {
       .then(response => response.json())
       .then(data => {
         console.log(data)
+
         self.setState({
           autofill_data: data,
           did_fetch: true,
@@ -83,6 +92,7 @@ class ConfigAPBS extends ConfigForm {
         // for(let key in data){
         //   console.log(key.concat(':\n    ', data[key],'\n'))
         // }
+        
         console.log(data)
       })
       .catch(error => console.error(error));
@@ -98,6 +108,40 @@ class ConfigAPBS extends ConfigForm {
       [itemName] : itemValue
     })
   }
+
+  handleParentFormChange = (e, nameString) => {
+    let name = (nameString === undefined) ? e.target.name : nameString;
+    let value = (e.target !== undefined) ? e.target.value : e;
+    let parent_form_values = this.state.parent_form_values;
+
+    parent_form_values[name] = value
+    // console.log(parent_form_values)
+    this.setState({ parent_form_values })
+  }
+
+  /** Updates current form values from child components.
+   * 
+   *  If value is an object and name is null, then the calctype-
+   *  specific contents of the form_value object are overwritten.
+   *  This case will usually only occurs during initialization
+   *  of a calculation method's form component
+   */
+  handleChildFormChange = (value, name=null) => {
+    let child_form_values = null;
+    
+    if (name === null && typeof value === 'object'){
+      child_form_values = value
+    }
+    else{
+      child_form_values = this.state.child_form_values
+      child_form_values[name] = value
+    }
+    console.log('child_form_values: ')
+    console.log(child_form_values)
+    this.setState({ child_form_values })
+  }
+
+  // updateFormValues = 
 
   /** Creates button to upload a PQR file to use as base for  */
   renderPqrUpload(){
@@ -202,7 +246,8 @@ class ConfigAPBS extends ConfigForm {
         )
       }
       let outputGroup = 
-        <Radio.Group name={outputNameField} defaultValue={this.state.type} onChange={this.handleFormChange} buttonStyle='solid'> {radioOptions} </Radio.Group>
+      // <Radio.Group name={outputNameField} defaultValue={this.state.type} onChange={this.handleFormChange} buttonStyle='solid'> {radioOptions} </Radio.Group>
+        <Radio.Group name={outputNameField} defaultValue={this.state.parent_form_values.type} onChange={this.handleParentFormChange} buttonStyle='solid'> {radioOptions} </Radio.Group>
       ;
   
       // return this.renderCollapsePanel(header, outputGroup);
@@ -215,10 +260,13 @@ class ConfigAPBS extends ConfigForm {
    *  separate class files, with the intent to keep the form setups separated
    */
   renderMethodFormItems(){
-    console.log("Calculation Method Type: " + this.state.type)
-    switch(this.state.type){
+    console.log("Calculation Method Type: " + this.state.parent_form_values.type)
+    switch(this.state.parent_form_values.type){
       case "mg-auto":
-        return <MgAuto   autofill={this.state.autofill_data} />
+        return <MgAuto   
+                  autofill={this.state.autofill_data} 
+                  form_values={this.state.child_form_values} 
+                  onFormChange={this.handleChildFormChange} />
 
       case "mg-para":
         return <MgPara   autofill={this.state.autofill_data} />
@@ -250,7 +298,7 @@ class ConfigAPBS extends ConfigForm {
       )
     }
     let outputGroup = 
-      <Radio.Group name={outputNameField} defaultValue={this.state.calcenergy} onChange={this.handleFormChange}> {radioOptions} </Radio.Group>
+      <Radio.Group name={outputNameField} defaultValue={this.state.parent_form_values.calcenergy} onChange={this.handleParentFormChange}> {radioOptions} </Radio.Group>
     ;
 
     return this.renderCollapsePanel(header, outputGroup);
@@ -273,7 +321,7 @@ class ConfigAPBS extends ConfigForm {
       )
     }
     let outputGroup = 
-      <Radio.Group name={outputNameField} defaultValue={this.state.calcforce} onChange={this.handleFormChange}> {radioOptions} </Radio.Group>
+      <Radio.Group name={outputNameField} defaultValue={this.state.parent_form_values.calcforce} onChange={this.handleParentFormChange}> {radioOptions} </Radio.Group>
     ;
 
     return this.renderCollapsePanel(header, outputGroup);
@@ -311,7 +359,7 @@ class ConfigAPBS extends ConfigForm {
       )
     }
     let outputGroup = 
-      <Checkbox.Group name={outputNameField} value={this.state.output_scalar} onChange={(e) => this.handleFormChange(e, outputNameField)}> {checkboxOptions} </Checkbox.Group>
+      <Checkbox.Group name={outputNameField} value={this.state.parent_form_values.output_scalar} onChange={(e) => this.handleParentFormChange(e, outputNameField)}> {checkboxOptions} </Checkbox.Group>
     ;
 
     return this.renderCollapsePanel(header, outputGroup);
@@ -333,7 +381,7 @@ class ConfigAPBS extends ConfigForm {
       )
     }
     let outputGroup = 
-      <Radio.Group name={outputNameField} defaultValue={this.state.writeformat} onChange={this.handleFormChange}> {radioOptions} </Radio.Group>
+      <Radio.Group name={outputNameField} defaultValue={this.state.parent_form_values.writeformat} onChange={this.handleParentFormChange}> {radioOptions} </Radio.Group>
     ;
 
     return this.renderCollapsePanel(header, outputGroup);
@@ -440,7 +488,7 @@ class ConfigAPBS extends ConfigForm {
               <TabPane
                 key="2" 
                 forceRender={true} 
-                tab={<span><Icon type="setting" />{this.state.type + ' Options'}</span>}
+                tab={<span><Icon type="setting" />{this.state.parent_form_values.type + ' Options'}</span>}
                 // tab={<span><Icon type="setting" />Advanced Options</span>}
               >
                 {/** Choose calculation method-specific options */}
