@@ -91,7 +91,7 @@ class ConfigAPBS extends ConfigForm {
         body: JSON.stringify(payload),
         headers: {
           'x-requested-with': '',
-          // 'Content-Type': 'application/json'
+          'Content-Type': 'application/json'
         }
       })
         .then(response => response.json())
