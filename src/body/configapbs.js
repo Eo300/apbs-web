@@ -64,6 +64,47 @@ class ConfigAPBS extends ConfigForm {
     // this.calc_method_component = this.renderMethodFormItems();
   }
 
+  /** If user tries submitting job again, raise alert. */
+  handleNewJobSubmit(e, self){
+    e.preventDefault();
+    console.log('WE IN NEWJOBSUBMIT')
+    if(self.state.job_submit)
+      alert("Job is submitted. Redirecting to job status page");
+    else{
+      self.setState({
+        job_submit: true
+      })
+
+      let form_post_url = window._env_.API_URL + "/submit/apbs/json";
+      let combined_form_data = self.state.parent_form_values;
+      // console.log(self.state.parent_form_values);
+      // console.log(self.state.child_form_values);
+      Object.assign(combined_form_data, self.state.child_form_values);
+      // console.log(combined_form_data);
+      let payload = {
+        form : combined_form_data
+      }
+      console.log(payload)
+      
+      fetch(form_post_url, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+          'x-requested-with': '',
+          // 'Content-Type': 'application/json'
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          console.log('Success: ', data)
+          window.location.assign(`/jobstatus?jobid=${self.state.jobid}`)
+        })
+        .catch(error => console.error('Error: ', error))
+    }
+  }
+
+
   componentDidMount(){
     if(this.props.jobid){
       this.fetchAutofillData(this.state.jobid)
@@ -96,6 +137,7 @@ class ConfigAPBS extends ConfigForm {
         console.log(data)
       })
       .catch(error => console.error(error));
+    self.handleParentFormChange({}, 'pdb2pqrid', jobid)
   }
 
   /** Updates current state of form values when changed */
@@ -109,9 +151,10 @@ class ConfigAPBS extends ConfigForm {
     })
   }
 
-  handleParentFormChange = (e, nameString) => {
+  handleParentFormChange = (e, nameString, passedVal) => {
     let name = (nameString === undefined) ? e.target.name : nameString;
     let value = (e.target !== undefined) ? e.target.value : e;
+    if(passedVal !== undefined) value = passedVal;
     let parent_form_values = this.state.parent_form_values;
 
     parent_form_values[name] = value
@@ -391,7 +434,6 @@ class ConfigAPBS extends ConfigForm {
    * @todo Create the submission form using APBS config from http://nbcr-222.ucsd.edu/pdb2pqr_2.1.1/ as a template 
    */
   renderConfigForm(){
-
     return(
       <Form action={window._env_.API_URL + "/submit/apbs"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data">
       {/* <Form action={window._env_.API_URL + "/jobstatus?submitType=apbs"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data"> */}
@@ -458,8 +500,11 @@ class ConfigAPBS extends ConfigForm {
   }
 
   renderConfigFormTabular(){
+    // console.log(this.state.parent_form_values.mol)
     return(
-      <Form action={window._env_.API_URL + "/submit/apbs"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data">
+      <Form onSubmit={ (e) => this.handleNewJobSubmit(e, this)}>
+      {/* <Form action={window._env_.API_URL + "/submit/apbs"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data"> */}
+      {/* <Form action={window._env_.API_URL + "/submit/apbs/json"} method="POST" onSubmit={this.handleNewJobSubmit} name="thisform" encType="multipart/form-data"> */}
         <Row>
           <Col span={22} offset={1}>
           {/* <Col span={21} offset={1}> */}
@@ -562,9 +607,9 @@ class ConfigAPBS extends ConfigForm {
 
         {/** Hidden element holdovers from original website */}
         {/**   obscure to server-side later */}
-        <input type='hidden' name='hiddencheck' value={this.state.hiddencheck} />
+        <input type='hidden' name='hiddencheck' value={this.state.parent_form_values.hiddencheck} />
         <input type='hidden' name='pdb2pqrid' value={this.state.jobid} />
-        <input type='hidden' name='mol' value={this.state.mol} />
+        <input type='hidden' name='mol' value={this.state.parent_form_values.mol} />
       </Form>
     )
   }
