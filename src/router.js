@@ -6,7 +6,7 @@ import {
 import App from './App';
 import './App.css';
 import 'antd/dist/antd.css';
-import PAGES from './pagenames.js';
+import PAGES from './common/pagenames.js';
 
   
 class ServerRouter extends Component{
@@ -46,7 +46,7 @@ class ServerRouter extends Component{
                     />
                     <Route path="/apbs"
                         render={ props => (
-                            <App page={PAGES.apbs}/>
+                            <App page={PAGES.apbs} query={props.location.search}/>
                         )}
                     />
                     <Route path="/jobstatus"

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
-import PAGES from './pagenames.js';
-import MyHeader from './myheader.js';
-import MyFooter from './myfooter.js';
-import HomePage from './home.js';
-import AboutPage from './about.js';
-import ConfigPDB2PQR from './configpdb2pqr.js';
-import ConfigAPBS from './configapbs.js';
-import JobStatus from './jobstatus.js';
+import PAGES from './common/pagenames.js';
+import MyHeader from './common/myheader.js';
+import MyFooter from './common/myfooter.js';
+import HomePage from './body/home.js';
+import AboutPage from './body/about.js';
+import ConfigPDB2PQR from './body/configpdb2pqr.js';
+import ConfigAPBS from './body/configapbs.js';
+import JobStatus from './body/jobstatus.js';
 import './App.css';
 import 'antd/dist/antd.css';
 
@@ -101,15 +101,18 @@ class App extends Component {
     // PDB2PQR page
     // Renders configuration elements to set up an PDB2PQR job
     else if (this.state.cur_page === PAGES.pdb2pqr){
-      bcrumb = this.createServiceBreadcrumb(['Services', 'PDB2PQR Job Configuration'])
+      bcrumb = this.createServiceBreadcrumb(['Tools', 'PDB2PQR Job Configuration'])
       content = <ConfigPDB2PQR />;
     }
     
     // APBS page
     // Renders configuration elements to set up an APBS job
     else if (this.state.cur_page === PAGES.apbs){
-      bcrumb = this.createServiceBreadcrumb(['Services', 'APBS Job Configuration'])
-      content = <ConfigAPBS />;
+      let queryParser = require('query-string-es5');
+      let job_id = queryParser.parse(this.props.query)['jobid']
+
+      bcrumb = this.createServiceBreadcrumb(['Tools', 'APBS Job Configuration'])
+      content = <ConfigAPBS jobid={job_id}/>;
     }
 
     // JOB STATUS page
@@ -118,7 +121,7 @@ class App extends Component {
       let queryParser = require('query-string-es5');
       let job_id = queryParser.parse(this.props.query)['jobid']
 
-      bcrumb = this.createServiceBreadcrumb(['Services', 'Job Status', job_id])
+      bcrumb = this.createServiceBreadcrumb(['Tools', 'Job Status', job_id])
       content = 
         <JobStatus
           jobid={job_id}

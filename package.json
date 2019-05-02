@@ -12,6 +12,7 @@
     "react-scripts": "^2.1.5"
   },
   "scripts": {
+    "dev": "cd ./env && bash ./env.sh && cd .. && cp ./env/env-config.js ./public/ && react-scripts start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
