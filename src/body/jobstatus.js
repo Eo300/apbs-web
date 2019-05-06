@@ -217,6 +217,11 @@ class JobStatus extends Component{
       //   message.success(jobtype.toUpperCase()+' job completed')
     }
 
+    let start_time = this.state[jobtype].startTime
+    let end_time   = this.state[jobtype].endTime
+    start_time = (this.state[jobtype].startTime !== null) ? new Date(start_time*1000).toLocaleString() : null
+    end_time   = (this.state[jobtype].endTime !== null) ? new Date(end_time*1000).toLocaleString() : null
+
     outputList =  <div>
                     <h2 style={{ margin: '10px 0' }}>{jobtype.toUpperCase()}:</h2>
 
@@ -225,8 +230,10 @@ class JobStatus extends Component{
                         <h3 style={{color: this.statusColor}}>
                           {displayed_job_state} &nbsp;&nbsp; {running_icon}
                         </h3>
-                        Start time: {this.state[jobtype].startTime}<br/>
-                        End time: {this.state[jobtype].endTime}<br/>
+                        {/* Start time: {this.state[jobtype].startTime}<br/>
+                        End time: {this.state[jobtype].endTime}<br/> */}
+                        Start time: {start_time}<br/>
+                        End time: {end_time}<br/>
                         <h3>{this.state.elapsedTime[jobtype]}</h3>
                         {/* Elapsed time ({jobtype.toUpperCase()}): <strong>{this.state.elapsedTime[jobtype]}</strong> */}
                       </Col>
