@@ -21,75 +21,82 @@ class ConfigPDB2PQR extends ConfigForm{
       only_parse: false,
       no_NC_terminus: false,
 
-      PDBSOURCE_value:      "ID",
-      PH_value:             7,
-      PKACALCMETHOD_value:  "propka",
-      FF_value:             "parse",
-      FFOUT_value:          "internal",
-      OPTIONS_value:        [ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin' ],
 
+      form_values: {
+        PDBSOURCE:      "ID",
+        PH:             7,
+        PKACALCMETHOD:  "propka",
+        FF:             "parse",
+        FFOUT:          "internal",
+        OPTIONS:        [ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin' ],
+      }
       // job_submit: false
     }
     // this.handleJobSubmit = this.handleJobSubmit.bind(this);
-    this.changeFormValue = this.changeFormValue.bind(this)
+    this.handleFormChange = this.handleFormChange.bind(this)
     // this.renderConfigForm = this.renderConfigForm.bind(this)
   }
 
   /** Updates current state of form values when changed */
-  changeFormValue = (e, nameString) => {
+  handleFormChange = (e, nameString) => {
     let itemName  = (nameString === undefined) ? e.target.name : nameString;
     let itemValue = (e.target !== undefined) ? e.target.value : e;
     // let itemValue = e.target.value;
     // let itemName  = e.target.name;
 
+    // Update form values 
+    let form_values = this.state.form_values;
+    form_values[itemName] = itemValue;
+    this.setState({ form_values })
+
     console.log(itemName +": "+ itemValue);
     switch(itemName){
       case "PDBSOURCE":
-        this.setState({
-          PDBSOURCE_value: itemValue
-        });
+        // this.setState({
+        //   PDBSOURCE: itemValue
+        // });
         (itemValue == "UPLOAD") ? this.togglePdbUploadButton(true) : this.togglePdbUploadButton(false);
         break;
 
       case "PH":
-        this.setState({
-          PH_value: itemValue
-        });
+        // this.setState({
+        //   PH: itemValue
+        // });
         break;
 
       case "PKACALCMETHOD":
-        this.setState({
-          PKACALCMETHOD_value: itemValue
-        });
+        // this.setState({
+        //   PKACALCMETHOD: itemValue
+        // });
         (itemValue == "pdb2pka") ? this.toggleMustUseParse(true) : this.toggleMustUseParse(false);
         break;
 
       case "FF":
-        this.setState({
-          FF_value: itemValue
-        });
+        // this.setState({
+        //   FF: itemValue
+        // });
         (itemValue != "parse")? this.toggleDisableForNoParse(true) : this.toggleDisableForNoParse(false);
         (itemValue == "user") ? this.toggleUserForcefieldUploadButton(true) : this.toggleUserForcefieldUploadButton(false);
         this.uncheckTerminusOptions()
         break;
 
       case "FFOUT":
-        this.setState({
-          FFOUT_value: itemValue
-        });
+        // this.setState({
+        //   FFOUT: itemValue
+        // });
         break;
         
       case "OPTIONS":
-        this.setState({
-          OPTIONS_value: itemValue
-        });
+        // this.setState({
+        //   OPTIONS: itemValue
+        // });
         (itemValue.includes("assignfrommol2")) ? this.toggleMol2UploadButton(true) : this.toggleMol2UploadButton(false);
         (["neutralnterminus", "neutralcterminus"].some(opt=>itemValue.includes(opt))) ? this.toggleMustUseParse(true) : this.toggleMustUseParse(false);
         break;
     }
   }
 
-  // /** If user tries submitting job again, raise alert. */
+  /** If user tries submitting job again, raise alert. */
   // handleJobSubmit = (e) => {
   //   // e.preventDefault();
   //   if(this.state.job_submit)
@@ -101,9 +108,6 @@ class ConfigPDB2PQR extends ConfigForm{
   //   }
   // }
 
-  handlePdbSourceChoice = (e) => {
-    // if ()
-  }
   
   togglePdbUploadButton(show_upload){
     this.setState({
@@ -124,9 +128,12 @@ class ConfigPDB2PQR extends ConfigForm{
 
   toggleMustUseParse(do_disable){
     if(do_disable){
+      let form_values = this.state.form_values
+      form_values["FF"] = "parse";
       this.setState({
+        form_values,
         only_parse: do_disable,
-        FF_value: "parse",
+        // FF: "parse",
         ff_upload_hidden: true,
         no_NC_terminus: !do_disable
       })
@@ -146,16 +153,21 @@ class ConfigPDB2PQR extends ConfigForm{
 
   uncheckTerminusOptions(){
       let new_OPTIONS = [];
-      // this.state.OPTIONS_value.forEach()
-      for(let element of this.state.OPTIONS_value){
+      // this.state.form_values.OPTIONS.forEach()
+      for(let element of this.state.form_values.OPTIONS){
         if( !["neutralnterminus", "neutralcterminus"].some(opt => {return element == opt;}) ){
           console.log(element);
           new_OPTIONS.push(element)
         }
       }
-      this.setState({
-        OPTIONS_value: new_OPTIONS
-      }) 
+
+      let form_values = this.state.form_values
+      form_values["OPTIONS"] = new_OPTIONS;
+      this.setState({ form_values })
+  
+      // this.setState({
+      //   OPTIONS: new_OPTIONS
+      // }) 
   }
   // togglePdbUploadButton = (e) => {
   //   this.setState({
@@ -175,9 +187,9 @@ class ConfigPDB2PQR extends ConfigForm{
   renderPdbSourceInput(){
     // if(this.state.pdb_upload_hidden) return;
     let return_element = null
-    if(this.state.PDBSOURCE_value == 'ID'){
+    if(this.state.form_values.PDBSOURCE == 'ID'){
       return_element = 
-          <Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4}/>
+          <Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4} onChange={this.handleFormChange}/>
     }
     else{
       // <Upload name="PDB" beforeUpload='false' accept=".pdb">
@@ -329,7 +341,7 @@ class ConfigPDB2PQR extends ConfigForm{
           label="PDB Source"
           required={true}
         >
-          <Radio.Group name="PDBSOURCE" defaultValue={this.state.PDBSOURCE_value} buttonStyle='solid' onChange={this.changeFormValue}>
+          <Radio.Group name="PDBSOURCE" defaultValue={this.state.form_values.PDBSOURCE} buttonStyle='solid' onChange={this.handleFormChange}>
             <Radio.Button  value="ID"> PDB ID
             {/* <Radio.Button  value="ID"> PDB ID:&nbsp;&nbsp; */}
               {/* <Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4}/> */}
@@ -355,8 +367,8 @@ class ConfigPDB2PQR extends ConfigForm{
           label="pKa Options"
         >
           {/* <Switch checkedChildren="pKa Calculation" unCheckedChildren="pKa Calculation" defaultChecked={true} /><br/> */}
-          pH: <InputNumber name="PH" min={0} max={14} step={0.5} defaultValue={this.state.PH_value} /><br/>
-          <Radio.Group name="PKACALCMETHOD" defaultValue={this.state.PKACALCMETHOD_value} onChange={this.changeFormValue} >
+          pH: <InputNumber name="PH" min={0} max={14} step={0.5} value={this.state.form_values.PH} onChange={(e) => this.handleFormChange(e, 'PH')} /><br/>
+          <Radio.Group name="PKACALCMETHOD" defaultValue={this.state.form_values.PKACALCMETHOD} onChange={this.handleFormChange} >
             <Radio style={radioVertStyle} id="pka_none" value="none">    No pKa calculation </Radio>
             <Radio style={radioVertStyle} id="pka_propka" value="propka">  Use PROPKA to assign protonation states at provided pH </Radio>
             <Tooltip placement="right" title="requires PARSE forcefield">
@@ -370,7 +382,7 @@ class ConfigPDB2PQR extends ConfigForm{
           id="forcefield"
           label="Please choose a forcefield to use"
         >
-          <Radio.Group name="FF" value={this.state.FF_value} buttonStyle="solid" onChange={this.changeFormValue}>
+          <Radio.Group name="FF" value={this.state.form_values.FF} buttonStyle="solid" onChange={this.handleFormChange}>
             <Radio.Button disabled={this.state.only_parse} value="amber">  AMBER   </Radio.Button>
             <Radio.Button disabled={this.state.only_parse} value="charmm"> CHARMM  </Radio.Button>
             <Radio.Button disabled={this.state.only_parse} value="peoepb"> PEOEPB  </Radio.Button>
@@ -389,7 +401,7 @@ class ConfigPDB2PQR extends ConfigForm{
           id="outputscheme"
           label="Please choose an output naming scheme to use"
         >
-          <Radio.Group name="FFOUT" defaultValue={this.state.FFOUT_value} buttonStyle="solid" onChange={this.changeFormValue}>
+          <Radio.Group name="FFOUT" defaultValue={this.state.form_values.FFOUT} buttonStyle="solid" onChange={this.handleFormChange}>
             <Radio.Button value="internal"> Internal naming scheme <Tooltip placement="bottomLeft" title="This is placeholder help text to tell the user what this option means"><Icon type="question-circle" /></Tooltip> </Radio.Button>
             <Radio.Button value="amber">  AMBER   </Radio.Button>
             <Radio.Button value="charmm"> CHARMM  </Radio.Button>
@@ -405,7 +417,7 @@ class ConfigPDB2PQR extends ConfigForm{
           id="addedoptions"
           label="Additional Options"
         >
-          <Checkbox.Group name="OPTIONS" value={this.state.OPTIONS_value} onChange={(e) => this.changeFormValue(e, "OPTIONS")}>
+          <Checkbox.Group name="OPTIONS" value={this.state.form_values.OPTIONS} onChange={(e) => this.handleFormChange(e, "OPTIONS")}>
             {optionChecklist}
           </Checkbox.Group>
         </Form.Item>
