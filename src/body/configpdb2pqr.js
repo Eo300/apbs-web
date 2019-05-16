@@ -97,16 +97,17 @@ class ConfigPDB2PQR extends ConfigForm{
   }
 
   /** If user tries submitting job again, raise alert. */
-  // handleJobSubmit = (e) => {
-  //   // e.preventDefault();
-  //   if(this.state.job_submit)
-  //     alert("Job is submitted. Redirecting to job status page");
-  //   else{
-  //     this.setState({
-  //       job_submit: true
-  //     })
-  //   }
-  // }
+  /** Prepare form data to be sent via JSON request */
+  handleJobSubmit = (e) => {
+    // e.preventDefault();
+    // if(this.state.job_submit)
+    //   alert("Job is submitted. Redirecting to job status page");
+    // else{
+    //   this.setState({
+    //     job_submit: true
+    //   })
+    // }
+  }
 
   
   togglePdbUploadButton(show_upload){
