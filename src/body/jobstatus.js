@@ -5,6 +5,8 @@ import  { Affix, Layout, Menu, Button, Form, Switch,
           Icon, Tooltip, Upload, List, message,
         } from 'antd';
 import { stat } from 'fs';
+import io from 'socket.io-client';
+
 const { Content, Sider } = Layout;
 
 // message.config({
@@ -17,6 +19,7 @@ class JobStatus extends Component{
     super(props);
 
     this.jobServerDomain = window._env_.API_URL
+    this.jobStatusDomain = window._env_.STATUS_URL
 
     this.fetchIntervalPDB2PQR = null;
     this.fetchIntervalAPBS = null;
@@ -58,9 +61,10 @@ class JobStatus extends Component{
 
   /** Begins fetching status as soon this component loads */
   componentDidMount(){
-    // let self = this;
-    this.fetchIntervalPDB2PQR = this.fetchJobStatus('pdb2pqr');
-    this.fetchIntervalAPBS = this.fetchJobStatus('apbs');
+    // this.fetchIntervalPDB2PQR = this.fetchJobStatus('pdb2pqr');
+    // this.fetchIntervalAPBS = this.fetchJobStatus('apbs');
+    this.fetchJobStatusSocketIO('apbs')
+    this.fetchJobStatusSocketIO('pdb2pqr')
   }
 
   /** Cleans up setInterval objects before unmounting */
@@ -114,6 +118,47 @@ class JobStatus extends Component{
     
     }, 1000);
     return interval;
+  }
+
+  /**
+   * Inquires job status from server via WebSocket, using 
+   * response data to update states.
+   */
+  fetchJobStatusSocketIO(jobtype){
+    let self = this;
+
+    // Initialize interval to continually compute elapsed time
+    if(self.elapsedIntervalPDB2PQR == null)
+      self.elapsedIntervalPDB2PQR = self.computeElapsedTime('pdb2pqr');
+    if(self.elapsedIntervalAPBS == null)
+      self.elapsedIntervalAPBS = self.computeElapsedTime('apbs')
+
+    // Connect to job status service; send job status request to server 
+    let socket = io.connect(self.jobStatusDomain);
+    socket.emit('status', {'jobid': self.props.jobid, 'jobtype': jobtype})
+
+    // When server responds, set the appropriate status values
+    socket.on(`${jobtype}_status`, function(data){
+      // console.log(data);
+      self.setState({
+        [jobtype]: {
+          status: data[jobtype].status,
+          startTime: data[jobtype].startTime,
+          endTime: data[jobtype].endTime,
+          files: data[jobtype].files,         
+        },
+      });
+    })
+
+    // Disconnects socket; log to console
+    socket.on('disconnect', (reason) =>{ 
+      if(reason === 'termination'){
+        console.log(reason)
+        socket.disconnect()
+      }
+      else
+        console.log(`other reason: ${reason}`)
+    })
   }
 
   prependZeroIfSingleDigit(numString){ 
