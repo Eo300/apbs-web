@@ -29,8 +29,9 @@ class ConfigPDB2PQR extends ConfigForm{
         FF:             "parse",
         FFOUT:          "internal",
         OPTIONS:        [ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin' ],
-      }
-      // job_submit: false
+      },
+      
+      job_submit: false
     }
     // this.handleJobSubmit = this.handleJobSubmit.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this)
@@ -100,13 +101,13 @@ class ConfigPDB2PQR extends ConfigForm{
   /** Prepare form data to be sent via JSON request */
   handleJobSubmit = (e) => {
     // e.preventDefault();
-    // if(this.state.job_submit)
-    //   alert("Job is submitted. Redirecting to job status page");
-    // else{
-    //   this.setState({
-    //     job_submit: true
-    //   })
-    // }
+    if(this.state.job_submit)
+      alert("Job is submitted. Redirecting to job status page");
+    else{
+      this.setState({
+        job_submit: true
+      })
+    }
   }
 
   
