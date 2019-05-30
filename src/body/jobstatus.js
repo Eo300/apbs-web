@@ -128,9 +128,9 @@ class JobStatus extends Component{
     let self = this;
 
     // Initialize interval to continually compute elapsed time
-    if(self.elapsedIntervalPDB2PQR == null)
+    if(self.elapsedIntervalPDB2PQR == null && jobtype === 'pdb2pqr')
       self.elapsedIntervalPDB2PQR = self.computeElapsedTime('pdb2pqr');
-    if(self.elapsedIntervalAPBS == null)
+    if(self.elapsedIntervalAPBS == null && jobtype === 'apbs')
       self.elapsedIntervalAPBS = self.computeElapsedTime('apbs')
 
     // Connect to job status service; send job status request to server 
@@ -139,7 +139,7 @@ class JobStatus extends Component{
 
     // When server responds, set the appropriate status values
     socket.on(`${jobtype}_status`, function(data){
-      // console.log(data);
+      console.log(data);
       self.setState({
         [jobtype]: {
           status: data[jobtype].status,
