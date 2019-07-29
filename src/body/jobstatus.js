@@ -59,12 +59,14 @@ class JobStatus extends Component{
     }
   }
 
-  /** Begins fetching status as soon this component loads */
+  /** Begins fetching status as soon this component loads
+   *  TODO: remove socketIO from npm package dependencies
+   */
   componentDidMount(){
-    // this.fetchIntervalPDB2PQR = this.fetchJobStatus('pdb2pqr');
-    // this.fetchIntervalAPBS = this.fetchJobStatus('apbs');
-    this.fetchJobStatusSocketIO('apbs')
-    this.fetchJobStatusSocketIO('pdb2pqr')
+    this.fetchIntervalPDB2PQR = this.fetchJobStatus('pdb2pqr');
+    this.fetchIntervalAPBS = this.fetchJobStatus('apbs');
+    // this.fetchJobStatusSocketIO('apbs')
+    // this.fetchJobStatusSocketIO('pdb2pqr')
   }
 
   /** Cleans up setInterval objects before unmounting */
@@ -101,7 +103,8 @@ class JobStatus extends Component{
       self.elapsedIntervalAPBS = self.computeElapsedTime('apbs')
 
     let interval = setInterval(function(){
-      fetch(self.jobServerDomain+'/api/jobstatus?jobid='+self.props.jobid +'&'+jobtype+'=true')
+      // fetch(self.jobServerDomain+'/api/jobstatus?jobid='+self.props.jobid +'&'+jobtype+'=true')
+      fetch(`${window._env_.WORKFLOW_URL}/${self.props.jobid}/${jobtype}`)
         .then(response => response.json())
         .then(data => {
             // Update job-respective component states
@@ -290,7 +293,7 @@ class JobStatus extends Component{
                       dataSource={this.state[jobtype].files}
                       // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
                       renderItem={ item => (
-                          <List.Item actions={[<a href={window._env_.API_URL+'/download/'+item}><Button type="primary" icon="download">Download</Button></a>]}>
+                          <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}>
                             {/* {window._env_.API_URL+'/download/'+item} */}
                             {item.split('/')[1]}
                           </List.Item>
