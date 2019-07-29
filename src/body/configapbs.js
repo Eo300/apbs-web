@@ -29,14 +29,14 @@ class ConfigAPBS extends ConfigForm {
       autofill_data: {},
       did_fetch: false,
       fileList: [],
-
+      
       /**
        elec_calctype: 'mg-auto',
        calculate_energy: 'total',
        calculate_forces: 'no',
        output_scalar: [],
        output_format: 'dx',
-      */
+       */
       
       parent_form_values: {
         /** state variables related to form user input */
@@ -46,17 +46,17 @@ class ConfigAPBS extends ConfigForm {
         calcforce: 'no',
         output_scalar: ['writepot'],
         writeformat: 'dx',
-
+        
         /** Hidden element holdovers from original website */
         hiddencheck: 'local',
         // pdb2pqrid: null,
         mol: '1',
       },
-
+      
       removewater: 'on',
-
+      
       child_form_values: {},
-
+      
       
     }
     // this.handleFormChange = this.handleFormChange.bind(this)
@@ -75,7 +75,16 @@ class ConfigAPBS extends ConfigForm {
         job_submit: true
       })
 
-      let form_post_url = window._env_.API_URL + "/submit/apbs/json";
+      // Obtain a job id if not within props
+      // if(self.state.jobid == undefined)
+      // self.getNewJobID()
+
+      // let form_post_url = window._env_.API_URL + "/submit/apbs/json";
+      // let form_post_url = window._env_.WORKFLOW_URL + "/submit/apbs/json";
+      // let form_post_url = `${window._env_.WORKFLOW_URL}/api/workflow/${self.state.jobid}/apbs?task=1`;
+      let form_post_url = `${window._env_.WORKFLOW_URL}/${self.state.jobid}/apbs`;
+      console.log(form_post_url)
+
       let combined_form_data = self.state.parent_form_values;
       // console.log(self.state.parent_form_values);
       // console.log(self.state.child_form_values);
@@ -86,6 +95,7 @@ class ConfigAPBS extends ConfigForm {
       }
       console.log(payload)
       
+      // Submit the form to the workflow service
       fetch(form_post_url, {
         method: 'POST',
         body: JSON.stringify(payload),
@@ -109,6 +119,9 @@ class ConfigAPBS extends ConfigForm {
     if(this.props.jobid){
       this.fetchAutofillData(this.state.jobid)
     }
+    else{
+      this.getNewJobID()
+    }
   }
 
   fetchAutofillData(jobid){
@@ -119,9 +132,12 @@ class ConfigAPBS extends ConfigForm {
     console.log('comp: ')
     // console.log(self.calc_method_component)
     // this.calc_method_component = this.renderMethodFormItems()
-    console.log(server_domain.concat('/api/autofill/jobs/apbs/',jobid))
+    // console.log(server_domain.concat('/api/autofill/jobs/apbs/',jobid))
+    console.log(`${window._env_.AUTOFILL_URL}/${jobid}/apbs`)
+    // console.log(`${window._env_.AUTOFILL_URL}/api/autofill/${jobid}/apbs`)
 
-    fetch(server_domain.concat('/api/autofill/jobs/apbs/',jobid))
+    fetch(`${window._env_.AUTOFILL_URL}/${jobid}/apbs`)
+    // fetch(`${window._env_.AUTOFILL_URL}/api/autofill/${jobid}/apbs`)
       .then(response => response.json())
       .then(data => {
         console.log(data)
@@ -193,7 +209,9 @@ class ConfigAPBS extends ConfigForm {
         <Upload
           name='file'
           accept='.pqr'
-          action={window._env_.API_URL+'/api/upload/autofill/pqr'}
+          // action={`${window._env_.AUTOFILL_URL}/api/autofill/upload/${this.state.jobid}/apbs`}
+          action={`${window._env_.AUTOFILL_URL}/upload/${this.state.jobid}/apbs`}
+
           // action={'http://jsonplaceholder.typicode.com/posts/'}
           fileList={this.state.fileList}
           beforeUpload={(e) => this.doubleUploadConfirm(e, this)}
