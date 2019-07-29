@@ -7,6 +7,19 @@ import  { Affix, Layout, Menu, Button, Form, Switch,
 import ConfigForm from './utils/formutils';
 const { Content, Sider } = Layout;
 
+const OptionsMapping = {
+  'atomsnotclose'   : 'DEBUMP',
+  'optimizeHnetwork': 'OPT',
+  'assignfrommol2'  : 'LIGANDCHECK',
+  'makeapbsin'      : 'INPUT',
+  'keepchainids'    : 'CHAIN',
+  'insertwhitespace': 'WHITESPACE',
+  'maketypemap'     : 'TYPEMAP',
+  'neutralnterminus': 'NEUTRALN',
+  'neutralcterminus': 'NEUTRALC',
+  'removewater'     : 'DROPWATER',
+}
+
 /**
  * Component defining how the PDB2PQR job configuration page is rendered
  */
@@ -23,6 +36,7 @@ class ConfigPDB2PQR extends ConfigForm{
 
 
       form_values: {
+        PDBID:          "",
         PDBSOURCE:      "ID",
         PH:             7,
         PKACALCMETHOD:  "propka",
@@ -30,12 +44,21 @@ class ConfigPDB2PQR extends ConfigForm{
         FFOUT:          "internal",
         OPTIONS:        [ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin' ],
       },
-      
+
       job_submit: false
     }
     // this.handleJobSubmit = this.handleJobSubmit.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this)
     // this.renderConfigForm = this.renderConfigForm.bind(this)
+  }
+
+  componentDidMount(){
+    if(this.props.jobid){
+      this.setState({ jobid: this.props.jobid })
+    }
+    else{
+      this.getNewJobID()
+    }
   }
 
   /** Updates current state of form values when changed */
@@ -99,14 +122,46 @@ class ConfigPDB2PQR extends ConfigForm{
 
   /** If user tries submitting job again, raise alert. */
   /** Prepare form data to be sent via JSON request */
-  handleJobSubmit = (e) => {
-    // e.preventDefault();
-    if(this.state.job_submit)
+  handleJobSubmit = (e, self) => {
+    e.preventDefault();
+    if(self.state.job_submit)
       alert("Job is submitted. Redirecting to job status page");
     else{
-      this.setState({
+      self.setState({
         job_submit: true
       })
+
+      // // Obtain a job id if not within props
+      // if(self.state.jobid == undefined){
+      //   self.getNewJobID()
+      // }
+
+      let form_and_options = self.state.form_values;
+      for(let option of form_and_options['OPTIONS']){
+        form_and_options[OptionsMapping[option]] = option
+      }
+
+      // let form_post_url = `${window._env_.WORKFLOW_URL}/api/workflow/${self.state.jobid}/pdb2pqr`;
+      let form_post_url = `${window._env_.WORKFLOW_URL}/${self.state.jobid}/pdb2pqr`;
+      let payload = {
+        form : self.state.form_values
+      }
+
+      // Submit form data to the workflow service
+      fetch(form_post_url, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+          'x-requested-with': '',
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success: ', data)
+          window.location.assign(`/jobstatus?jobid=${self.state.jobid}`)
+        })
+        .catch(error => console.error('Error: ', error))
     }
   }
 
@@ -300,7 +355,7 @@ class ConfigPDB2PQR extends ConfigForm{
         optionChecklist.push(
           <div>
             <Row>
-              <Checkbox name={element['name']} value={element['value']}> {element['label']} </Checkbox>
+              <Checkbox name={element['name']} value={element['value']} onChange={ (e) => this.handleFormChange(element['name'])}> {element['label']} </Checkbox>
               {this.renderMol2UploadButton()}
             </Row>
           </div>
@@ -330,13 +385,7 @@ class ConfigPDB2PQR extends ConfigForm{
     };
 
     return(
-      <Form action={window._env_.API_URL + "/submit/pdb2pqr/json"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data">
-      {/* <Form action={window._env_.API_URL + "/submit/pdb2pqr"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data"> */}
-      {/* <Form action={window._env_.API_URL + "/jobstatus?submitType=pdb2pqr"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data"> */}
-      {/* <Form action={"http://localhost:7000/jobstatus?submitType=pdb2pqr"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data"> */}
-      {/* <Form action="/jobstatus?submitType=pdb2pqr" method="POST" onSubmit={this.handleJobSubmit} name="thisform" enctype="multipart/form-data"> */}
-      {/* <Form action="http://apbs-1328226216.us-west-2.elb.amazonaws.com/pdb2pqr.cgi" method="POST" onSubmit={this.handleJobSubmit} name="thisform"> */}
-
+      <Form onSubmit={ (e) => this.handleJobSubmit(e, this) }>
         {/** Form item for PDB Source (id | upload) */}
         <Form.Item
           // id="pdbid"

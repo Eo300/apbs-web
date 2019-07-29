@@ -47,6 +47,26 @@ class ConfigForm extends Component{
   }
 
   
+  
+  getNewJobID(){
+    console.log('inside getNewJobID')
+    let id_gen_url = window._env_.ID_URL
+    // let id_gen_url = window._env_.ID_URL + '/api/uid'
+    // console.log(id_gen_url)
+    fetch(id_gen_url)
+    .then(response => response.json())
+    .then(data => {
+      // console.log(data)
+      // console.log(data.job_id)
+      // console.log(data['job_id'])
+      this.setState({
+          jobid : data['job_id']
+      })
+      console.log(this.state.jobid)
+    })
+    .catch(error => console.error(error)) 
+  }
+  
   /** Submission button rendered by default. If submission button's pressed,
    *  button text changes with spinning icon to indicate data has been sent
    */
