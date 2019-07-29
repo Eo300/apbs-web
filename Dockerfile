@@ -1,10 +1,12 @@
 # stage: 1
 FROM node:10 as react-build
 WORKDIR /app
-COPY . ./
+COPY package.json package-lock.json ./
 # RUN yarn install
 # RUN yarn build
 RUN npm install
+
+COPY . ./
 RUN npm run build
 
 # stage: 2 — the production environment
