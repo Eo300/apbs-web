@@ -11,7 +11,7 @@ import JobStatus from './body/jobstatus.js';
 import './App.css';
 import 'antd/dist/antd.css';
 
-import { Layout, Breadcrumb, Col } from 'antd';
+import { Layout, Breadcrumb, Col, Row } from 'antd';
 // import { Layout, Col, Menu, Icon, Tooltip, Alert } from 'antd';
 // const { Header, Content, Sider, Footer } = Layout;
 
@@ -144,10 +144,12 @@ class App extends Component {
           onClick={j => this.onClickSelectPage(j)}
         />
         <Layout style={{ padding: '0 50px' }}>
+          {/* <Row> */}
           {bcrumb}
           {content}
+          {/* </Row> */}
+          <MyFooter />
         </Layout>
-        <MyFooter />
       </Layout>
 
     )
