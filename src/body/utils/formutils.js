@@ -71,19 +71,23 @@ class ConfigForm extends Component{
    *  button text changes with spinning icon to indicate data has been sent
    */
   renderSubmitButton(){
-    if (!this.state.job_submit)
-      return (
-        <Button className='config-submit' type="primary" htmlType="submit" size='large' shape='round' >
-          Start Job
-        </Button>
-      )
-    else
-      return (
-        <Button className='config-submit' type="primary" htmlType="submit" size='large' shape='round' loading>
-          Submitting job...
-        </Button>
-      )
-    
+    let submission_text = '';
+    let loading = false;
+
+    if(!this.state.job_submit)
+      submission_text = 'Start Job'
+    else{
+      submission_text = 'Submitting job...'
+      loading = true
+    }
+
+    // TODO: return a submission bar affixed to the bottom of the window
+    return (
+      <Button className='config-submit' type="primary" htmlType="submit" size='large' shape='round' loading={loading}>
+        {submission_text}
+      </Button>
+    )
+
   }
 
 }
