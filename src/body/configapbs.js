@@ -230,8 +230,10 @@ class ConfigAPBS extends ConfigForm {
       console.log(self.state.did_fetch)
       return window.confirm('Uploading a new file will overwrite ALL values within form. Continue?');
     }
-    else
+    else{
+      console.log('values not yet autofilled')
       return true;
+    }
   }
   
   handlePqrUpload(info, self){
@@ -245,16 +247,16 @@ class ConfigAPBS extends ConfigForm {
       self.setState({
         jobid: info.file.response['job_id'],
       })
-      self.fetchAutofillData(this.state.jobid);
+      self.fetchAutofillData(self.state.jobid);
     }
     else if (info.file.status === 'error') {
       message.error(`${info.file.name} file upload failed.`);
     }
 
     // fileList: info.fileList.slice(-1),
-    console.log(this.state.fileList)
-    this.setState({ fileList: info.fileList.slice(-1) })
-    console.log(this.state.fileList)
+    console.log(self.state.fileList)
+    self.setState({ fileList: info.fileList.slice(-1) })
+    console.log(self.state.fileList)
   }
 
   /** Creates and returns the sidebar component. */
