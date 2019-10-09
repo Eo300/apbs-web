@@ -1,0 +1,16 @@
+.footer-block {
+    font-size: 14px;
+    /* background-color: #00152946; */
+    width: 100vw;
+    /* min-height: 100vh; */
+}
+
+.footer-icon {
+    font-size: 26px;
+    color: #545456;
+    transition: .3s;
+}
+
+.footer-icon:hover{
+    filter: brightness(1.5)
+}
