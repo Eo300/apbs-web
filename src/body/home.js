@@ -3,7 +3,10 @@ import 'antd/dist/antd.css';
 import '../styles/home.css';
 
 import{ Layout, Col, Menu, Carousel, Row,
-        Card, Icon, Button, Link } from 'antd';
+        Card, Icon, Button, } from 'antd';
+import { Link } from 'react-router-dom';
+
+const { Content } = Layout;
 
 class HomePage extends Component{
     /**
@@ -11,18 +14,35 @@ class HomePage extends Component{
      */
     mainBanner(){
         return(
-            <Col style={{ boxShadow: "2px 4px 10px #00000033" }} >
-            {/* <Col span={18} offset={3} style={{ boxShadow: "2px 4px 10px #00000033" }} > */}
-                <Carousel autoplay >
-                    <div>
-                        <h3>
-                            Welcome to the PDB2PQR Server
-                            {/* <Button>Configure </Button> */}
-                        </h3>
-                        
-                    </div>
-                </Carousel>        
-            </Col>
+            <Row align="middle"  className="banner">
+                <Col xs={1} sm={1} md={2} lg={4} xl={4} />
+                <Col xs={22} sm={22} md={20} lg={16} xl={16}>
+                {/* <Col style={{ boxShadow: "2px 4px 10px #00000033" }} span={16}> */}
+                {/* <Col span={18} offset={3} style={{ boxShadow: "2px 4px 10px #00000033" }} > */}
+                    {/* <Carousel autoplay > */}
+                    <Content className="welcome-text">
+                        <div>
+                            <h1> APBS </h1>
+                            <p> Welcome to the new home for running the APBS/PDB2PQR software suite </p>
+
+                            <br/>
+                            <p> Use the software: </p>
+                                {/* <Button> <Link to="/pdb2pqr"> PDB2PQR </Link> </Button>
+                                <Button> <Link to="/apbs"> APBS </Link> </Button> */}
+                                <Button className="banner-button" shape="round">
+                                    <Link to="/pdb2pqr"><span>PDB2PQR</span></Link>
+                                </Button>
+                                <Button className="banner-button" shape="round">
+                                    <Link to="/apbs"><span>APBS</span></Link>
+                                </Button>
+                            
+                        </div>
+                    </Content>
+                    {/* </Carousel>         */}
+                </Col>
+                {/* <Col span={8}/> */}
+                <Col xs={1} sm={1} md={2} lg={4} xl={4}/>
+            </Row>
         )
     }
 

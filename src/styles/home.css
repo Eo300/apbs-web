@@ -14,3 +14,40 @@
 .ant-carousel .slick-slide h3 {
 color: #fff;
 }
+
+@keyframes fadeInDown{
+  from {
+    opacity: 0;
+    transform: translateY(40%)
+  }
+}
+
+.banner {
+  background-color: #fff; 
+  /* height: 50%; */
+  /* height: 50vh; */
+  height: 576px;
+}
+.banner h1{
+  font-size: 68px;
+  animation: 0.7s fadeInDown ;
+}
+.banner p{
+  font-size: 17px;
+  animation: 1.0s fadeInDown ;
+  /* animation-delay: 3s */
+}
+.banner .welcome-text {
+  /* margin: 50px 0px */
+  transform: translate(0%, 25%);
+}
+.banner .banner-button {
+  /* margin: 50px 0px */
+  /* transform: translate(0%, 50%) */
+  /* background-color: aqua */
+  /* outline: dashed  */
+  /* margin-left:  16px; */
+  margin-right: 16px;
+  /* margin-top: 16px; */
+  animation: 1.2s fadeInDown ;
+}
