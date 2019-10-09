@@ -410,6 +410,14 @@ class JobStatus extends Component{
           timeline_list.push( <Timeline.Item>{val}</Timeline.Item> )
       }
 
+      let elapsedTime = 'computing...'
+      if (this.state.elapsedTime[jobtype] !== undefined){
+        elapsedTime = this.state.elapsedTime[jobtype]
+      }
+      else{
+        elapsedTime = 'computing...'
+      }
+
       let job_status_block =
         <Row gutter={16}>
           {/* General job information */}
@@ -417,7 +425,13 @@ class JobStatus extends Component{
             <h2>
               ID: {this.props.jobid}
             </h2>
-            General job information here
+            {/* General job information here */}
+            <h3>Time Elapsed:</h3>
+            <p style={{fontSize:24}}>
+               {elapsedTime}
+               {/* <b>{elapsedTime}</b> */}
+              {/* Time Elapsed: {this.state.elapsedTime[jobtype]} */}
+            </p>
 
           </Col>
 
