@@ -14,6 +14,7 @@ import 'antd/dist/antd.css';
 import { Layout, Breadcrumb, Col, Row } from 'antd';
 // import { Layout, Col, Menu, Icon, Tooltip, Alert } from 'antd';
 // const { Header, Content, Sider, Footer } = Layout;
+const { Header } = Layout;
 
 /**
  * Main application code.
@@ -24,11 +25,13 @@ class App extends Component {
   constructor(props){
       super(props);
       this.onClickSelectPage = this.onClickSelectPage.bind(this);
+      // this.submenuOnClick = this.submenuOnClick.bind(this);
       // this.handleJobSubmit = this.handleJobSubmit.bind(this);
       this.state = {
-          cur_page: this.props.page,  // Current page
-          job_submit: false,          // Maintains if user tries clicking the Start Job button again
-      };
+        cur_page: this.props.page,  // Current page
+        job_submit: false,          // Maintains if user tries clicking the Start Job button again
+        // openSubmenus: {},           // Currently open submenus
+    };
   }
 
   /** 
@@ -39,6 +42,7 @@ class App extends Component {
         cur_page: selected_page
     })
   }
+
 
   /** Builds Breadcrumb component
    * @param {array} items - list containing the desired items for the breadcrumb
@@ -80,6 +84,7 @@ class App extends Component {
     // Renders landing page, with choice to do PDB2PQR or APBS
     if (this.state.cur_page === PAGES.home || this.state.cur_page === null){
       document.title = "Home";
+      bcrumb = this.createServiceBreadcrumb(['Home'])
       content = <HomePage />;
     }
     
@@ -87,6 +92,7 @@ class App extends Component {
     // Renders the about page
     else if (this.state.cur_page === PAGES.about){
       document.title = "About";
+      bcrumb = this.createServiceBreadcrumb(['About'])
       content = <AboutPage />;
     }
 
@@ -125,12 +131,14 @@ class App extends Component {
     else if (this.state.cur_page === PAGES.status){
       let queryParser = require('query-string-es5');
       let job_id = queryParser.parse(this.props.query)['jobid']
+      let job_type = queryParser.parse(this.props.query)['jobtype']
 
       document.title = `Job Status - ${job_id}`;
       bcrumb = this.createServiceBreadcrumb(['Tools', 'Job Status', job_id])
       content = 
         <JobStatus
           jobid={job_id}
+          jobtype={job_type}
         />;
     }
 
@@ -142,8 +150,15 @@ class App extends Component {
           navbar_items={navbar_options}
           all_header_items={new Array()}
           onClick={j => this.onClickSelectPage(j)}
+
+          //
+          isMenuCollapsed={this.props.isMenuCollapsed}
+          openSubmenus={Object.values(this.props.openSubmenus)}
+          submenuOnClick={k => this.props.submenuOnClick(k)}
+          onSiderCollapse={(isCollapsed, type) => this.props.onSiderCollapse(isCollapsed, type)}
         />
-        <Layout style={{ padding: '0 50px' }}>
+        {/* <Header style={{ background: '#fff', paddingDown: 16 }} /> */}
+        <Layout style={{ padding: '0px 50px' }}>
           {/* <Row> */}
           {bcrumb}
           {content}

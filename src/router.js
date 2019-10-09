@@ -10,48 +10,115 @@ import PAGES from './common/pagenames.js';
 
   
 class ServerRouter extends Component{
+
+    constructor(props){
+        super(props)
+        this.state = {
+            openSubmenus: {},
+            isMenuCollapsed: false,
+        }
+        this.submenuOnClick = this.submenuOnClick.bind(this);
+        this.onSiderCollapse = this.onSiderCollapse.bind(this);
+    }
+
+    /**
+     * onClick handler for selecting a submenu when using side-menu navigation.
+     * Used to ensure that opened submenus remain open when navigating to another page.
+     */
+    submenuOnClick(submenu_key){
+        let submenu_obj = this.state.openSubmenus;
+
+        // If submenu is closing, remove the key from object
+        // Otherwise, add the key to the object
+        if( Object.keys(submenu_obj).includes(submenu_key) )
+            delete submenu_obj[submenu_key];
+        else
+            submenu_obj[submenu_key] = submenu_key;
+
+        this.setState({ openSubmenus: submenu_obj });
+    }
+
+    onSiderCollapse(collapsed, type){
+        console.log(collapsed, type)
+        let cur_sider_state = this.state.isMenuCollapsed;
+        let new_state = null;
+        
+        if( type === 'clickTrigger' )
+            new_state = !cur_sider_state;
+        else if (type === 'responsive')
+            new_state = collapsed;
+
+        this.setState({ isMenuCollapsed: new_state });
+    }
+
     render(){
-
-        // let navbar_options = new Map();
-        // let content = "";
-
-        // navbar_options.set("navbar_home",    "Home");
-        // navbar_options.set("navbar_pdb2pqr", "PDB2PQR");
-        // navbar_options.set("navbar_apbs",    "APBS");
-        // navbar_options.set("navbar_about",   "About");
-
         return(
             <Router>
                 <div>
                     <Route exact path="/"
                         render={ props => (
-                            <App page={PAGES.home}/>
-                            // <App page="navbar_home"/>
+                            <App
+                                page={PAGES.home}
+                                isMenuCollapsed={this.state.isMenuCollapsed}
+                                openSubmenus={this.state.openSubmenus}
+                                submenuOnClick={j => this.submenuOnClick(j)}
+                                onSiderCollapse={(isCollapsed, type) => this.onSiderCollapse(isCollapsed, type)}
+                            />
                         )}                
                     />
                     <Route path="/about"
                         render={ props => (
-                            <App page={PAGES.about}/>
+                            <App
+                                page={PAGES.about}
+                                isMenuCollapsed={this.state.isMenuCollapsed}
+                                openSubmenus={this.state.openSubmenus}
+                                submenuOnClick={j => this.submenuOnClick(j)}
+                                onSiderCollapse={(isCollapsed, type) => this.onSiderCollapse(isCollapsed, type)}
+                            />
                         )}
                     />
                     <Route path="/documentation"
                         render={ props => (
-                            <App page={PAGES.documentation}/>
+                            <App
+                                page={PAGES.documentation}
+                                isMenuCollapsed={this.state.isMenuCollapsed}
+                                openSubmenus={this.state.openSubmenus}
+                                submenuOnClick={j => this.submenuOnClick(j)}
+                                onSiderCollapse={(isCollapsed, type) => this.onSiderCollapse(isCollapsed, type)}
+                            />
                         )}
                     />
                     <Route path="/pdb2pqr"
                         render={ props => (
-                            <App page={PAGES.pdb2pqr}/>
+                            <App
+                                page={PAGES.pdb2pqr}
+                                isMenuCollapsed={this.state.isMenuCollapsed}
+                                openSubmenus={this.state.openSubmenus}
+                                submenuOnClick={j => this.submenuOnClick(j)}
+                                onSiderCollapse={(isCollapsed, type) => this.onSiderCollapse(isCollapsed, type)}
+                            />
                         )}
                     />
                     <Route path="/apbs"
                         render={ props => (
-                            <App page={PAGES.apbs} query={props.location.search}/>
+                            <App
+                                page={PAGES.apbs}
+                                isMenuCollapsed={this.state.isMenuCollapsed}
+                                openSubmenus={this.state.openSubmenus}
+                                submenuOnClick={j => this.submenuOnClick(j)}
+                                onSiderCollapse={(isCollapsed, type) => this.onSiderCollapse(isCollapsed, type)}
+                                query={props.location.search}/>
                         )}
                     />
                     <Route path="/jobstatus"
                         render={ props => (
-                            <App page={PAGES.status} query={props.location.search}/>
+                            <App
+                                page={PAGES.status}
+                                isMenuCollapsed={this.state.isMenuCollapsed}
+                                openSubmenus={this.state.openSubmenus}
+                                submenuOnClick={j => this.submenuOnClick(j)}
+                                onSiderCollapse={(isCollapsed, type) => this.onSiderCollapse(isCollapsed, type)}
+                                query={props.location.search}/>
                         )}
                     />
                 </div>
