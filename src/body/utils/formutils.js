@@ -66,6 +66,10 @@ class ConfigForm extends Component{
     })
     .catch(error => console.error(error)) 
   }
+
+  saveIdToStorage(jobid){
+    
+  }
   
   /** Submission button rendered by default. If submission button's pressed,
    *  button text changes with spinning icon to indicate data has been sent
