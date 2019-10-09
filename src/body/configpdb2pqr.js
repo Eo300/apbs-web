@@ -169,7 +169,7 @@ class ConfigPDB2PQR extends ConfigForm{
         .then(response => response.json())
         .then(data => {
           console.log('Success: ', data)
-          window.location.assign(`/jobstatus?jobid=${self.state.jobid}`)
+          window.location.assign(`/jobstatus?jobtype=pdb2pqr&jobid=${self.state.jobid}`)
         })
         .catch(error => console.error('Error: ', error))
     }
