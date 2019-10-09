@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import 'antd/dist/antd.css'
 import  { Affix, Layout, Menu, Button, Form, Switch,
           Input, Radio, Checkbox , Row, Col, InputNumber,
-          Icon, Tooltip, Upload, List, message,
+          Icon, Tooltip, Upload, List, message, Timeline
         } from 'antd';
 import { stat } from 'fs';
 import io from 'socket.io-client';
@@ -31,6 +31,8 @@ class JobStatus extends Component{
     this.colorErrorStatus     = "#F5222D";
     // this.totalElapsedTime = 0;
     this.state = {
+      current_jobid: props.jobid,
+
       totalElapsedTime: 0,
       pdb2pqrElapsedTime: this.elapsedIntervalPDB2PQR,
       apbsElapsedTime: 0,
@@ -49,12 +51,16 @@ class JobStatus extends Component{
         startTime: null, // in seconds
         endTime: null, // in seconds
         files: [],
+        files_input: [],
+        files_output: [],
       },
       apbs: {
         status: 'no_job',
         startTime: null, // in seconds
         endTime: null, // in seconds
         files: [],
+        files_input: [],
+        files_output: [],
       }
     }
   }
@@ -78,11 +84,19 @@ class JobStatus extends Component{
   /** Stops polling the job status if fetched status isn't 'running' */
   componentDidUpdate(){
     let statuses = ["complete", "error", null];
-    if(statuses.includes(this.state.pdb2pqr.status)){//} && statuses.includes(this.state.pdb2pqr.status)){
+    if( statuses.includes(this.state.pdb2pqr.status) ){//} && statuses.includes(this.state.pdb2pqr.status)){
       clearInterval(this.fetchIntervalPDB2PQR);
     }
-    if(statuses.includes(this.state.apbs.status)){
+    if( statuses.includes(this.state.apbs.status) ){
       clearInterval(this.fetchIntervalAPBS);
+    }
+
+    if( this.props.jobid !== this.state.current_jobid ){
+      this.setState({
+        current_jobid: this.props.jobid
+      })
+      // this.fetchIntervalPDB2PQR = this.fetchJobStatus('pdb2pqr');
+      // this.fetchIntervalAPBS = this.fetchJobStatus('apbs');     
     }
   }
 
@@ -113,7 +127,9 @@ class JobStatus extends Component{
                 status: data[jobtype].status,
                 startTime: data[jobtype].startTime,
                 endTime: data[jobtype].endTime,
-                files: data[jobtype].files,         
+                files: data[jobtype].files,
+                files_input: data[jobtype].inputFiles,
+                files_output: data[jobtype].outputFiles,
               },
             });
         })
@@ -355,14 +371,128 @@ class JobStatus extends Component{
       )
     }
   }
-      
+
+  newCreateJobStatus(){
+    if( this.props.jobid ){
+
+      let jobtype = undefined;
+      if( ['apbs','pdb2pqr'].includes(this.props.jobtype) ){
+        jobtype = this.props.jobtype;
+      }
+
+      // let state_list = ['Download input files', 'Queued', 'Running', 'Upload output files', 'Complete']
+      let state_list = ['Submitted', 'Running', 'Complete']
+      let stop_index = state_list.length
+
+      let is_pending = false
+      let pending_text = ''
+
+      let timeline_list = []
+      if( this.state[jobtype].status == 'running' )
+        stop_index = 2;
+      else if( this.state[jobtype].status == 'complete' ){
+        /** Do nothing */
+      }else
+        stop_index = 0;
+
+      for (let val of state_list.slice(0, stop_index)){
+        if( val == 'Running' && this.state[jobtype].status == 'running' ){
+          console.log('Running should be a pending dot')
+          is_pending = true
+          pending_text = "Running"
+
+          // timeline_list.push( <Timeline.Item pending >{val}</Timeline.Item> )
+        }
+        else if( val == 'Complete' && this.state[jobtype].status == 'complete' ){
+          timeline_list.push( <Timeline.Item color="green" dot={<Icon type="check-circle"/>}>{val}</Timeline.Item> )
+        }
+        else
+          timeline_list.push( <Timeline.Item>{val}</Timeline.Item> )
+      }
+
+      let job_status_block =
+        <Row gutter={16}>
+          {/* General job information */}
+          <Col span={6}>
+            <h2>
+              ID: {this.props.jobid}
+            </h2>
+            General job information here
+
+          </Col>
+
+          {/* Display input/output files */}
+          <Col span={12}>
+            {/* {this.createOutputList('pdb2pqr')} */}
+            {/* {this.createOutputList(jobtype)} */}
+
+            <h2>Files:</h2>
+            <List
+              size="small"
+              bordered
+              header={<h3>Input</h3>}
+              dataSource={this.state[jobtype].files_input}
+              // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
+              renderItem={ item => (
+                  <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}>
+                    {item.split('/')[1]}
+                  </List.Item>
+                )}
+            />
+            <br/>
+            <List
+              size="small"
+              bordered
+              header={<h3>Output</h3>}
+              dataSource={this.state[jobtype].files_output}
+              // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
+              renderItem={ item => (
+                  <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}>
+                    {item.split('/')[1]}
+                  </List.Item>
+                )}
+            />
+
+          </Col>
+
+          {/* Show timeline of task related to job */}
+          <Col span={6}>
+            {/* <Timeline mode="left">
+              <Timeline.Item>Download input files</Timeline.Item>
+              <Timeline.Item>Queued</Timeline.Item>
+              <Timeline.Item>Running</Timeline.Item>
+              <Timeline.Item>Upload output files</Timeline.Item>
+              <Timeline.Item>Complete</Timeline.Item>
+            </Timeline> */}
+            <Timeline mode="left" pending={pending_text}>
+              {timeline_list}
+            </Timeline>
+          </Col>
+        </Row>
+
+      return job_status_block;
+    }
+
+    // If a job ID not in URL, display appropriate message
+    else{
+      return(
+        <Layout>
+          <h2>Missing jobid field</h2>
+          <p>Your request URL is missing the jobid field</p>
+          <p>Usage: /jobstatus?<b>jobid=JOBID</b> </p>
+        </Layout>
+      )
+    }   
+  }
+
   render(){
     return(
       <Layout id="pdb2pqr">
           <Content style={{ background: '#fff', padding: 16, marginBottom: 5, minHeight: 280, boxShadow: "2px 4px 10px #00000033" }}>
           {/* <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}> */}
             {/* Content goes here */}
-            {this.createJobStatus()}
+            {/* {this.createJobStatus()} */}
+            {this.newCreateJobStatus()}
         </Content>
       </Layout>
     );
