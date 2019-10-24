@@ -244,7 +244,7 @@ class ConfigAPBS extends ConfigForm {
           <Form.Item label="Upload additional input files for APBS">
             <Upload
               name='file_data'
-              accept='.pqr'
+              // accept='.pqr'
               action={`${window._env_.STORAGE_URL}/${this.state.jobid}`}
               fileList={this.state.readfileList}
               beforeUpload={ (e) => this.inspectReadfile(e, this) }
