@@ -33,6 +33,12 @@ class ConfigAPBS extends ConfigForm {
       // related to APBS input file
       use_input_file: true,
       infileList: [],
+      readfileList: [],
+      show_apbs_misc_upload: false,
+
+      v2_form_values: {
+        filename: null
+      },
       
       /**
        elec_calctype: 'mg-auto',
@@ -94,8 +100,11 @@ class ConfigAPBS extends ConfigForm {
       // console.log(self.state.child_form_values);
       Object.assign(combined_form_data, self.state.child_form_values);
       // console.log(combined_form_data);
+      // let payload = {
+      //   form : combined_form_data
+      // }
       let payload = {
-        form : combined_form_data
+        form : self.state.v2_form_values
       }
       console.log(payload)
       
@@ -210,18 +219,19 @@ class ConfigAPBS extends ConfigForm {
     return(
       <div>
         Use an APBS input file:<br/>
-        <Switch
+        {/* <Switch
           checked={this.state.use_input_file}
           onChange={() => {this.setState({use_input_file: !this.state.use_input_file})}}
-        />
+        /> */}
 
         {/* <div hidden={!this.state.use_input_file}> */}
           <Form.Item label="Choose the APBS input file">
             <Upload
               name='file_data'
               accept='.in'
-              action={`${window._env_.STORAGE_URL}/${this.state.jobid}/${this.state.jobid}.in`}
+              action={`${window._env_.STORAGE_URL}/${this.state.jobid}`}
               fileList={this.state.infileList}
+              beforeUpload={ (e) => this.inspectReadfile(e, this, 'infile') }
               onChange={ (e) => this.handleInfileUpload(e, this) }
             >
               <Button icon="upload" disabled={!this.state.use_input_file}>
@@ -230,6 +240,21 @@ class ConfigAPBS extends ConfigForm {
             </Upload>
           </Form.Item>
         {/* </div> */}
+
+          <Form.Item label="Upload additional input files for APBS">
+            <Upload
+              name='file_data'
+              accept='.pqr'
+              action={`${window._env_.STORAGE_URL}/${this.state.jobid}`}
+              fileList={this.state.readfileList}
+              beforeUpload={ (e) => this.inspectReadfile(e, this) }
+              onChange={ (e) => this.handleReadfileUpload(e, this) }
+            >
+              <Button icon="upload" disabled={!this.state.show_apbs_misc_upload}>
+                Upload APBS read files
+              </Button>
+            </Upload>
+          </Form.Item>
       </div>
     )
   }
@@ -242,9 +267,11 @@ class ConfigAPBS extends ConfigForm {
     if (info.file.status === 'done') {
       message.success(`APBS input file ${info.file.name} uploaded successfully`);
       console.log(`APBS input file ${info.file.name} uploaded successfully`)
+      self.setState({ show_apbs_misc_upload: true })
     }
     else if (info.file.status === 'error') {
       message.error(`${info.file.name} file upload failed.`);
+      self.setState({ show_apbs_misc_upload: false })
     }
 
     // fileList: info.fileList.slice(-1),
@@ -252,6 +279,42 @@ class ConfigAPBS extends ConfigForm {
     console.log(self.state.infileList)
     self.setState({ infileList: info.fileList.slice(-1) })
     console.log(self.state.infileList)    
+  }
+  
+  inspectReadfile(file, self, file_type){
+    if ( file_type === 'infile'){
+      if(!file.name.endsWith('.in')){
+        message.error('You must upload an APBS input (*.in) file!');
+        return false;
+      }
+      else{
+        let v2_form_values = self.state.v2_form_values;
+        v2_form_values['filename'] = file.name;
+        self.setState({ v2_form_values });
+      }
+    }
+    
+    // read file, checking READ section for related input files (e.g. *.pqr files)
+    // Record names of additional inputs files
+    // Record number of additional input files ( len(namefile_list) )
+
+    // If no READ section is found, return false (don't upload)
+  }
+
+  handleReadfileUpload(info, self){
+    if (info.file.status !== 'uploading'){
+      console.log('uploading readfile')
+    }
+    if (info.file.status === 'done'){
+      message.success(`${info.file.name} file uploaded successfully`);
+      console.log(`${info.file.name} file uploaded successfully`)
+    }
+    else if (info.file.status === 'error'){
+      message.error(`${info.file.name} file upload failed.`);
+    }
+    
+    // have file list show most recent upload
+    self.setState({ readfileList: info.fileList })
   }
 
   renderReadfileUpload(){
@@ -264,6 +327,7 @@ class ConfigAPBS extends ConfigForm {
               accept='.pqr'
               action={`${window._env_.STORAGE_URL}/${this.state.jobid}/${this.state.jobid}.in`}
               fileList={this.state.infileList}
+              beforeUpload={ (e) => this.inspectReadfile(e, this, null) }
               onChange={ (e) => this.handleReadfileUpload(e, this) }
             >
               <Button icon="upload" disabled={!this.state.use_input_file}>
@@ -277,10 +341,9 @@ class ConfigAPBS extends ConfigForm {
 
   }
 
-  handleReadfileUpload(info, self){}
 
-  /** Creates button to upload a PQR file to use as base for  */
-  renderPqrUpload(){
+  /** Creates button to upload a PQR file to use as base for autofilling the form */
+  renderPqrAutofillUpload(){
     return(
       <Form.Item label="Autofill with PQR file">
         <Upload
@@ -292,7 +355,7 @@ class ConfigAPBS extends ConfigForm {
           // action={'http://jsonplaceholder.typicode.com/posts/'}
           fileList={this.state.pqrFileList}
           beforeUpload={(e) => this.doubleUploadConfirm(e, this)}
-          onChange={ (e) => this.handlePqrUpload(e, this)}
+          onChange={ (e) => this.handlePqrAutofillUpload(e, this)}
         >
           <Button icon="upload">
             Click to Upload PQR File
@@ -313,7 +376,7 @@ class ConfigAPBS extends ConfigForm {
     }
   }
   
-  handlePqrUpload(info, self){
+  handlePqrAutofillUpload(info, self){
     if (info.file.status !== 'uploading') {
       console.log('uploading')
       // console.log(info.file, info.fileList);
@@ -535,7 +598,7 @@ class ConfigAPBS extends ConfigForm {
       <Form action={window._env_.API_URL + "/submit/apbs"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data">
       {/* <Form action={window._env_.API_URL + "/jobstatus?submitType=apbs"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data"> */}
         {/** Load data from PQR file */}
-        {this.renderPqrUpload()}
+        {this.renderPqrAutofillUpload()}
 
         {/** Choose the calculation method */}
         <Form.Item label='Calculation Type'>
@@ -617,10 +680,10 @@ class ConfigAPBS extends ConfigForm {
                 tab={<span><Icon type="upload" />Input</span>}
               >
                 {/** Toggle to use an APBS infile rather than */}
-                {/* {this.renderInfileUpload()} */}
+                {this.renderInfileUpload()}
 
                 {/** Load data from PQR file */}
-                {this.renderPqrUpload()}
+                {this.renderPqrAutofillUpload()}
 
                 {/** Choose the calculation method */}
                 <Form.Item label='Calculation Type'>
@@ -714,6 +777,46 @@ class ConfigAPBS extends ConfigForm {
     )
   }
       
+  renderConfigFormInfile(){
+    // console.log(this.state.parent_form_values.mol)
+    return(
+      <Form onSubmit={ (e) => this.handleNewJobSubmit(e, this)}>
+      {/* <Form action={window._env_.API_URL + "/submit/apbs"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data"> */}
+      {/* <Form action={window._env_.API_URL + "/submit/apbs/json"} method="POST" onSubmit={this.handleNewJobSubmit} name="thisform" encType="multipart/form-data"> */}
+        <Row>
+          <Col span={22} offset={1}>
+          {/* <Col span={21} offset={1}> */}
+            <Tabs
+              defaultActiveKey='1'
+              tabPosition='top'
+              // tabPosition='left'
+              // style={{ height: 220 }}
+            >
+              <TabPane
+                key="1" 
+                forceRender={true} 
+                tab={<span><Icon type="upload" />Input</span>}
+              >
+                {/** Toggle to use an APBS infile rather than */}
+                {this.renderInfileUpload()}
+              </TabPane>
+            </Tabs>
+          </Col>
+        </Row>
+
+        {/** Where the submission button lies */}
+        <Form.Item>
+          <Col offset={20}>
+          <Affix offsetBottom={100}>
+            {this.renderSubmitButton()}
+          </Affix>
+          </Col>
+        </Form.Item>
+
+      </Form>
+    )
+  }
+      
   render(){
     return(
       <Layout id="apbs" style={{ padding: '16px 0', marginBottom: 5, background: '#fff', boxShadow: "2px 4px 10px #00000033" }}>
@@ -722,7 +825,8 @@ class ConfigAPBS extends ConfigForm {
             <Content style={{ background: '#fff', padding: 16, margin: 0, minHeight: 280 }}>
               {/* Content goes here */}
               {/* {this.renderConfigForm()} */}
-              {this.renderConfigFormTabular()}
+              {/* {this.renderConfigFormTabular()} */}
+              {this.renderConfigFormInfile()}
             </Content>
           </Layout>
         </Layout>    

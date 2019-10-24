@@ -292,7 +292,7 @@ class ConfigPDB2PQR extends ConfigForm{
     let return_element = null
     if(this.state.form_values.PDBSOURCE == 'ID'){
       return_element = 
-          <Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4} onChange={this.handleFormChange}/>
+          <Input name="PDBID" placeholder="PDB ID" maxLength={4} onChange={this.handleFormChange}/>
     }
     else{
       let upload_url = `${window._env_.AUTOFILL_URL}/upload/${this.state.jobid}/pdb2pqr`
