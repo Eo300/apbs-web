@@ -680,7 +680,7 @@ class ConfigAPBS extends ConfigForm {
                 tab={<span><Icon type="upload" />Input</span>}
               >
                 {/** Toggle to use an APBS infile rather than */}
-                {this.renderInfileUpload()}
+                {/* {this.renderInfileUpload()} */}
 
                 {/** Load data from PQR file */}
                 {this.renderPqrAutofillUpload()}
@@ -818,6 +818,16 @@ class ConfigAPBS extends ConfigForm {
   }
       
   render(){
+    let rendered_config = null;
+    if( this.props.jobid ){
+      rendered_config = this.renderConfigFormTabular()
+    }
+    else{
+      rendered_config = this.renderConfigFormInfile()
+    }
+
+
+
     return(
       <Layout id="apbs" style={{ padding: '16px 0', marginBottom: 5, background: '#fff', boxShadow: "2px 4px 10px #00000033" }}>
           {/* {this.renderSidebar()} */}
@@ -826,7 +836,8 @@ class ConfigAPBS extends ConfigForm {
               {/* Content goes here */}
               {/* {this.renderConfigForm()} */}
               {/* {this.renderConfigFormTabular()} */}
-              {this.renderConfigFormInfile()}
+              {/* {this.renderConfigFormInfile()} */}
+              {rendered_config}
             </Content>
           </Layout>
         </Layout>    
