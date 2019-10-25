@@ -6,6 +6,7 @@ import  { Affix, Layout, Menu, Button, Form, Switch,
         } from 'antd';
 import { stat } from 'fs';
 import io from 'socket.io-client';
+import { Link } from 'react-router-dom';
 
 const { Content, Sider } = Layout;
 
@@ -418,71 +419,92 @@ class JobStatus extends Component{
         elapsedTime = 'computing...'
       }
 
+      let apbs_button_block = null
+      // if ( jobtype !== undefined ){
+      if ( jobtype === 'pdb2pqr' ){
+        let apbs_config_url = `/apbs?jobid=${this.props.jobid}`
+        apbs_button_block = 
+        // <Button type="primary" href={apbs_config_url}>
+        <Link to={apbs_config_url}>
+          <Button type="primary">
+              Use results with APBS
+              <Icon type="right"/>
+            </Button>
+        </Link>
+      }
+
       let job_status_block =
-        <Row gutter={16}>
-          {/* General job information */}
-          <Col span={6}>
-            <h2>
-              ID: {this.props.jobid}
-            </h2>
-            {/* General job information here */}
-            <h3>Time Elapsed:</h3>
-            <p style={{fontSize:24}}>
-               {elapsedTime}
-               {/* <b>{elapsedTime}</b> */}
-              {/* Time Elapsed: {this.state.elapsedTime[jobtype]} */}
-            </p>
+        <div>
+          <Row gutter={16}>
+            {/* General job information */}
+            <Col span={6}>
+              <h2>
+                ID: {this.props.jobid}
+              </h2>
+              {/* General job information here */}
+              <h3>Time Elapsed:</h3>
+              <p style={{fontSize:24}}>
+                {elapsedTime}
+                {/* <b>{elapsedTime}</b> */}
+                {/* Time Elapsed: {this.state.elapsedTime[jobtype]} */}
+              </p>
 
-          </Col>
+            </Col>
 
-          {/* Display input/output files */}
-          <Col span={12}>
-            {/* {this.createOutputList('pdb2pqr')} */}
-            {/* {this.createOutputList(jobtype)} */}
+            {/* Display input/output files */}
+            <Col span={12}>
+              {/* {this.createOutputList('pdb2pqr')} */}
+              {/* {this.createOutputList(jobtype)} */}
 
-            <h2>Files:</h2>
-            <List
-              size="small"
-              bordered
-              header={<h3>Input</h3>}
-              dataSource={this.state[jobtype].files_input}
-              // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
-              renderItem={ item => (
-                  <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}>
-                    {item.split('/')[1]}
-                  </List.Item>
-                )}
-            />
-            <br/>
-            <List
-              size="small"
-              bordered
-              header={<h3>Output</h3>}
-              dataSource={this.state[jobtype].files_output}
-              // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
-              renderItem={ item => (
-                  <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}>
-                    {item.split('/')[1]}
-                  </List.Item>
-                )}
-            />
+              <h2>Files:</h2>
+              <List
+                size="small"
+                bordered
+                header={<h3>Input</h3>}
+                dataSource={this.state[jobtype].files_input}
+                // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
+                renderItem={ item => (
+                    <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}>
+                      {item.split('/')[1]}
+                    </List.Item>
+                  )}
+              />
+              <br/>
+              <List
+                size="small"
+                bordered
+                header={<h3>Output</h3>}
+                dataSource={this.state[jobtype].files_output}
+                // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
+                renderItem={ item => (
+                    <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}>
+                      {item.split('/')[1]}
+                    </List.Item>
+                  )}
+              />
 
-          </Col>
+            </Col>
 
-          {/* Show timeline of task related to job */}
-          <Col span={6}>
-            {/* <Timeline mode="left">
-              <Timeline.Item>Download input files</Timeline.Item>
-              <Timeline.Item>Queued</Timeline.Item>
-              <Timeline.Item>Running</Timeline.Item>
-              <Timeline.Item>Upload output files</Timeline.Item>
-              <Timeline.Item>Complete</Timeline.Item>
-            </Timeline> */}
-            <Timeline mode="left" pending={pending_text}>
-              {timeline_list}
-            </Timeline>
-          </Col>
-        </Row>
+            {/* Show timeline of task related to job */}
+            <Col span={6}>
+              {/* <Timeline mode="left">
+                <Timeline.Item>Download input files</Timeline.Item>
+                <Timeline.Item>Queued</Timeline.Item>
+                <Timeline.Item>Running</Timeline.Item>
+                <Timeline.Item>Upload output files</Timeline.Item>
+                <Timeline.Item>Complete</Timeline.Item>
+              </Timeline> */}
+              <Timeline mode="left" pending={pending_text}>
+                {timeline_list}
+              </Timeline>
+            </Col>
+          </Row>
+          <Row>
+            <Col offset={18}>
+              {apbs_button_block}
+            </Col>
+          </Row>
+        </div>
 
       return job_status_block;
     }
