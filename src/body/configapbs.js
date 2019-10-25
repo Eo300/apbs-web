@@ -6,6 +6,7 @@ import  { Affix, Layout, Menu, Button, Form, Switch,
           Collapse, Spin, message, Tabs
         } from 'antd';
 // import Radio.Group from 'antd/lib/radio/group';
+import { Redirect } from 'react-router-dom';
 import ConfigForm from './utils/formutils';
 import { MgAuto, MgPara, MgManual, FeManual, MgDummy
        } from './apbs/calculationtypes';
@@ -22,6 +23,9 @@ class ConfigAPBS extends ConfigForm {
   constructor(props){
     super(props);
     this.state = {
+      job_submit: false,
+      successful_submit: false,
+
       allCollapsed : true,
       
       /** state variables related to PQR upload */
@@ -109,6 +113,7 @@ class ConfigAPBS extends ConfigForm {
       console.log(payload)
       
       // Submit the form to the workflow service
+      let successful_submit = false
       fetch(form_post_url, {
         method: 'POST',
         body: JSON.stringify(payload),
@@ -117,11 +122,18 @@ class ConfigAPBS extends ConfigForm {
           'Content-Type': 'application/json'
         }
       })
-        .then(response => response.json())
+        // .then(response => response.json())
+        .then(function(response) {
+          if (response.status === 202){
+            successful_submit = true
+          }
+          return response.json()
+        })
         .then(data => {
+          self.setState({ successful_submit: successful_submit })
           console.log(data)
           console.log('Success: ', data)
-          window.location.assign(`/jobstatus?jobtype=apbs&jobid=${self.state.jobid}`)
+          // window.location.assign(`/jobstatus?jobtype=apbs&jobid=${self.state.jobid}`)
         })
         .catch(error => console.error('Error: ', error))
     }
@@ -819,11 +831,14 @@ class ConfigAPBS extends ConfigForm {
       
   render(){
     let rendered_config = null;
-    if( this.props.jobid ){
-      rendered_config = this.renderConfigFormTabular()
+    if ( this.state.successful_submit ){
+      rendered_config = <Redirect to={`/jobstatus?jobtype=apbs&jobid=${this.state.jobid}`}/>
     }
     else{
-      rendered_config = this.renderConfigFormInfile()
+      if( this.props.jobid )
+        rendered_config = this.renderConfigFormTabular()
+      else
+        rendered_config = this.renderConfigFormInfile()
     }
 
 

@@ -4,6 +4,7 @@ import  { Affix, Layout, Menu, Button, Form, Switch,
           Input, Radio, Checkbox , Row, Col, InputNumber,
           Icon, Tooltip, Upload, Spin, message
         } from 'antd';
+import { Redirect } from 'react-router-dom';
 import ConfigForm from './utils/formutils';
 const { Content, Sider } = Layout;
 
@@ -55,7 +56,8 @@ class ConfigPDB2PQR extends ConfigForm{
         OPTIONS:        [ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin' ],
       },
 
-      job_submit: false
+      job_submit: false,
+      successful_submit: false,
     }
     // this.handleJobSubmit = this.handleJobSubmit.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this)
@@ -158,6 +160,7 @@ class ConfigPDB2PQR extends ConfigForm{
       }
 
       // Submit form data to the workflow service
+      let successful_submit = false
       fetch(form_post_url, {
         method: 'POST',
         body: JSON.stringify(payload),
@@ -166,10 +169,18 @@ class ConfigPDB2PQR extends ConfigForm{
           'Content-Type': 'application/json'
         }
       })
-        .then(response => response.json())
+        .then(function(response) {
+          if (response.status === 202){
+            successful_submit = true
+          }
+          return response.json()
+        })
         .then(data => {
-          console.log('Success: ', data)
-          window.location.assign(`/jobstatus?jobtype=pdb2pqr&jobid=${self.state.jobid}`)
+          self.setState({ successful_submit: successful_submit })
+          if ( successful_submit ){
+            console.log('Success: ', data)
+            // window.location.assign(`/jobstatus?jobtype=pdb2pqr&jobid=${self.state.jobid}`)
+          }
         })
         .catch(error => console.error('Error: ', error))
     }
@@ -522,111 +533,117 @@ class ConfigPDB2PQR extends ConfigForm{
       }, 0);
     };
 
-    return(
-      <Col offset={1}>
-        <Form onSubmit={ (e) => this.handleJobSubmit(e, this) }>
-          {/** Form item for PDB Source (id | upload) */}
-          <Form.Item
-            // id="pdbid"
-            label="PDB Source"
-            required={true}
-          >
-            <Radio.Group name="PDBSOURCE" defaultValue={this.state.form_values.PDBSOURCE} buttonStyle='solid' onChange={this.handleFormChange}>
-              <Radio.Button  value="ID"> PDB ID
-              {/* <Radio.Button  value="ID"> PDB ID:&nbsp;&nbsp; */}
-                {/* <Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4}/> */}
-              </Radio.Button>
-              <Radio.Button  value="UPLOAD"> Upload a PDB file
-              {/* <Radio.Button  value="UPLOAD"> Upload a PDB file:&nbsp;&nbsp; */}
-                {/* {this.renderPdbSourceInput()} */}
-                {/* <input type="file" name="PDB" accept=".pdb" hidden={this.state.pdb_upload_hidden}/> */}
-                {/* <Row><Upload name="PDB" accept=".pdb" customRequest={dummyRequest} >
-                  <Button>
-                    <Icon type="upload" >
-                    </Icon> Click to upload
-                  </Button>
-                </Upload></Row> */}
-              </Radio.Button>
-            </Radio.Group>
-            {this.renderPdbSourceInput()}
-          </Form.Item>
-          {/* <Form.Item> */}
-            {/* {this.renderPdbSourceInput()} */}
-          {/* </Form.Item> */}
-          
-          {/** Form item for pKa option*/}
-          <Form.Item
-            // id="pka"
-            label="pKa Options"
-          >
-            {/* <Switch checkedChildren="pKa Calculation" unCheckedChildren="pKa Calculation" defaultChecked={true} /><br/> */}
-            pH: <InputNumber name="PH" min={0} max={14} step={0.5} value={this.state.form_values.PH} onChange={(e) => this.handleFormChange(e, 'PH')} /><br/>
-            <Radio.Group name="PKACALCMETHOD" defaultValue={this.state.form_values.PKACALCMETHOD} onChange={this.handleFormChange} >
-              <Radio style={radioVertStyle} id="pka_none" value="none">    No pKa calculation </Radio>
-              <Radio style={radioVertStyle} id="pka_propka" value="propka">  Use PROPKA to assign protonation states at provided pH </Radio>
-              <Tooltip placement="right" title="requires PARSE forcefield">
-                <Radio style={radioVertStyle} id="pka_pdb2pka" value="pdb2pka"> Use PDB2PKA to parametrize ligands and assign pKa values <b>(requires PARSE forcefield)</b> at provided pH </Radio>
-              </Tooltip>
-            </Radio.Group>
-          </Form.Item>
+    if (this.state.successful_submit){
+      return <Redirect to={`/jobstatus?jobtype=pdb2pqr&jobid=${this.state.jobid}`}/>
+    }
+    else{
+      return(
+        <Col offset={1}>
+          <Form onSubmit={ (e) => this.handleJobSubmit(e, this) }>
+            {/** Form item for PDB Source (id | upload) */}
+            <Form.Item
+              // id="pdbid"
+              label="PDB Source"
+              required={true}
+            >
+              <Radio.Group name="PDBSOURCE" defaultValue={this.state.form_values.PDBSOURCE} buttonStyle='solid' onChange={this.handleFormChange}>
+                <Radio.Button  value="ID"> PDB ID
+                {/* <Radio.Button  value="ID"> PDB ID:&nbsp;&nbsp; */}
+                  {/* <Input name="PDBID" autoFocus="True" placeholder="PDB ID" maxLength={4}/> */}
+                </Radio.Button>
+                <Radio.Button  value="UPLOAD"> Upload a PDB file
+                {/* <Radio.Button  value="UPLOAD"> Upload a PDB file:&nbsp;&nbsp; */}
+                  {/* {this.renderPdbSourceInput()} */}
+                  {/* <input type="file" name="PDB" accept=".pdb" hidden={this.state.pdb_upload_hidden}/> */}
+                  {/* <Row><Upload name="PDB" accept=".pdb" customRequest={dummyRequest} >
+                    <Button>
+                      <Icon type="upload" >
+                      </Icon> Click to upload
+                    </Button>
+                  </Upload></Row> */}
+                </Radio.Button>
+              </Radio.Group>
+              {this.renderPdbSourceInput()}
+            </Form.Item>
+            {/* <Form.Item> */}
+              {/* {this.renderPdbSourceInput()} */}
+            {/* </Form.Item> */}
+            
+            {/** Form item for pKa option*/}
+            <Form.Item
+              // id="pka"
+              label="pKa Options"
+            >
+              {/* <Switch checkedChildren="pKa Calculation" unCheckedChildren="pKa Calculation" defaultChecked={true} /><br/> */}
+              pH: <InputNumber name="PH" min={0} max={14} step={0.5} value={this.state.form_values.PH} onChange={(e) => this.handleFormChange(e, 'PH')} /><br/>
+              <Radio.Group name="PKACALCMETHOD" defaultValue={this.state.form_values.PKACALCMETHOD} onChange={this.handleFormChange} >
+                <Radio style={radioVertStyle} id="pka_none" value="none">    No pKa calculation </Radio>
+                <Radio style={radioVertStyle} id="pka_propka" value="propka">  Use PROPKA to assign protonation states at provided pH </Radio>
+                <Tooltip placement="right" title="requires PARSE forcefield">
+                  <Radio style={radioVertStyle} id="pka_pdb2pka" value="pdb2pka"> Use PDB2PKA to parametrize ligands and assign pKa values <b>(requires PARSE forcefield)</b> at provided pH </Radio>
+                </Tooltip>
+              </Radio.Group>
+            </Form.Item>
+  
+            {/** Form item for forcefield choice */}
+            <Form.Item
+              id="forcefield"
+              label="Please choose a forcefield to use"
+            >
+              <Radio.Group name="FF" value={this.state.form_values.FF} buttonStyle="solid" onChange={this.handleFormChange}>
+                <Radio.Button disabled={this.state.only_parse} value="amber">  AMBER   </Radio.Button>
+                <Radio.Button disabled={this.state.only_parse} value="charmm"> CHARMM  </Radio.Button>
+                <Radio.Button disabled={this.state.only_parse} value="peoepb"> PEOEPB  </Radio.Button>
+                <Radio.Button value="parse">  PARSE   </Radio.Button>
+                <Radio.Button disabled={this.state.only_parse} value="swanson">SWANSON </Radio.Button>
+                <Radio.Button disabled={this.state.only_parse} value="tyl06">  TYL06   </Radio.Button>
+                <Radio.Button disabled={this.state.only_parse} value="user">   User-defined Forcefield </Radio.Button>
+              </Radio.Group><br/>
+              {this.renderUserForcefieldUploadButton()}
+              {/* Forcefield file: <input type="file" name="USERFF" />
+              Names file (*.names): <input type="file" name="USERNAMES" accept=".names" /> */}
+            </Form.Item>
+  
+            {/** Form item for output scheme choice*/}
+            <Form.Item
+              id="outputscheme"
+              label="Please choose an output naming scheme to use"
+            >
+              <Radio.Group name="FFOUT" defaultValue={this.state.form_values.FFOUT} buttonStyle="solid" onChange={this.handleFormChange}>
+                <Radio.Button value="internal"> Internal naming scheme <Tooltip placement="bottomLeft" title="This is placeholder help text to tell the user what this option means"><Icon type="question-circle" /></Tooltip> </Radio.Button>
+                <Radio.Button value="amber">  AMBER   </Radio.Button>
+                <Radio.Button value="charmm"> CHARMM  </Radio.Button>
+                <Radio.Button value="parse">  PARSE   </Radio.Button>
+                <Radio.Button value="peoepb"> PEOEPB  </Radio.Button>
+                <Radio.Button value="swanson">SWANSON </Radio.Button>
+                <Radio.Button value="tyl06">  TYL06   </Radio.Button>
+              </Radio.Group>
+            </Form.Item>
+            
+            {/** Form item for choosing additional options (defined earlier) */}
+            <Form.Item
+              id="addedoptions"
+              label="Additional Options"
+            >
+              <Checkbox.Group name="OPTIONS" value={this.state.form_values.OPTIONS} onChange={(e) => this.handleFormChange(e, "OPTIONS")}>
+                {optionChecklist}
+              </Checkbox.Group>
+            </Form.Item>
+            
+            {/** Where the submission button lies */}
+            <Form.Item>
+              <Col offset={18}>
+                <Affix offsetBottom={100}>
+                  {this.renderSubmitButton()}
+                </Affix>
+              </Col>
+            </Form.Item>
+  
+          </Form>
+        </Col>
+      )
+    }
 
-          {/** Form item for forcefield choice */}
-          <Form.Item
-            id="forcefield"
-            label="Please choose a forcefield to use"
-          >
-            <Radio.Group name="FF" value={this.state.form_values.FF} buttonStyle="solid" onChange={this.handleFormChange}>
-              <Radio.Button disabled={this.state.only_parse} value="amber">  AMBER   </Radio.Button>
-              <Radio.Button disabled={this.state.only_parse} value="charmm"> CHARMM  </Radio.Button>
-              <Radio.Button disabled={this.state.only_parse} value="peoepb"> PEOEPB  </Radio.Button>
-              <Radio.Button value="parse">  PARSE   </Radio.Button>
-              <Radio.Button disabled={this.state.only_parse} value="swanson">SWANSON </Radio.Button>
-              <Radio.Button disabled={this.state.only_parse} value="tyl06">  TYL06   </Radio.Button>
-              <Radio.Button disabled={this.state.only_parse} value="user">   User-defined Forcefield </Radio.Button>
-            </Radio.Group><br/>
-            {this.renderUserForcefieldUploadButton()}
-            {/* Forcefield file: <input type="file" name="USERFF" />
-            Names file (*.names): <input type="file" name="USERNAMES" accept=".names" /> */}
-          </Form.Item>
-
-          {/** Form item for output scheme choice*/}
-          <Form.Item
-            id="outputscheme"
-            label="Please choose an output naming scheme to use"
-          >
-            <Radio.Group name="FFOUT" defaultValue={this.state.form_values.FFOUT} buttonStyle="solid" onChange={this.handleFormChange}>
-              <Radio.Button value="internal"> Internal naming scheme <Tooltip placement="bottomLeft" title="This is placeholder help text to tell the user what this option means"><Icon type="question-circle" /></Tooltip> </Radio.Button>
-              <Radio.Button value="amber">  AMBER   </Radio.Button>
-              <Radio.Button value="charmm"> CHARMM  </Radio.Button>
-              <Radio.Button value="parse">  PARSE   </Radio.Button>
-              <Radio.Button value="peoepb"> PEOEPB  </Radio.Button>
-              <Radio.Button value="swanson">SWANSON </Radio.Button>
-              <Radio.Button value="tyl06">  TYL06   </Radio.Button>
-            </Radio.Group>
-          </Form.Item>
-          
-          {/** Form item for choosing additional options (defined earlier) */}
-          <Form.Item
-            id="addedoptions"
-            label="Additional Options"
-          >
-            <Checkbox.Group name="OPTIONS" value={this.state.form_values.OPTIONS} onChange={(e) => this.handleFormChange(e, "OPTIONS")}>
-              {optionChecklist}
-            </Checkbox.Group>
-          </Form.Item>
-          
-          {/** Where the submission button lies */}
-          <Form.Item>
-            <Col offset={18}>
-              <Affix offsetBottom={100}>
-                {this.renderSubmitButton()}
-              </Affix>
-            </Col>
-          </Form.Item>
-
-        </Form>
-      </Col>
-    )
   }
       
   render(){
