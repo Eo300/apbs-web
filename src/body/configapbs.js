@@ -99,16 +99,21 @@ class ConfigAPBS extends ConfigForm {
       let form_post_url = `${window._env_.WORKFLOW_URL}/${self.state.jobid}/apbs?`;
       console.log(form_post_url)
 
-      let combined_form_data = self.state.parent_form_values;
-      // console.log(self.state.parent_form_values);
-      // console.log(self.state.child_form_values);
-      Object.assign(combined_form_data, self.state.child_form_values);
-      // console.log(combined_form_data);
-      // let payload = {
-      //   form : combined_form_data
-      // }
-      let payload = {
-        form : self.state.v2_form_values
+      let payload;
+      if ( self.props.jobid ){
+        let combined_form_data = self.state.parent_form_values;
+        // console.log(self.state.parent_form_values);
+        // console.log(self.state.child_form_values);
+        Object.assign(combined_form_data, self.state.child_form_values);
+        // console.log(combined_form_data);
+        payload = {
+          form : combined_form_data
+        }
+      }
+      else{
+        payload = {
+          form : self.state.v2_form_values
+        }
       }
       console.log(payload)
       

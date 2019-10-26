@@ -389,22 +389,22 @@ class JobStatus extends Component{
       let pending_text = ''
 
       let timeline_list = []
-      if( this.state[jobtype].status == 'running' )
+      if( this.state[jobtype].status === 'running' )
         stop_index = 2;
-      else if( this.state[jobtype].status == 'complete' ){
+      else if( this.state[jobtype].status === 'complete' ){
         /** Do nothing */
       }else
         stop_index = 0;
 
       for (let val of state_list.slice(0, stop_index)){
-        if( val == 'Running' && this.state[jobtype].status == 'running' ){
+        if( val == 'Running' && this.state[jobtype].status === 'running' ){
           console.log('Running should be a pending dot')
           is_pending = true
           pending_text = "Running"
 
           // timeline_list.push( <Timeline.Item pending >{val}</Timeline.Item> )
         }
-        else if( val == 'Complete' && this.state[jobtype].status == 'complete' ){
+        else if( val == 'Complete' && this.state[jobtype].status === 'complete' ){
           timeline_list.push( <Timeline.Item color="green" dot={<Icon type="check-circle"/>}>{val}</Timeline.Item> )
         }
         else
@@ -423,10 +423,12 @@ class JobStatus extends Component{
       // if ( jobtype !== undefined ){
       if ( jobtype === 'pdb2pqr' ){
         let apbs_config_url = `/apbs?jobid=${this.props.jobid}`
+        let is_disabled = true;
+        if (this.state[jobtype].status === 'complete') is_disabled = false;
         apbs_button_block = 
         // <Button type="primary" href={apbs_config_url}>
         <Link to={apbs_config_url}>
-          <Button type="primary">
+          <Button type="primary" disabled={is_disabled}>
               Use results with APBS
               <Icon type="right"/>
             </Button>
