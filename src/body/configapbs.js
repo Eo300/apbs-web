@@ -489,16 +489,28 @@ class ConfigAPBS extends ConfigForm {
                   onFormChange={this.handleChildFormChange} />
 
       case "mg-para":
-        return <MgPara   autofill={this.state.autofill_data} />
+        return <MgPara   
+                  autofill={this.state.autofill_data} 
+                  form_values={this.state.child_form_values} 
+                  onFormChange={this.handleChildFormChange} />
 
       case "mg-manual":
-        return <MgManual autofill={this.state.autofill_data} />
+        return <MgManual 
+                  autofill={this.state.autofill_data} 
+                  form_values={this.state.child_form_values} 
+                  onFormChange={this.handleChildFormChange} />
 
       case "fe-manual":
-        return <FeManual autofill={this.state.autofill_data} />
+        return <FeManual 
+                  autofill={this.state.autofill_data} 
+                  form_values={this.state.child_form_values} 
+                  onFormChange={this.handleChildFormChange} />
 
       case "mg-dummy":
-        return <MgDummy  autofill={this.state.autofill_data} />
+        return <MgDummy  
+                  autofill={this.state.autofill_data} 
+                  form_values={this.state.child_form_values} 
+                  onFormChange={this.handleChildFormChange} />
     }
   }
 
