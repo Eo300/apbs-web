@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import {
   BrowserRouter as Router,
   Route,
@@ -19,6 +20,12 @@ class ServerRouter extends Component{
         }
         this.submenuOnClick = this.submenuOnClick.bind(this);
         this.onSiderCollapse = this.onSiderCollapse.bind(this);
+
+        if( window._env_.GA_TRACKING_ID !== "" ) 
+            ReactGA.initialize(window._env_.GA_TRACKING_ID);
+        else
+            console.error('no Google Analytics ID was set')
+        
     }
 
     /**

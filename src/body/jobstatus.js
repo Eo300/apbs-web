@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import 'antd/dist/antd.css'
 import  { Affix, Layout, Menu, Button, Form, Switch,
           Input, Radio, Checkbox , Row, Col, InputNumber,
@@ -18,6 +19,8 @@ const { Content, Sider } = Layout;
 class JobStatus extends Component{
   constructor(props){
     super(props);
+    if( window._env_.GA_TRACKING_ID !== "" ) 
+      ReactGA.pageview(window.location.pathname)
 
     this.jobServerDomain = window._env_.API_URL
     this.jobStatusDomain = window._env_.STATUS_URL

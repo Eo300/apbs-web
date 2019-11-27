@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import 'antd/dist/antd.css'
 import  { Affix, Layout, Menu, Button, Form, Switch,
           Input, Radio, Checkbox , Row, Col, InputNumber,
@@ -22,6 +23,9 @@ class ConfigAPBS extends ConfigForm {
 
   constructor(props){
     super(props);
+    if( window._env_.GA_TRACKING_ID !== "" )
+      ReactGA.pageview(window.location.pathname)
+      
     this.state = {
       job_submit: false,
       successful_submit: false,

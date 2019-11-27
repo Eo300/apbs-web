@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import 'antd/dist/antd.css';
 import '../styles/home.css';
 
@@ -9,6 +10,12 @@ import { Link } from 'react-router-dom';
 const { Content } = Layout;
 
 class HomePage extends Component{
+    constructor(props){
+        super(props);
+        if( window._env_.GA_TRACKING_ID !== "" ) 
+            ReactGA.pageview(window.location.pathname)
+    }
+
     /**
      * Creates and returns the main banner welcoming the user to the website
      */

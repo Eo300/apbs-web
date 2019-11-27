@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import 'antd/dist/antd.css';
 // import './home.css';
 
@@ -7,6 +8,11 @@ import{ Layout, Col, Menu, Carousel, Row,
 const { Content } = Layout;
 
 class AboutPage extends Component{
+    constructor(props){
+        super(props)
+        if( window._env_.GA_TRACKING_ID !== "" ) 
+            ReactGA.pageview(window.location.pathname)
+    }
 
     render(){
         return(
