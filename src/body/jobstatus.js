@@ -20,7 +20,7 @@ class JobStatus extends Component{
   constructor(props){
     super(props);
     if( window._env_.GA_TRACKING_ID !== "" ) 
-      ReactGA.pageview(window.location.pathname)
+      ReactGA.pageview(window.location.pathname + window.location.search)
 
     this.jobServerDomain = window._env_.API_URL
     this.jobStatusDomain = window._env_.STATUS_URL

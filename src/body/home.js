@@ -13,7 +13,7 @@ class HomePage extends Component{
     constructor(props){
         super(props);
         if( window._env_.GA_TRACKING_ID !== "" ) 
-            ReactGA.pageview(window.location.pathname)
+            ReactGA.pageview(window.location.pathname + window.location.search)
     }
 
     /**
