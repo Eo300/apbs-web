@@ -33,6 +33,7 @@ class MgAuto extends CalctypeBase{
 
     }
 
+    // Setting default form_values
     let initial_values = {
       cgcent      : 'mol',
       fgcent      : 'mol',
@@ -127,7 +128,7 @@ class MgAuto extends CalctypeBase{
       pdimex      : this.props.autofill.pdime[0],
       pdimey      : this.props.autofill.pdime[1],
       pdimez      : this.props.autofill.pdime[2],
-      gcent       : this.props.autofill.gridCenterMethod,
+      // gcent       : this.props.autofill.gridCenterMethod,
     }
 
     let new_values = this.props.form_values
