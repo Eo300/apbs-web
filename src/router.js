@@ -3,6 +3,7 @@ import ReactGA from 'react-ga';
 import {
   BrowserRouter as Router,
   Route,
+//   Switch,
 } from 'react-router-dom'
 import App from './App';
 import './App.css';
@@ -62,6 +63,7 @@ class ServerRouter extends Component{
         return(
             <Router>
                 <div>
+                    {/* <Switch> */}
                     <Route exact path="/"
                         render={ props => (
                             <App
@@ -88,6 +90,17 @@ class ServerRouter extends Component{
                         render={ props => (
                             <App
                                 page={PAGES.documentation}
+                                isMenuCollapsed={this.state.isMenuCollapsed}
+                                openSubmenus={this.state.openSubmenus}
+                                submenuOnClick={j => this.submenuOnClick(j)}
+                                onSiderCollapse={(isCollapsed, type) => this.onSiderCollapse(isCollapsed, type)}
+                            />
+                        )}
+                    />
+                    <Route path="/download"
+                        render={ props => (
+                            <App
+                                page={PAGES.download}
                                 isMenuCollapsed={this.state.isMenuCollapsed}
                                 openSubmenus={this.state.openSubmenus}
                                 submenuOnClick={j => this.submenuOnClick(j)}
@@ -128,6 +141,7 @@ class ServerRouter extends Component{
                                 query={props.location.search}/>
                         )}
                     />
+                    {/* </Switch> */}
                 </div>
             </Router>
         )

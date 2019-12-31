@@ -12,6 +12,7 @@ import './App.css';
 import 'antd/dist/antd.css';
 
 import { Layout, Breadcrumb, Col, Row } from 'antd';
+import DownloadPage from './body/cli-download.js';
 // import { Layout, Col, Menu, Icon, Tooltip, Alert } from 'antd';
 // const { Header, Content, Sider, Footer } = Layout;
 const { Header } = Layout;
@@ -97,7 +98,7 @@ class App extends Component {
     }
 
     // DOCUMENTATION page
-    // Renders the about page
+    // Renders the documentation page
     // Directs user to the APBS-PDB2PQR documentation
     else if (this.state.cur_page === PAGES.documentation){
       document.title = "Documentation";
@@ -105,6 +106,15 @@ class App extends Component {
       content = <embed 
         style={{height: '70vh'}}
         src="https://apbs-pdb2pqr.readthedocs.io/en/latest/"/>;
+    }
+
+    // DOWNLOAD page
+    // Renders the CLI download page
+    // Directs user to the APBS-PDB2PQR download page
+    else if (this.state.cur_page === PAGES.download){
+      document.title = "Downloads";
+      bcrumb = this.createServiceBreadcrumb(['Downloads'])
+      content = <DownloadPage />;
     }
 
     // PDB2PQR page

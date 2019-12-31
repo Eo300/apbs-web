@@ -113,8 +113,15 @@ class MyHeader extends Component{
                 <span>Documentation</span>
               </NavLink> 
             </Menu.Item>
+
+            <Menu.Item  name={PAGES.download} onClick={() => this.props.onClick(PAGES.download)} key={PAGES.download}> 
+              <NavLink to="/download">
+                <Icon type="download"/>
+                <span>Download CLI</span>
+              </NavLink> 
+            </Menu.Item>
   
-            <SubMenu
+            {/* <SubMenu
               title={
                 <span>
                   <Icon type="schedule"/>
@@ -124,7 +131,7 @@ class MyHeader extends Component{
               key="job_history"
               children={previous_jobs}
               onTitleClick={() => this.props.submenuOnClick("job_history")}
-            />
+            /> */}
               {/* {previous_jobs}
             </SubMenu> */}
   
