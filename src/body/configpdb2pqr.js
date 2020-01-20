@@ -176,6 +176,10 @@ class ConfigPDB2PQR extends ConfigForm{
         .then(function(response) {
           if (response.status === 202){
             successful_submit = true
+          }else if(response.status >= 400){
+          // }else if(response.status === 400 || response.status === 500){
+            successful_submit = false
+            self.state.job_submit = false
           }
           return response.json()
         })
@@ -184,6 +188,8 @@ class ConfigPDB2PQR extends ConfigForm{
           if ( successful_submit ){
             console.log('Success: ', data)
             // window.location.assign(`/jobstatus?jobtype=pdb2pqr&jobid=${self.state.jobid}`)
+          }else{
+            message.error(data['error'])
           }
         })
         .catch(error => console.error('Error: ', error))
