@@ -422,6 +422,7 @@ class JobStatus extends Component{
         elapsedTime = 'computing...'
       }
 
+      // Setup button to configure APBS post-PDB2PQR
       let apbs_button_block = null
       // if ( jobtype !== undefined ){
       if ( jobtype === 'pdb2pqr' ){
@@ -436,6 +437,35 @@ class JobStatus extends Component{
               <Icon type="right"/>
             </Button>
         </Link>
+      }
+
+      // Setup button to view results in vizualizer
+      // TODO: use dropdown when we add more than just 3Dmol
+      let viz_button_block = null
+      let pqr_prefix = null
+      if ( jobtype === 'apbs' ){
+        // find pqr name prefix
+        for( let element of this.state[jobtype].files_input ){
+          let file_name = element.split('/').slice(-1)[0]
+          let extension_index = file_name.search(/.pqr$/)
+          if( extension_index !== -1 ){
+            pqr_prefix = file_name.slice(0, extension_index)
+            // console.log(pqr_prefix)
+            break
+          }
+        }
+        // load visualizer button link if on the respective job status page
+        // let viz_3dmol_url = `/viz/3dmol?jobid=${this.props.jobid}&pqr=${pqr_prefix}`
+        let viz_3dmol_url = `${window._env_.VIZ_URL}/3dmol?jobid=${this.props.jobid}&pqr=${pqr_prefix}`
+        let is_disabled = true;
+        if (this.state[jobtype].status === 'complete') is_disabled = false;
+        viz_button_block = 
+        // <Button type="primary" href={apbs_config_url}>
+        <Button type="primary" href={viz_3dmol_url} target='_BLANK' disabled={is_disabled}>
+            View in 3Dmol
+            {/* View in Visualizer */}
+            <Icon type="right"/>
+        </Button>
       }
 
       let job_status_block =
@@ -507,6 +537,11 @@ class JobStatus extends Component{
           <Row>
             <Col offset={18}>
               {apbs_button_block}
+            </Col>
+          </Row>
+          <Row>
+            <Col offset={18}>
+              {viz_button_block}
             </Col>
           </Row>
         </div>
