@@ -84,7 +84,7 @@ class App extends Component {
     // HOME page
     // Renders landing page, with choice to do PDB2PQR or APBS
     if (this.state.cur_page === PAGES.home || this.state.cur_page === null){
-      document.title = "Home";
+      document.title = "APBS | Home";
       bcrumb = this.createServiceBreadcrumb(['Home'])
       content = <HomePage />;
     }
@@ -92,7 +92,7 @@ class App extends Component {
     // ABOUT page
     // Renders the about page
     else if (this.state.cur_page === PAGES.about){
-      document.title = "About";
+      document.title = "APBS | About";
       bcrumb = this.createServiceBreadcrumb(['About'])
       content = <AboutPage />;
     }
@@ -101,7 +101,7 @@ class App extends Component {
     // Renders the documentation page
     // Directs user to the APBS-PDB2PQR documentation
     else if (this.state.cur_page === PAGES.documentation){
-      document.title = "Documentation";
+      document.title = "APBS | Documentation";
       bcrumb = this.createServiceBreadcrumb(['Documentation'])
       content = <embed 
         style={{height: '70vh'}}
@@ -112,7 +112,7 @@ class App extends Component {
     // Renders the CLI download page
     // Directs user to the APBS-PDB2PQR download page
     else if (this.state.cur_page === PAGES.download){
-      document.title = "Downloads";
+      document.title = "APBS | Downloads";
       bcrumb = this.createServiceBreadcrumb(['Downloads'])
       content = <DownloadPage />;
     }
@@ -120,7 +120,7 @@ class App extends Component {
     // PDB2PQR page
     // Renders configuration elements to set up an PDB2PQR job
     else if (this.state.cur_page === PAGES.pdb2pqr){
-      document.title = "Config - PDB2PQR";
+      document.title = "Tools | Configure a PDB2PQR job";
       bcrumb = this.createServiceBreadcrumb(['Tools', 'PDB2PQR Job Configuration'])
       content = <ConfigPDB2PQR />;
     }
@@ -131,7 +131,7 @@ class App extends Component {
       let queryParser = require('query-string-es5');
       let job_id = queryParser.parse(this.props.query)['jobid']
 
-      document.title = "Config - APBS";
+      document.title = "Tools | Configure a APBS job";
       bcrumb = this.createServiceBreadcrumb(['Tools', 'APBS Job Configuration'])
       content = <ConfigAPBS jobid={job_id}/>;
     }
