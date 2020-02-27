@@ -716,7 +716,7 @@ class ConfigAPBS extends ConfigForm {
                 {/* {this.renderInfileUpload()} */}
 
                 {/** Load data from PQR file */}
-                {this.renderPqrAutofillUpload()}
+                {/* {this.renderPqrAutofillUpload()} */}
 
                 {/** Choose the calculation method */}
                 <Form.Item label='Calculation Type'>
