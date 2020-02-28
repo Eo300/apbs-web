@@ -3,11 +3,13 @@ import ReactGA from 'react-ga';
 import 'antd/dist/antd.css'
 import  { Affix, Layout, Menu, Button, Form, Switch,
           Input, Radio, Checkbox , Row, Col, InputNumber,
-          Icon, Tooltip, Upload, List, message, Timeline
+          Icon, Tooltip, Upload, List, message, Timeline, notification
         } from 'antd';
 import { stat } from 'fs';
 import io from 'socket.io-client';
 import { Link } from 'react-router-dom';
+
+import '../styles/jobstatus.css'
 
 const { Content, Sider } = Layout;
 
@@ -77,6 +79,20 @@ class JobStatus extends Component{
     this.fetchIntervalAPBS = this.fetchJobStatus('apbs');
     // this.fetchJobStatusSocketIO('apbs')
     // this.fetchJobStatusSocketIO('pdb2pqr')
+
+    // if( window._env_.ON_CLOUD == true ){
+    if( true ){
+      notification.warn({
+        key: 'data_retention_notice',
+        message: "Regarding Data Retention",
+        duration: 0,
+        description: 
+          "Files for a JobID WILL BE DELETED 48 hours after job creation,\
+            if using APBS-REST via our cloud service. Please download\
+            the files you need in the meantime.",
+        // btn: (<Button type="primary" size="small" onClick={() => notification.close('data_retention_notice')}> Close </Button>)
+      })
+    }
   }
 
   /** Cleans up setInterval objects before unmounting */
@@ -384,7 +400,9 @@ class JobStatus extends Component{
         jobtype = this.props.jobtype;
       }
 
+      /** Create the timeline view of the current job status */
       // let state_list = ['Download input files', 'Queued', 'Running', 'Upload output files', 'Complete']
+      // let state_list = ['Pending', 'Aborted', 'Running', 'Complete', 'Terminated']
       let state_list = ['Submitted', 'Running', 'Complete']
       let stop_index = state_list.length
 
@@ -414,6 +432,7 @@ class JobStatus extends Component{
           timeline_list.push( <Timeline.Item>{val}</Timeline.Item> )
       }
 
+      /** Set elapsed time */
       let elapsedTime = 'computing...'
       if (this.state.elapsedTime[jobtype] !== undefined){
         elapsedTime = this.state.elapsedTime[jobtype]
@@ -422,7 +441,7 @@ class JobStatus extends Component{
         elapsedTime = 'computing...'
       }
 
-      // Setup button to configure APBS post-PDB2PQR
+      /** Setup button to configure APBS post-PDB2PQR */
       let apbs_button_block = null
       // if ( jobtype !== undefined ){
       if ( jobtype === 'pdb2pqr' ){
@@ -432,7 +451,7 @@ class JobStatus extends Component{
         apbs_button_block = 
         // <Button type="primary" href={apbs_config_url}>
         <Link to={apbs_config_url}>
-          <Button type="primary" disabled={is_disabled}>
+          <Button type="primary" size='large' disabled={is_disabled}>
               Use results with APBS
               <Icon type="right"/>
             </Button>
@@ -461,21 +480,32 @@ class JobStatus extends Component{
         if (this.state[jobtype].status === 'complete') is_disabled = false;
         viz_button_block = 
         // <Button type="primary" href={apbs_config_url}>
-        <Button type="primary" href={viz_3dmol_url} target='_BLANK' disabled={is_disabled}>
+        <Button type="primary" size='large' href={viz_3dmol_url} target='_BLANK' disabled={is_disabled}>
             View in 3Dmol
             {/* View in Visualizer */}
             <Icon type="right"/>
         </Button>
       }
 
+      let bookmark_notice_block = 
+        <div style={{ textAlign: 'center' }}>
+          <h2> <b>Bookmark</b> <Icon type="star" theme="twoTone" /> this page to return to your results after leaving</h2>
+          {/* <h2> <b>Bookmark</b> this page in order to view your results after leaving this page.</h2> */}
+          <br/>
+        </div>
+
       let job_status_block =
         <div>
+          <Row>
+            {bookmark_notice_block}
+          </Row>
           <Row gutter={16}>
             {/* General job information */}
             <Col span={6}>
               <h2>
                 ID: {this.props.jobid}
               </h2>
+
               {/* General job information here */}
               <h3>Time Elapsed:</h3>
               <p style={{fontSize:24}}>
@@ -484,6 +514,12 @@ class JobStatus extends Component{
                 {/* Time Elapsed: {this.state.elapsedTime[jobtype]} */}
               </p>
 
+              <Timeline mode="left" pending={pending_text}>
+                {timeline_list}
+              </Timeline>
+
+              {/* <br/> */}
+              {/* <h3>Regarding data retention</h3> */}
             </Col>
 
             {/* Display input/output files */}
@@ -492,6 +528,7 @@ class JobStatus extends Component{
               {/* {this.createOutputList(jobtype)} */}
 
               <h2>Files:</h2>
+              {/* <h3>Notice regarding data retention</h3> */}
               <List
                 size="small"
                 bordered
@@ -499,7 +536,8 @@ class JobStatus extends Component{
                 dataSource={this.state[jobtype].files_input}
                 // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
                 renderItem={ item => (
-                    <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}>
+                    <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Icon type='download'/> Download </a>]}>
+                    {/* <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}> */}
                       {item.split('/')[1]}
                     </List.Item>
                   )}
@@ -512,11 +550,19 @@ class JobStatus extends Component{
                 dataSource={this.state[jobtype].files_output}
                 // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
                 renderItem={ item => (
-                    <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}>
+                    <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Icon type='download'/> Download </a>]}>
+                    {/* <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}> */}
                       {item.split('/')[1]}
                     </List.Item>
                   )}
               />
+
+              <br/>
+
+              <div className='next-process'>
+                {apbs_button_block}
+                {viz_button_block}
+              </div>
 
             </Col>
 
@@ -529,12 +575,14 @@ class JobStatus extends Component{
                 <Timeline.Item>Upload output files</Timeline.Item>
                 <Timeline.Item>Complete</Timeline.Item>
               </Timeline> */}
-              <Timeline mode="left" pending={pending_text}>
+              {/* <Timeline mode="left" pending={pending_text}>
                 {timeline_list}
-              </Timeline>
+              </Timeline> */}
             </Col>
+
           </Row>
-          <Row>
+
+          {/* <Row>
             <Col offset={18}>
               {apbs_button_block}
             </Col>
@@ -543,7 +591,8 @@ class JobStatus extends Component{
             <Col offset={18}>
               {viz_button_block}
             </Col>
-          </Row>
+          </Row> */}
+
         </div>
 
       return job_status_block;

@@ -262,7 +262,7 @@ class ConfigAPBS extends ConfigForm {
           </Form.Item>
         {/* </div> */}
 
-          <Form.Item label="Upload additional input files for APBS">
+          <Form.Item label="Upload supporting files for the APBS input file above">
             <Upload
               name='file_data'
               // accept='.pqr'
