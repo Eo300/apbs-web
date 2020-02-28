@@ -447,7 +447,11 @@ class JobStatus extends Component{
       if ( jobtype === 'pdb2pqr' ){
         let apbs_config_url = `/apbs?jobid=${this.props.jobid}`
         let is_disabled = true;
-        if (this.state[jobtype].status === 'complete') is_disabled = false;
+        if (this.state[jobtype].status === 'complete'){
+          // TODO: Use alternative means to determine if user requested APBS input file
+          if ( this.state[jobtype].files_output.some( e => e.slice(-3) === '.in' ) ) // check if APBS input file exists in output_files with *.in
+            is_disabled = false;
+        }
         apbs_button_block = 
         // <Button type="primary" href={apbs_config_url}>
         <Link to={apbs_config_url}>
