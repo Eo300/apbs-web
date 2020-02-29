@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import 'antd/dist/antd.css';
 import '../styles/myheader.css'
+// import APBS_LOGO_64 from '../img/APBS_64.png';
+import APBS_LOGO_128 from '../img/APBS_128_v2.png';
 import PAGES from './pagenames.js';
 
 import { NavLink, } from 'react-router-dom';
@@ -70,7 +72,10 @@ class MyHeader extends Component{
           onCollapse={(isCollapsed, type) => this.props.onSiderCollapse(isCollapsed, type)}
           className="sidemenu"
         >
-          <div className="logo"/>
+          {/* <div className="logo"/> */}
+          <NavLink to="/"> 
+            <img className="logo" src={APBS_LOGO_128}/>
+          </NavLink>
           <Menu
             theme="dark"
             // mode="horizontal"

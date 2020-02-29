@@ -54,7 +54,7 @@ class ServerRouter extends Component{
         if( type === 'clickTrigger' )
             new_state = !cur_sider_state;
         else if (type === 'responsive')
-            new_state = collapsed;
+            new_state = cur_sider_state;
 
         this.setState({ isMenuCollapsed: new_state });
     }
