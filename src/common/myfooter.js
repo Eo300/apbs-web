@@ -90,7 +90,7 @@ class MyFooter extends Component{
             {/* <Row><Col span={20} offset={2}> */}
             <Row>
                 <Col span={20}>
-                    <hr/>
+                    {/* <hr/> */}
                     <br/>
                 </Col>
             </Row>
