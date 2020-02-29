@@ -392,6 +392,25 @@ class JobStatus extends Component{
     }
   }
 
+  createFileListItem(item){
+    let action_list = [
+      <a href={window._env_.STORAGE_URL+'/'+item}><Icon type='download'/> Download </a>
+    ]
+
+    // Add view option if extension is .txt or .json
+    if( item.endsWith('.txt') || item.endsWith('.json') ){
+      action_list.unshift(
+        <a href={window._env_.STORAGE_URL+'/'+item+'?view=true'} target='_BLANK'><Icon type='eye'/> View </a>
+      )
+    }
+
+    return (
+      <List.Item actions={action_list}>
+        {item.split('/')[1]}
+      </List.Item>
+    )
+  }
+
   newCreateJobStatus(){
     if( this.props.jobid ){
 
@@ -540,7 +559,10 @@ class JobStatus extends Component{
                 dataSource={this.state[jobtype].files_input}
                 // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
                 renderItem={ item => (
-                    <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Icon type='download'/> Download </a>]}>
+                    <List.Item actions={[
+                      <a href={window._env_.STORAGE_URL+'/'+item}><Icon type='download'/> Download </a>,
+                      // <a href={window._env_.STORAGE_URL+'/'+item}><Icon type='eye'/> View </a>
+                    ]}>
                     {/* <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}> */}
                       {item.split('/')[1]}
                     </List.Item>
@@ -553,12 +575,16 @@ class JobStatus extends Component{
                 header={<h3>Output</h3>}
                 dataSource={this.state[jobtype].files_output}
                 // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
-                renderItem={ item => (
-                    <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Icon type='download'/> Download </a>]}>
-                    {/* <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}> */}
-                      {item.split('/')[1]}
-                    </List.Item>
-                  )}
+                renderItem={ (item) => this.createFileListItem(item) }
+                // renderItem={ item => (
+                //     <List.Item actions={[
+                //       <a href={window._env_.STORAGE_URL+'/'+item}><Icon type='download'/> Download </a>,
+                //       <a href={window._env_.STORAGE_URL+'/'+item+'?view=true' target="BLANK"}><Icon type='eye'/> View </a>
+                //     ]}>
+                //     {/* <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}> */}
+                //       {item.split('/')[1]}
+                //     </List.Item>
+                //   )}
               />
 
               <br/>
