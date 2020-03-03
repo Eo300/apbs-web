@@ -179,7 +179,7 @@ class ConfigPDB2PQR extends ConfigForm{
           }else if(response.status >= 400){
           // }else if(response.status === 400 || response.status === 500){
             successful_submit = false
-            self.state.job_submit = false
+            self.setState({ job_submit: false })
           }
           return response.json()
         })

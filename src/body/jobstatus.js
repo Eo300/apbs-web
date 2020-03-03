@@ -10,6 +10,7 @@ import io from 'socket.io-client';
 import { Link } from 'react-router-dom';
 
 import '../styles/jobstatus.css'
+import { strict } from 'assert';
 
 const { Content, Sider } = Layout;
 
@@ -397,8 +398,8 @@ class JobStatus extends Component{
       <a href={window._env_.STORAGE_URL+'/'+item}><Icon type='download'/> Download </a>
     ]
 
-    // Add view option if extension is .txt or .json
-    if( item.endsWith('.txt') || item.endsWith('.json') ){
+    // Add view option if extension is .txt, .json, or .mc
+    if( item.endsWith('.txt') || item.endsWith('.json') || item.endsWith('.mc')){
       action_list.unshift(
         <a href={window._env_.STORAGE_URL+'/'+item+'?view=true'} target='_BLANK'><Icon type='eye'/> View </a>
       )
@@ -560,8 +561,8 @@ class JobStatus extends Component{
                 // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
                 renderItem={ item => (
                     <List.Item actions={[
+                      <a href={window._env_.STORAGE_URL+'/'+item+'?view=true'} target='_BLANK'><Icon type='eye'/> View </a>,
                       <a href={window._env_.STORAGE_URL+'/'+item}><Icon type='download'/> Download </a>,
-                      // <a href={window._env_.STORAGE_URL+'/'+item}><Icon type='eye'/> View </a>
                     ]}>
                     {/* <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}> */}
                       {item.split('/')[1]}

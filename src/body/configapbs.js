@@ -135,14 +135,21 @@ class ConfigAPBS extends ConfigForm {
         .then(function(response) {
           if (response.status === 202){
             successful_submit = true
+          }else if(response.status >= 400){
+            successful_submit = false
+            self.setState({ job_submit: false })
           }
           return response.json()
         })
         .then(data => {
           self.setState({ successful_submit: successful_submit })
           console.log(data)
-          console.log('Success: ', data)
           // window.location.assign(`/jobstatus?jobtype=apbs&jobid=${self.state.jobid}`)
+          if ( successful_submit ){
+            console.log('Success: ', data)
+          }else{
+            message.error(data['error'])
+          }
         })
         .catch(error => console.error('Error: ', error))
     }
@@ -311,6 +318,7 @@ class ConfigAPBS extends ConfigForm {
       else{
         let v2_form_values = self.state.v2_form_values;
         v2_form_values['filename'] = file.name;
+        // v2_form_values['support_files'] = [] //TODO: use later to communicate to server the expected READ files
         self.setState({ v2_form_values });
       }
     }
