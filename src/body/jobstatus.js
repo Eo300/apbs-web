@@ -1,10 +1,39 @@
 import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import 'antd/dist/antd.css'
-import  { Affix, Layout, Menu, Button, Form, Switch,
-          Input, Radio, Checkbox , Row, Col, InputNumber,
-          Icon, Tooltip, Upload, List, message, Timeline, notification
-        } from 'antd';
+
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  DownloadOutlined,
+  EyeOutlined,
+  LoadingOutlined,
+  RightOutlined,
+  StarTwoTone,
+} from '@ant-design/icons';
+
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+
+import {
+  Affix,
+  Layout,
+  Menu,
+  Button,
+  Switch,
+  Input,
+  Radio,
+  Checkbox,
+  Row,
+  Col,
+  InputNumber,
+  Tooltip,
+  Upload,
+  List,
+  message,
+  Timeline,
+  notification,
+} from 'antd';
 import { stat } from 'fs';
 import io from 'socket.io-client';
 import { Link } from 'react-router-dom';
@@ -324,7 +353,7 @@ class JobStatus extends Component{
     if(completion_status !== null){
       displayed_job_state = completion_status.charAt(0).toUpperCase() + completion_status.substr(1)
       if(completion_status == 'running')
-        running_icon = <Icon type='loading'/>
+        running_icon = <LoadingOutlined />
       // else if(completion_status == 'complete')
       //   message.success(jobtype.toUpperCase()+' job completed')
     }
@@ -357,7 +386,7 @@ class JobStatus extends Component{
                       dataSource={this.state[jobtype].files}
                       // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
                       renderItem={ item => (
-                          <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}>
+                          <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon={<DownloadOutlined />}>Download</Button></a>]}>
                             {/* {window._env_.API_URL+'/download/'+item} */}
                             {item.split('/')[1]}
                           </List.Item>
@@ -422,13 +451,13 @@ class JobStatus extends Component{
 
   createFileListItem(item){
     let action_list = [
-      <a href={window._env_.STORAGE_URL+'/'+item}><Icon type='download'/> Download </a>
+      <a href={window._env_.STORAGE_URL+'/'+item}><DownloadOutlined /> Download </a>
     ]
 
     // Add view option if extension is .txt, .json, or .mc
     if( item.endsWith('.txt') || item.endsWith('.json') || item.endsWith('.mc')){
       action_list.unshift(
-        <a href={window._env_.STORAGE_URL+'/'+item+'?view=true'} target='_BLANK'><Icon type='eye'/> View </a>
+        <a href={window._env_.STORAGE_URL+'/'+item+'?view=true'} target='_BLANK'><EyeOutlined /> View </a>
       )
     }
 
@@ -492,13 +521,13 @@ class JobStatus extends Component{
         timeline_list.push( <Timeline.Item>{this.possibleJobStates.submitted}</Timeline.Item> )
         timeline_list.push( <Timeline.Item>{this.possibleJobStates.pending}</Timeline.Item> )
         timeline_list.push( <Timeline.Item>{this.possibleJobStates.running}</Timeline.Item> )
-        timeline_list.push( <Timeline.Item color="red" dot={<Icon type="close-circle" />}>{this.possibleJobStates.failed}</Timeline.Item> )
+        timeline_list.push( <Timeline.Item color="red" dot={<CloseCircleOutlined />}>{this.possibleJobStates.failed}</Timeline.Item> )
       }
       else if( this.state[jobtype].status === 'complete' ){
         timeline_list.push( <Timeline.Item>{this.possibleJobStates.submitted}</Timeline.Item> )
         timeline_list.push( <Timeline.Item>{this.possibleJobStates.pending}</Timeline.Item> )
         timeline_list.push( <Timeline.Item>{this.possibleJobStates.running}</Timeline.Item> )
-        timeline_list.push( <Timeline.Item color="green" dot={<Icon type="check-circle"/>}>{this.possibleJobStates.complete}</Timeline.Item> )
+        timeline_list.push( <Timeline.Item color="green" dot={<CheckCircleOutlined />}>{this.possibleJobStates.complete}</Timeline.Item> )
       }
 
       /** Set elapsed time */
@@ -526,7 +555,7 @@ class JobStatus extends Component{
         <Link to={apbs_config_url}>
           <Button type="primary" size='large' disabled={is_disabled}>
               Use results with APBS
-              <Icon type="right"/>
+              <RightOutlined />
             </Button>
         </Link>
       }
@@ -556,13 +585,13 @@ class JobStatus extends Component{
         <Button type="primary" size='large' href={viz_3dmol_url} target='_BLANK' disabled={is_disabled}>
             View in 3Dmol
             {/* View in Visualizer */}
-            <Icon type="right"/>
+            <RightOutlined />
         </Button>
       }
 
       let bookmark_notice_block = 
         <div style={{ textAlign: 'center' }}>
-          <h2> <b>Bookmark</b> <Icon type="star" theme="twoTone" /> this page to return to your results after leaving</h2>
+          <h2> <b>Bookmark</b> <StarTwoTone /> this page to return to your results after leaving</h2>
           {/* <h2> <b>Bookmark</b> this page in order to view your results after leaving this page.</h2> */}
           <br/>
         </div>
@@ -610,8 +639,8 @@ class JobStatus extends Component{
                 // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
                 renderItem={ item => (
                     <List.Item actions={[
-                      <a href={window._env_.STORAGE_URL+'/'+item+'?view=true'} target='_BLANK'><Icon type='eye'/> View </a>,
-                      <a href={window._env_.STORAGE_URL+'/'+item}><Icon type='download'/> Download </a>,
+                      <a href={window._env_.STORAGE_URL+'/'+item+'?view=true'} target='_BLANK'><EyeOutlined /> View </a>,
+                      <a href={window._env_.STORAGE_URL+'/'+item}><DownloadOutlined /> Download </a>,
                     ]}>
                     {/* <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}> */}
                       {item.split('/')[1]}

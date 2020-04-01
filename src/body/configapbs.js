@@ -1,11 +1,28 @@
 import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import 'antd/dist/antd.css'
-import  { Affix, Layout, Menu, Button, Form, Switch,
-          Input, Radio, Checkbox , Row, Col, InputNumber,
-          Icon, Tooltip, Upload,
-          Collapse, Spin, message, Tabs
-        } from 'antd';
+import { ExportOutlined, SettingOutlined, UploadOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Affix,
+  Layout,
+  Menu,
+  Button,
+  Switch,
+  Input,
+  Radio,
+  Checkbox,
+  Row,
+  Col,
+  InputNumber,
+  Tooltip,
+  Upload,
+  Collapse,
+  Spin,
+  message,
+  Tabs,
+} from 'antd';
 // import Radio.Group from 'antd/lib/radio/group';
 import { Redirect } from 'react-router-dom';
 import ConfigForm from './utils/formutils';
@@ -244,7 +261,7 @@ class ConfigAPBS extends ConfigForm {
   // updateFormValues = 
 
   renderInfileUpload(){
-    return(
+    return (
       <div>
         Use an APBS input file:<br/>
         {/* <Switch
@@ -262,7 +279,7 @@ class ConfigAPBS extends ConfigForm {
               beforeUpload={ (e) => this.inspectReadfile(e, this, 'infile') }
               onChange={ (e) => this.handleInfileUpload(e, this) }
             >
-              <Button icon="upload" disabled={!this.state.use_input_file}>
+              <Button icon={<UploadOutlined />} disabled={!this.state.use_input_file}>
                 Upload APBS input file
               </Button>
             </Upload>
@@ -278,13 +295,13 @@ class ConfigAPBS extends ConfigForm {
               beforeUpload={ (e) => this.inspectReadfile(e, this) }
               onChange={ (e) => this.handleReadfileUpload(e, this) }
             >
-              <Button icon="upload" disabled={!this.state.show_apbs_misc_upload}>
+              <Button icon={<UploadOutlined />} disabled={!this.state.show_apbs_misc_upload}>
                 Upload APBS read files
               </Button>
             </Upload>
           </Form.Item>
       </div>
-    )
+    );
   }
 
   handleInfileUpload(info, self){
@@ -347,7 +364,7 @@ class ConfigAPBS extends ConfigForm {
   }
 
   renderReadfileUpload(){
-    return(
+    return (
       <div>
         {/* <div hidden={!this.state.use_input_file}> */}
           <Form.Item label="Choose the APBS input file">
@@ -359,21 +376,21 @@ class ConfigAPBS extends ConfigForm {
               beforeUpload={ (e) => this.inspectReadfile(e, this, null) }
               onChange={ (e) => this.handleReadfileUpload(e, this) }
             >
-              <Button icon="upload" disabled={!this.state.use_input_file}>
+              <Button icon={<UploadOutlined />} disabled={!this.state.use_input_file}>
                 Upload APBS input file
               </Button>
             </Upload>
           </Form.Item>
         {/* </div> */}
       </div>
-    )
+    );
 
   }
 
 
   /** Creates button to upload a PQR file to use as base for autofilling the form */
   renderPqrAutofillUpload(){
-    return(
+    return (
       <Form.Item label="Autofill with PQR file">
         <Upload
           name='file'
@@ -386,12 +403,12 @@ class ConfigAPBS extends ConfigForm {
           beforeUpload={(e) => this.doubleUploadConfirm(e, this)}
           onChange={ (e) => this.handlePqrAutofillUpload(e, this)}
         >
-          <Button icon="upload">
+          <Button icon={<UploadOutlined />}>
             Click to Upload PQR File
           </Button>
         </Upload>
       </Form.Item>
-    )
+    );
   }
 
   doubleUploadConfirm(file, self){
@@ -702,7 +719,7 @@ class ConfigAPBS extends ConfigForm {
 
   renderConfigFormTabular(){
     // console.log(this.state.parent_form_values.mol)
-    return(
+    return (
       <Form onSubmit={ (e) => this.handleNewJobSubmit(e, this)}>
       {/* <Form action={window._env_.API_URL + "/submit/apbs"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data"> */}
       {/* <Form action={window._env_.API_URL + "/submit/apbs/json"} method="POST" onSubmit={this.handleNewJobSubmit} name="thisform" encType="multipart/form-data"> */}
@@ -718,7 +735,7 @@ class ConfigAPBS extends ConfigForm {
               <TabPane
                 key="1" 
                 forceRender={true} 
-                tab={<span><Icon type="upload" />Input</span>}
+                tab={<span><UploadOutlined />Input</span>}
               >
                 {/** Toggle to use an APBS infile rather than */}
                 {/* {this.renderInfileUpload()} */}
@@ -737,7 +754,7 @@ class ConfigAPBS extends ConfigForm {
               <TabPane
                 key="2" 
                 forceRender={true} 
-                tab={<span><Icon type="setting" />{this.state.parent_form_values.type + ' Options'}</span>}
+                tab={<span><SettingOutlined />{this.state.parent_form_values.type + ' Options'}</span>}
                 // tab={<span><Icon type="setting" />Advanced Options</span>}
               >
                 {/** Choose calculation method-specific options */}
@@ -749,7 +766,7 @@ class ConfigAPBS extends ConfigForm {
               <TabPane
                 key="3"
                 forceRender={true}
-                tab={<span><Icon type="setting" />Misc Options</span>}
+                tab={<span><SettingOutlined />Misc Options</span>}
               >
                 {/** Choose whether to remove water from the calculations */}
                 <Form.Item>
@@ -778,7 +795,7 @@ class ConfigAPBS extends ConfigForm {
               <TabPane
                 key="4" 
                 forceRender={true} 
-                tab={<span><Icon type="export" />Output Settings</span>}
+                tab={<span><ExportOutlined />Output Settings</span>}
               >
                 {/** Choose output of scalar data */}
                 <Form.Item label='Scalar data output'>
@@ -815,12 +832,12 @@ class ConfigAPBS extends ConfigForm {
         <input type='hidden' name='pdb2pqrid' value={this.state.jobid} />
         <input type='hidden' name='mol' value={this.state.parent_form_values.mol} />
       </Form>
-    )
+    );
   }
       
   renderConfigFormInfile(){
     // console.log(this.state.parent_form_values.mol)
-    return(
+    return (
       <Form onSubmit={ (e) => this.handleNewJobSubmit(e, this)}>
       {/* <Form action={window._env_.API_URL + "/submit/apbs"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data"> */}
       {/* <Form action={window._env_.API_URL + "/submit/apbs/json"} method="POST" onSubmit={this.handleNewJobSubmit} name="thisform" encType="multipart/form-data"> */}
@@ -836,7 +853,7 @@ class ConfigAPBS extends ConfigForm {
               <TabPane
                 key="1" 
                 forceRender={true} 
-                tab={<span><Icon type="upload" />Input</span>}
+                tab={<span><UploadOutlined />Input</span>}
               >
                 {/** Toggle to use an APBS infile rather than */}
                 {this.renderInfileUpload()}
@@ -855,7 +872,7 @@ class ConfigAPBS extends ConfigForm {
         </Form.Item>
 
       </Form>
-    )
+    );
   }
       
   render(){

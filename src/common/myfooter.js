@@ -3,7 +3,8 @@ import 'antd/dist/antd.css';
 import '../styles/myfooter.css';
 
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Layout, Icon, Tooltip, Col, Row } from 'antd';
+import { CopyOutlined, GithubOutlined, LinkOutlined } from '@ant-design/icons';
+import { Layout, Tooltip, Col, Row } from 'antd';
 const { Footer } = Layout;
 
 /**
@@ -24,32 +25,28 @@ class MyFooter extends Component{
     }
 
     generateCopyTooltip(text, placement){
-        return(
+        return (
             <Tooltip title={this.state.copyTooltip} placement={placement} >
                 <CopyToClipboard text={text.trim()} onCopy={() => this.tooltipCopyTextChange()}>
-                    <Icon 
-                        type="copy" 
-                        id="copyCitation" 
+                    <CopyOutlined
+                        id="copyCitation"
                         className="footer-icon"
-                        value={text} 
-                        style={{ fontSize: 26, cursor: "pointer" }} 
-                    />
+                        value={text}
+                        style={{ fontSize: 26, cursor: "pointer" }} />
                 </CopyToClipboard>
             </Tooltip>
-        )
+        );
     }
     generateLinkTooltip(url_text, placement){
-        return(
+        return (
             <Tooltip title="Go to publication" placement={placement}>
                 <a href={url_text} target="BLANK">
-                    <Icon 
-                        type="link" 
-                        className="footer-icon"
+                    <LinkOutlined
                         // style={{ fontSize: 26, color: "#545456" }}
-                    />
+                        className="footer-icon" />
                 </a>
-            </Tooltip>            
-        )
+            </Tooltip>
+        );
     }
 
     render(){
@@ -80,101 +77,98 @@ class MyFooter extends Component{
             fontSize: 26
         }
 
-        return(
-        <Footer className="footer-block">
-            {/* <Row><Col span={20} offset={2}>
-                <b>If using the PDB2PQR service in a publication, please cite: </b><br/>
-                <i>{pdb2pqrCitationText}</i><br/><br/>
-            </Col></Row> */}
-               
-            {/* <Row><Col span={20} offset={2}> */}
-            <Row>
-                <Col span={20}>
-                    {/* <hr/> */}
-                    <br/>
-                </Col>
-            </Row>
-            <Row style={{ fontSize: 16 }}>
-                <Col span={20} >
-                <b>If using APBS/PDB2PQR in a publication, please cite the respective software: </b><br/>
-                {/* <i>{pdb2pqrCitationText}</i><br/><br/> */}
-                </Col>
-            </Row>
+        return (
+            <Footer className="footer-block">
+                {/* <Row><Col span={20} offset={2}>
+                    <b>If using the PDB2PQR service in a publication, please cite: </b><br/>
+                    <i>{pdb2pqrCitationText}</i><br/><br/>
+                </Col></Row> */}
+                   
+                {/* <Row><Col span={20} offset={2}> */}
+                <Row>
+                    <Col span={20}>
+                        {/* <hr/> */}
+                        <br/>
+                    </Col>
+                </Row>
+                <Row style={{ fontSize: 16 }}>
+                    <Col span={20} >
+                    <b>If using APBS/PDB2PQR in a publication, please cite the respective software: </b><br/>
+                    {/* <i>{pdb2pqrCitationText}</i><br/><br/> */}
+                    </Col>
+                </Row>
 
-            {/* PDB2PQR citation text plus its tooltips */}
+                {/* PDB2PQR citation text plus its tooltips */}
 
-            <Row>
-                <Col span={2}>
-                    <b>APBS: </b>
-                </Col>
-                <Col span={16}>
-                    <i>{apbsCitationText}</i>
-                </Col>
+                <Row>
+                    <Col span={2}>
+                        <b>APBS: </b>
+                    </Col>
+                    <Col span={16}>
+                        <i>{apbsCitationText}</i>
+                    </Col>
 
-                <Col offset={1}>
-                    {/** Compo`nent specifying the copy-to-clipboard icon */}
-                    {apbsCopyTooltip}
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    {/** Component specifying the icon to link to paper from citation */}
-                    {apbsLinkTooltip}
+                    <Col offset={1}>
+                        {/** Compo`nent specifying the copy-to-clipboard icon */}
+                        {apbsCopyTooltip}
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        {/** Component specifying the icon to link to paper from citation */}
+                        {apbsLinkTooltip}
 
-                </Col>
+                    </Col>
 
-            </Row>
+                </Row>
 
-            {/* PDB2PQR citation text plus its tooltips */}
-            <Row>
-                <Col span={2}>
-                    <b>PDB2PQR: </b>
-                </Col>
-                <Col span={16}>
-                    <i>{pdb2pqrCitationText}</i>
-                </Col>
-                <Col offset={1}>
-                    {/** Component specifying the copy-to-clipboard icon */}
-                    {pdb2pqrCopyTooltip}
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    {/** Component specifying the icon to link to paper from citation */}
-                    {pdb2pqrLinkTooltip}
-                </Col>
+                {/* PDB2PQR citation text plus its tooltips */}
+                <Row>
+                    <Col span={2}>
+                        <b>PDB2PQR: </b>
+                    </Col>
+                    <Col span={16}>
+                        <i>{pdb2pqrCitationText}</i>
+                    </Col>
+                    <Col offset={1}>
+                        {/** Component specifying the copy-to-clipboard icon */}
+                        {pdb2pqrCopyTooltip}
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        {/** Component specifying the icon to link to paper from citation */}
+                        {pdb2pqrLinkTooltip}
+                    </Col>
+                    
+                </Row>
                 
-            </Row>
-            
-            <Row>
-                <br/>
-                <Col push={10}>
-                    <a href="https://github.com/Electrostatics/apbs-pdb2pqr" target="_BLANK">
-                        <Icon
-                            type="github"
-                            className="footer-icon"
+                <Row>
+                    <br/>
+                    <Col push={10}>
+                        <a href="https://github.com/Electrostatics/apbs-pdb2pqr" target="_BLANK">
+                            <GithubOutlined className="footer-icon" />
+                        </a>
+                    </Col>
+                </Row>
+
+
+                {/* <Tooltip title={this.state.copyTooltip} placement="bottom" >
+                    <CopyToClipboard text={pdb2pqrCitationText.trim()} onCopy={() => this.tooltipCopyTextChange()}>
+                        <Icon 
+                            type="copy" 
+                            id="copyCitation" 
+                            value={pdb2pqrCitationText} 
+                            style={{ fontSize: 26, cursor: "pointer" }} 
+                        />
+                    </CopyToClipboard>
+                </Tooltip> */}
+                {/* &nbsp;&nbsp;&nbsp;&nbsp; */}
+                {/* <Tooltip title="Go to publication" placement="bottom">
+                    <a href={pdb2pqrCitationLink} target="BLANK">
+                        <Icon 
+                            type="link" 
+                            style={{ fontSize: 26, color: "#545456" }}
                         />
                     </a>
-                </Col>
-            </Row>
+                </Tooltip> */}
+                
 
-
-            {/* <Tooltip title={this.state.copyTooltip} placement="bottom" >
-                <CopyToClipboard text={pdb2pqrCitationText.trim()} onCopy={() => this.tooltipCopyTextChange()}>
-                    <Icon 
-                        type="copy" 
-                        id="copyCitation" 
-                        value={pdb2pqrCitationText} 
-                        style={{ fontSize: 26, cursor: "pointer" }} 
-                    />
-                </CopyToClipboard>
-            </Tooltip> */}
-            {/* &nbsp;&nbsp;&nbsp;&nbsp; */}
-            {/* <Tooltip title="Go to publication" placement="bottom">
-                <a href={pdb2pqrCitationLink} target="BLANK">
-                    <Icon 
-                        type="link" 
-                        style={{ fontSize: 26, color: "#545456" }}
-                    />
-                </a>
-            </Tooltip> */}
-            
-
-        </Footer>
+            </Footer>
         );
     }
 }

@@ -1,10 +1,24 @@
 import React, { Component } from 'react';
 import 'antd/dist/antd.css'
-import  { Affix, Layout, Menu, Button, Form, Switch,
-          Input, Radio, Checkbox , Row, Col, InputNumber,
-          Icon, Tooltip, Upload,
-          Collapse, Spin
-        } from 'antd';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Affix,
+  Layout,
+  Menu,
+  Button,
+  Switch,
+  Input,
+  Radio,
+  Checkbox,
+  Row,
+  Col,
+  InputNumber,
+  Tooltip,
+  Upload,
+  Collapse,
+  Spin,
+} from 'antd';
 import RadioGroup from 'antd/lib/radio/group';
 import '../../styles/configJob.css';
 

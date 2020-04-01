@@ -1,10 +1,26 @@
 import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import 'antd/dist/antd.css'
-import  { Affix, Layout, Menu, Button, Form, Switch,
-          Input, Radio, Checkbox , Row, Col, InputNumber,
-          Icon, Tooltip, Upload, Spin, message
-        } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Affix,
+  Layout,
+  Menu,
+  Button,
+  Switch,
+  Input,
+  Radio,
+  Checkbox,
+  Row,
+  Col,
+  InputNumber,
+  Tooltip,
+  Upload,
+  Spin,
+  message,
+} from 'antd';
 import { Redirect } from 'react-router-dom';
 import ConfigForm from './utils/formutils';
 const { Content, Sider } = Layout;
@@ -328,7 +344,7 @@ class ConfigPDB2PQR extends ConfigForm{
           onChange={ (e) => this.handleUpload(e, this, 'pdb') }
           // onChange={ (e) => this.handlePdbUpload(e, this) }
         >
-          <Button icon="upload">
+          <Button icon={<UploadOutlined />}>
             Select File
           </Button>
         </Upload>
@@ -402,7 +418,7 @@ class ConfigPDB2PQR extends ConfigForm{
           beforeUpload={ (e) => this.beforeUpload(e, this, 'userff')}
           onChange={ (e) => this.handleUpload(e, this, 'userff') }
         >
-          <Button icon="upload"> Select File </Button>
+          <Button icon={<UploadOutlined />}> Select File </Button>
         </Upload>
 
       let names_upload = 
@@ -414,7 +430,7 @@ class ConfigPDB2PQR extends ConfigForm{
           beforeUpload={ (e) => this.beforeUpload(e, this, 'names')}
           onChange={ (e) => this.handleUpload(e, this, 'names') }
         >
-          <Button icon="upload"> Select File </Button>
+          <Button icon={<UploadOutlined />}> Select File </Button>
         </Upload>
       return(
         <div>
@@ -442,7 +458,7 @@ class ConfigPDB2PQR extends ConfigForm{
         beforeUpload={ (e) => this.beforeUpload(e, this, 'ligand')}
         onChange={ (e) => this.handleUpload(e, this, 'ligand') }
       >
-        <Button icon="upload"> Select File </Button>
+        <Button icon={<UploadOutlined />}> Select File </Button>
       </Upload>
 
 

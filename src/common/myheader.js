@@ -7,7 +7,9 @@ import PAGES from './pagenames.js';
 
 import { NavLink, } from 'react-router-dom';
 
-import { Layout, Col, Row, Menu, Icon, Affix, Input } from 'antd';
+import { BookOutlined, DownOutlined, HomeOutlined, ToolOutlined } from '@ant-design/icons';
+
+import { Layout, Col, Row, Menu, Affix, Input } from 'antd';
 import { stat } from 'fs';
 
 const { Header, Sider } = Layout;
@@ -88,7 +90,7 @@ class MyHeader extends Component{
             
             <Menu.Item  name={PAGES.home} onClick={() => this.props.onClick(PAGES.home)} key={PAGES.home}>
               <NavLink to="/">
-                <Icon type="home"/>
+                <HomeOutlined />
                 <span>Home</span>
               </NavLink>
             </Menu.Item>
@@ -97,7 +99,7 @@ class MyHeader extends Component{
               key={PAGES.tools}
               title={
                 <span>
-                  <Icon type="tool" />
+                  <ToolOutlined />
                   <span>Tools</span>
                 </span>
               }
@@ -114,7 +116,7 @@ class MyHeader extends Component{
             </Menu.Item> */}
             <Menu.Item  name={PAGES.documentation} onClick={() => this.props.onClick(PAGES.documentation)} key={PAGES.documentation}> 
               <NavLink to="/documentation">
-                <Icon type="book"/>
+                <BookOutlined />
                 <span>Documentation</span>
               </NavLink> 
             </Menu.Item>
@@ -173,7 +175,7 @@ class MyHeader extends Component{
               </Menu.Item> */}
               
               <Menu.Item  name={PAGES.home}          onClick={() => this.props.onClick(PAGES.home)}          key={PAGES.home}>          <NavLink to="/">Home</NavLink> </Menu.Item>
-              <Menu.SubMenu name={PAGES.tools}   key={PAGES.tools}   title={<span>Tools&nbsp;&nbsp;<Icon type="down" /></span>}>
+              <Menu.SubMenu name={PAGES.tools}   key={PAGES.tools}   title={<span>Tools&nbsp;&nbsp;<DownOutlined /></span>}>
                 <Menu.Item  name={PAGES.pdb2pqr} key={PAGES.pdb2pqr} onClick={() => this.props.onClick(PAGES.pdb2pqr)}> <NavLink to="/pdb2pqr">PDB2PQR</NavLink> </Menu.Item>
                 <Menu.Item  name={PAGES.apbs}    key={PAGES.apbs}    onClick={() => this.props.onClick(PAGES.apbs)}> <NavLink to="/apbs">APBS</NavLink> </Menu.Item>
               </Menu.SubMenu>

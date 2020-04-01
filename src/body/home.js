@@ -3,8 +3,9 @@ import ReactGA from 'react-ga';
 import 'antd/dist/antd.css';
 import '../styles/home.css';
 
-import{ Layout, Col, Menu, Carousel, Row,
-        Card, Icon, Button, } from 'antd';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+
+import { Layout, Col, Menu, Carousel, Row, Card, Button } from 'antd';
 import { Link } from 'react-router-dom';
 
 const { Content } = Layout;
@@ -74,17 +75,17 @@ class HomePage extends Component{
      * @param {string} iconType - Icon type to be shown on the card
      */
     createCard(linkUrl, text, iconType){
-        return(
+        return (
             <div style={{padding: 25}}>
                 <a href={linkUrl} target="_blank" rel="noopener noreferrer">
-                    <Card hoverable cover={<Icon type={iconType} style={{fontSize: 72}} />} style={{ width: 240, height: 250, paddingTop: 25}}>
+                    <Card hoverable cover={<LegacyIcon type={iconType} style={{fontSize: 72}} />} style={{ width: 240, height: 250, paddingTop: 25}}>
                         <div  style={{ paddingTop: 10, textAlign: 'center', fontSize: 18 }}>
                             {text}
                         </div>
                     </Card>
                 </a>
             </div>
-        )
+        );
     }
 
     render(){

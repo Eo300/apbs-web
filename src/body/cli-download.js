@@ -3,8 +3,7 @@ import ReactGA from 'react-ga';
 import 'antd/dist/antd.css';
 // import './home.css';
 
-import{ Layout, Col, Menu, Carousel, Row,
-        Card, Icon, Button, Link } from 'antd';
+import { Layout, Col, Menu, Carousel, Row, Card, Button, Link } from 'antd';
 const { Content } = Layout;
 
 class DownloadPage extends Component{

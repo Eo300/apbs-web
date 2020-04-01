@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import 'antd/dist/antd.css'
-import  { Radio, Form, Collapse, Switch, Input, InputNumber, Col, Row, Icon, Button
-} from 'antd';
+import { DownOutlined, RightOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Radio, Collapse, Switch, Input, InputNumber, Col, Row, Button } from 'antd';
 import CalctypeBase from './calctypebase';
 
 const Panel = Collapse.Panel;
@@ -296,10 +298,10 @@ class MgPara extends CalctypeBase{
   
   renderExpandAllButton(){
     if(this.state.collapse_active_keys.length == 0){
-      return <Button type='primary' onClick={this.handleExpandAll}> <Icon type='right'/> Expand All </Button>;
+      return <Button type='primary' onClick={this.handleExpandAll}> <RightOutlined /> Expand All </Button>;
     }
     else{
-      return <Button type='primary' onClick={this.handleExpandAll}> <Icon type='down'/> Collapse All </Button>;
+      return <Button type='primary' onClick={this.handleExpandAll}> <DownOutlined /> Collapse All </Button>;
     }
     // return button;
   }
