@@ -21,35 +21,50 @@ class HomePage extends Component{
      */
     mainBanner(){
         return(
-            <Row align="middle"  className="banner">
-                <Col xs={1} sm={1} md={2} lg={4} xl={4} />
-                <Col xs={22} sm={22} md={20} lg={16} xl={16}>
-                {/* <Col style={{ boxShadow: "2px 4px 10px #00000033" }} span={16}> */}
-                {/* <Col span={18} offset={3} style={{ boxShadow: "2px 4px 10px #00000033" }} > */}
-                    {/* <Carousel autoplay > */}
-                    <Content className="welcome-text">
-                        <div>
-                            <h1> APBS </h1>
-                            <p> Welcome to the new home for running the APBS/PDB2PQR software suite </p>
+            <div>
+                <Row align="middle"  className="banner">
+                    <Col xs={1} sm={1} md={2} lg={4} xl={4} />
+                    <Col xs={22} sm={22} md={20} lg={16} xl={16}>
+                    {/* <Col style={{ boxShadow: "2px 4px 10px #00000033" }} span={16}> */}
+                    {/* <Col span={18} offset={3} style={{ boxShadow: "2px 4px 10px #00000033" }} > */}
+                        {/* <Carousel autoplay > */}
+                        <Content className="welcome-text">
+                            <div>
+                                <h1> APBS </h1>
+                                <p> Welcome to the new home for running the APBS/PDB2PQR software suite </p>
+                                {/* <p> </p> */}
 
-                            <br/>
-                            <p> Use the software: </p>
-                                {/* <Button> <Link to="/pdb2pqr"> PDB2PQR </Link> </Button>
-                                <Button> <Link to="/apbs"> APBS </Link> </Button> */}
-                                <Button className="banner-button" shape="round">
-                                    <Link to="/pdb2pqr"><span>PDB2PQR</span></Link>
-                                </Button>
-                                <Button className="banner-button" shape="round">
-                                    <Link to="/apbs"><span>APBS</span></Link>
-                                </Button>
-                            
-                        </div>
-                    </Content>
-                    {/* </Carousel>         */}
-                </Col>
-                {/* <Col span={8}/> */}
-                <Col xs={1} sm={1} md={2} lg={4} xl={4}/>
-            </Row>
+                                <br/>
+                                <p> Getting Started: </p>
+                                    {/* <Button> <Link to="/pdb2pqr"> PDB2PQR </Link> </Button>
+                                    <Button> <Link to="/apbs"> APBS </Link> </Button> */}
+                                    <Button className="banner-button" type='primary' shape="round">
+                                        <Link to="/pdb2pqr"><span>PDB2PQR</span></Link>
+                                    </Button>
+                                    <Button className="banner-button" shape="round">
+                                        <Link to="/apbs"><span>APBS</span></Link>
+                                    </Button>
+                                
+                            </div>
+                        </Content>
+                        {/* </Carousel>         */}
+                    </Col>
+                    {/* <Col span={8}/> */}
+                    <Col xs={1} sm={1} md={2} lg={4} xl={4}/>
+                </Row>
+                {/* <Row>
+                    <Col xs={1} sm={1} md={2} lg={4} xl={4} />
+                    <Col xs={22} sm={22} md={20} lg={16} xl={16}>
+                        <Row>
+                            <Col width={8} className='landing-bullet'>
+                                <h1> <Icon type="sliders" className='icon'/> </h1>
+                                <h2> Prepare proteins with PDBP2QR </h2>
+                            </Col>
+                        </Row>
+                    </Col>
+                    <Col xs={1} sm={1} md={2} lg={4} xl={4}/>
+                </Row> */}
+            </div>
         )
     }
 

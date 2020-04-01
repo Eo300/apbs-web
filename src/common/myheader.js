@@ -106,12 +106,12 @@ class MyHeader extends Component{
               <Menu.Item  name={PAGES.pdb2pqr} key={PAGES.pdb2pqr} onClick={() => this.props.onClick(PAGES.pdb2pqr)}> <NavLink to="/pdb2pqr">PDB2PQR</NavLink> </Menu.Item>
               <Menu.Item  name={PAGES.apbs}    key={PAGES.apbs}    onClick={() => this.props.onClick(PAGES.apbs)}> <NavLink to="/apbs">APBS</NavLink> </Menu.Item>
             </SubMenu>
-            <Menu.Item  name={PAGES.about}         onClick={() => this.props.onClick(PAGES.about)}         key={PAGES.about}>         
+            {/* <Menu.Item  name={PAGES.about}         onClick={() => this.props.onClick(PAGES.about)}         key={PAGES.about}>         
               <NavLink to="/about">
                 <Icon type="team"/>
                 <span>About</span>
               </NavLink> 
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item  name={PAGES.documentation} onClick={() => this.props.onClick(PAGES.documentation)} key={PAGES.documentation}> 
               <NavLink to="/documentation">
                 <Icon type="book"/>
@@ -119,12 +119,12 @@ class MyHeader extends Component{
               </NavLink> 
             </Menu.Item>
 
-            <Menu.Item  name={PAGES.download} onClick={() => this.props.onClick(PAGES.download)} key={PAGES.download}> 
+            {/* <Menu.Item  name={PAGES.download} onClick={() => this.props.onClick(PAGES.download)} key={PAGES.download}> 
               <NavLink to="/download">
                 <Icon type="download"/>
                 <span>Download CLI</span>
               </NavLink> 
-            </Menu.Item>
+            </Menu.Item> */}
   
             {/* <SubMenu
               title={

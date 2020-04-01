@@ -22,8 +22,23 @@ const { Content, Sider } = Layout;
 class JobStatus extends Component{
   constructor(props){
     super(props);
-    if( window._env_.GA_TRACKING_ID !== "" ) 
+    if( window._env_.GA_TRACKING_ID !== "" ) {
+      let apbs_event_url = `${window._env_.WORKFLOW_URL}/${props.jobid}/${props.jobtype}/event`
+      ReactGA.set({dimension1: props.jobid})
+      ReactGA.ga('_setCustomVar',1,'jobid',props.jobid,3)
       ReactGA.pageview(window.location.pathname + window.location.search)
+
+
+      fetch(apbs_event_url, {
+        method: 'POST',
+      })
+      .then(function(response) {
+        if (response.status === 200){
+        }else if(response.status >= 400){}
+        return response.json()
+      })
+      .then(data => {})
+    }
 
     this.jobServerDomain = window._env_.API_URL
     this.jobStatusDomain = window._env_.STATUS_URL
@@ -36,6 +51,16 @@ class JobStatus extends Component{
     this.colorCompleteStatus  = "#52C41A";
     this.colorRunningStatus   = "#1890FF";
     this.colorErrorStatus     = "#F5222D";
+    this.possibleJobStates = {
+      submitted:   'Submitted',
+      pending:     'Pending Job Start',
+      downloading: 'Downloading',
+      uploading:   'Uploading',
+      running:     'Running',
+      complete:    'Complete',
+      failed:      'Failed',
+    }
+
     // this.totalElapsedTime = 0;
     this.state = {
       current_jobid: props.jobid,
@@ -55,6 +80,7 @@ class JobStatus extends Component{
       pdb2pqr: {
         // status: "pdb2pqrStatus",
         status: 'no_job',
+        // status: null,
         startTime: null, // in seconds
         endTime: null, // in seconds
         files: [],
@@ -63,6 +89,7 @@ class JobStatus extends Component{
       },
       apbs: {
         status: 'no_job',
+        // status: null,
         startTime: null, // in seconds
         endTime: null, // in seconds
         files: [],
@@ -82,18 +109,18 @@ class JobStatus extends Component{
     // this.fetchJobStatusSocketIO('pdb2pqr')
 
     // if( window._env_.ON_CLOUD == true ){
-    if( true ){
-      notification.warn({
-        key: 'data_retention_notice',
-        message: "Regarding Data Retention",
-        duration: 0,
-        description: 
-          "Files for a JobID WILL BE DELETED 48 hours after job creation,\
-            if using APBS-REST via our cloud service. Please download\
-            the files you need in the meantime.",
-        // btn: (<Button type="primary" size="small" onClick={() => notification.close('data_retention_notice')}> Close </Button>)
-      })
-    }
+    // if( true ){
+    //   notification.warn({
+    //     key: 'data_retention_notice',
+    //     message: "Regarding Data Retention",
+    //     duration: 0,
+    //     description: 
+    //       "Files for a JobID WILL BE DELETED 48 hours after job creation,\
+    //         if using APBS-REST via our cloud service. Please download\
+    //         the files you need in the meantime.",
+    //     // btn: (<Button type="primary" size="small" onClick={() => notification.close('data_retention_notice')}> Close </Button>)
+    //   })
+    // }
   }
 
   /** Cleans up setInterval objects before unmounting */
@@ -104,7 +131,7 @@ class JobStatus extends Component{
 
   /** Stops polling the job status if fetched status isn't 'running' */
   componentDidUpdate(){
-    let statuses = ["complete", "error", null];
+    let statuses = ["complete", "failed", "error", null];
     if( statuses.includes(this.state.pdb2pqr.status) ){//} && statuses.includes(this.state.pdb2pqr.status)){
       clearInterval(this.fetchIntervalPDB2PQR);
     }
@@ -430,26 +457,48 @@ class JobStatus extends Component{
       let pending_text = ''
 
       let timeline_list = []
-      if( this.state[jobtype].status === 'running' )
-        stop_index = 2;
+      // if( this.state[jobtype].status === 'running' )
+      //   stop_index = 2;
+      // else if( this.state[jobtype].status === 'complete' ){
+      //   /** Do nothing */
+      // }else
+      //   stop_index = 0;
+
+      // for (let val of state_list.slice(0, stop_index)){
+      //   if( val == 'Running' && this.state[jobtype].status === 'running' ){
+      //     console.log('Running should be a pending dot')
+      //     is_pending = true
+      //     pending_text = "Running"
+
+      //     // timeline_list.push( <Timeline.Item pending >{val}</Timeline.Item> )
+      //   }
+      //   else if( val == 'Complete' && this.state[jobtype].status === 'complete' ){
+      //     timeline_list.push( <Timeline.Item color="green" dot={<Icon type="check-circle"/>}>{val}</Timeline.Item> )
+      //   }
+      //   else
+      //     timeline_list.push( <Timeline.Item>{val}</Timeline.Item> )
+      // }
+        
+      if( this.state[jobtype].status === 'pending' ){
+        timeline_list.push( <Timeline.Item>{this.possibleJobStates.submitted}</Timeline.Item> )
+        pending_text = this.possibleJobStates.pending
+      }
+      else if( this.state[jobtype].status === 'running' ){
+        timeline_list.push( <Timeline.Item>{this.possibleJobStates.submitted}</Timeline.Item> )
+        timeline_list.push( <Timeline.Item>{this.possibleJobStates.pending}</Timeline.Item> )
+        pending_text = this.possibleJobStates.running
+      }
+      else if( this.state[jobtype].status === 'failed' ){
+        timeline_list.push( <Timeline.Item>{this.possibleJobStates.submitted}</Timeline.Item> )
+        timeline_list.push( <Timeline.Item>{this.possibleJobStates.pending}</Timeline.Item> )
+        timeline_list.push( <Timeline.Item>{this.possibleJobStates.running}</Timeline.Item> )
+        timeline_list.push( <Timeline.Item color="red" dot={<Icon type="close-circle" />}>{this.possibleJobStates.failed}</Timeline.Item> )
+      }
       else if( this.state[jobtype].status === 'complete' ){
-        /** Do nothing */
-      }else
-        stop_index = 0;
-
-      for (let val of state_list.slice(0, stop_index)){
-        if( val == 'Running' && this.state[jobtype].status === 'running' ){
-          console.log('Running should be a pending dot')
-          is_pending = true
-          pending_text = "Running"
-
-          // timeline_list.push( <Timeline.Item pending >{val}</Timeline.Item> )
-        }
-        else if( val == 'Complete' && this.state[jobtype].status === 'complete' ){
-          timeline_list.push( <Timeline.Item color="green" dot={<Icon type="check-circle"/>}>{val}</Timeline.Item> )
-        }
-        else
-          timeline_list.push( <Timeline.Item>{val}</Timeline.Item> )
+        timeline_list.push( <Timeline.Item>{this.possibleJobStates.submitted}</Timeline.Item> )
+        timeline_list.push( <Timeline.Item>{this.possibleJobStates.pending}</Timeline.Item> )
+        timeline_list.push( <Timeline.Item>{this.possibleJobStates.running}</Timeline.Item> )
+        timeline_list.push( <Timeline.Item color="green" dot={<Icon type="check-circle"/>}>{this.possibleJobStates.complete}</Timeline.Item> )
       }
 
       /** Set elapsed time */

@@ -620,7 +620,8 @@ class ConfigPDB2PQR extends ConfigForm{
               label="Please choose an output naming scheme to use"
             >
               <Radio.Group name="FFOUT" defaultValue={this.state.form_values.FFOUT} buttonStyle="solid" onChange={this.handleFormChange}>
-                <Radio.Button value="internal"> Internal naming scheme <Tooltip placement="bottomLeft" title="This is placeholder help text to tell the user what this option means"><Icon type="question-circle" /></Tooltip> </Radio.Button>
+                <Radio.Button value="internal"> Internal naming scheme </Radio.Button>
+                {/* <Radio.Button value="internal"> Internal naming scheme <Tooltip placement="bottomLeft" title="This is placeholder help text to tell the user what this option means"><Icon type="question-circle" /></Tooltip> </Radio.Button> */}
                 <Radio.Button value="amber">  AMBER   </Radio.Button>
                 <Radio.Button value="charmm"> CHARMM  </Radio.Button>
                 <Radio.Button value="parse">  PARSE   </Radio.Button>
