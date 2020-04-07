@@ -57,7 +57,7 @@ class ConfigPDB2PQR extends ConfigForm{
         PKACALCMETHOD:  "propka",
         FF:             "parse",
         FFOUT:          "internal",
-        OPTIONS:        [ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin' ],
+        OPTIONS:        [ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin', 'removewater' ],
       },
 
       job_submit: false,
