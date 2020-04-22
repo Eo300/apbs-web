@@ -28,9 +28,19 @@ class JobStatus extends Component{
       ReactGA.ga('_setCustomVar',1,'jobid',props.jobid,3)
       ReactGA.pageview(window.location.pathname + window.location.search)
 
+      
+      let ga_event_headers = {}
+      if( window._env_.GA_TRACKING_ID !== "" ){
+        ReactGA.ga(function(tracker){
+          let clientId = tracker.get('clientId')
+          // console.log('GA client ID: ' + clientId)
+          ga_event_headers['X-APBS-Client-ID'] = clientId
+        })  
+      }
 
       fetch(apbs_event_url, {
         method: 'POST',
+        headers: ga_event_headers
       })
       .then(function(response) {
         if (response.status === 200){
@@ -456,7 +466,7 @@ class JobStatus extends Component{
         }
         else if( task.name === 'apbs-executor'){
           if( task.state === 'terminated' ){
-            task_name = `${jobtype.toUpperCase()}`
+            task_name = `${jobtype.toUpperCase()} execution`
             reason = task.state_info.reason
           }
         }

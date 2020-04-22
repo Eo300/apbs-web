@@ -122,14 +122,24 @@ class ConfigAPBS extends ConfigForm {
       console.log(payload)
       
       // Submit the form to the workflow service
+      let form_post_headers = {
+        'x-requested-with': '',
+        'Content-Type': 'application/json'
+      }
+
+      if( self.hasAnalyticsId() ){
+        ReactGA.ga(function(tracker){
+          let clientId = tracker.get('clientId')
+          // console.log('GA client ID: ' + clientId)
+          form_post_headers['X-APBS-Client-ID'] = clientId
+        })  
+      }
+
       let successful_submit = false
       fetch(form_post_url, {
         method: 'POST',
         body: JSON.stringify(payload),
-        headers: {
-          'x-requested-with': '',
-          'Content-Type': 'application/json'
-        }
+        headers: form_post_headers,
       })
         // .then(response => response.json())
         .then(function(response) {

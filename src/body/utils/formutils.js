@@ -46,7 +46,9 @@ class ConfigForm extends Component{
     }
   }
 
-  
+  hasAnalyticsId(){
+    return (window._env_.GA_TRACKING_ID !== "")
+  }
   
   getNewJobID(){
     console.log('inside getNewJobID')
