@@ -83,6 +83,7 @@ class JobStatus extends Component{
         // status: null,
         startTime: null, // in seconds
         endTime: null, // in seconds
+        subtasks: [],
         files: [],
         files_input: [],
         files_output: [],
@@ -92,6 +93,7 @@ class JobStatus extends Component{
         // status: null,
         startTime: null, // in seconds
         endTime: null, // in seconds
+        subtasks: [],
         files: [],
         files_input: [],
         files_output: [],
@@ -175,6 +177,7 @@ class JobStatus extends Component{
                 status: data[jobtype].status,
                 startTime: data[jobtype].startTime,
                 endTime: data[jobtype].endTime,
+                subtasks: data[jobtype].subtasks,
                 files: data[jobtype].files,
                 files_input: data[jobtype].inputFiles,
                 files_output: data[jobtype].outputFiles,
@@ -439,6 +442,45 @@ class JobStatus extends Component{
     )
   }
 
+  getReasonForFailure(jobtype){
+    let reason = null
+    let task_name = null
+    if( this.state[jobtype].subtasks !== undefined){
+      for( let task of this.state[jobtype].subtasks ){ 
+
+        if( task.name === 'apbs-rest-downloader'){
+          if( task.state === 'terminated' ){
+            task_name = 'Loading Job Data'
+            reason = task.state_info.reason
+          }
+        }
+        else if( task.name === 'apbs-executor'){
+          if( task.state === 'terminated' ){
+            task_name = `${jobtype.toUpperCase()}`
+            reason = task.state_info.reason
+          }
+        }
+        else if( task.name === 'apbs-rest-uploader'){
+          if( task.state === 'terminated' ){
+            task_name = 'Upload results'
+            reason = task.state_info.reason
+          }
+        }
+
+        if( reason !== 'Completed' ){
+          if( reason === 'OOMKilled' ){
+            return [task_name, 'Out of memory error']
+          }
+          else{
+            return [task_name, reason]
+          }
+        }
+      }
+    }
+
+    return [null, null]
+  }
+
   newCreateJobStatus(){
     if( this.props.jobid ){
 
@@ -489,10 +531,26 @@ class JobStatus extends Component{
         pending_text = this.possibleJobStates.running
       }
       else if( this.state[jobtype].status === 'failed' ){
+        let reason_for_failure = this.getReasonForFailure(jobtype)
+        let task_name = null
+        let reason = null
+        let timeline_message = null
+
+        if( reason_for_failure[0] !== null && reason_for_failure[1] !== null ){
+          task_name = reason_for_failure[0]
+          reason = reason_for_failure[1]
+
+          timeline_message = `${this.possibleJobStates.failed} - ${task_name}: ${reason}`
+        }else{
+          timeline_message = this.possibleJobStates.failed
+        }
+
+
         timeline_list.push( <Timeline.Item>{this.possibleJobStates.submitted}</Timeline.Item> )
         timeline_list.push( <Timeline.Item>{this.possibleJobStates.pending}</Timeline.Item> )
         timeline_list.push( <Timeline.Item>{this.possibleJobStates.running}</Timeline.Item> )
-        timeline_list.push( <Timeline.Item color="red" dot={<Icon type="close-circle" />}>{this.possibleJobStates.failed}</Timeline.Item> )
+        // timeline_list.push( <Timeline.Item color="red" dot={<Icon type="close-circle" />}>{this.possibleJobStates.failed}</Timeline.Item> )
+        timeline_list.push( <Timeline.Item color="red" dot={<Icon type="close-circle" />}>{timeline_message}</Timeline.Item> )
       }
       else if( this.state[jobtype].status === 'complete' ){
         timeline_list.push( <Timeline.Item>{this.possibleJobStates.submitted}</Timeline.Item> )
