@@ -441,7 +441,7 @@ class JobStatus extends Component{
     // Add view option if extension is .txt, .json, or .mc
     if( item.endsWith('.txt') || item.endsWith('.json') || item.endsWith('.mc')){
       action_list.unshift(
-        <a href={window._env_.STORAGE_URL+'/'+item+'?view=true'} target='_BLANK'><Icon type='eye'/> View </a>
+        <a href={window._env_.STORAGE_URL+'/'+item+'?view=true'} target='_BLANK' rel="noopener noreferrer"><Icon type='eye'/> View </a>
       )
     }
 
@@ -678,7 +678,7 @@ class JobStatus extends Component{
                 // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
                 renderItem={ item => (
                     <List.Item actions={[
-                      <a href={window._env_.STORAGE_URL+'/'+item+'?view=true'} target='_BLANK'><Icon type='eye'/> View </a>,
+                      <a href={window._env_.STORAGE_URL+'/'+item+'?view=true'} target='_BLANK' rel="noopener noreferrer"><Icon type='eye'/> View </a>,
                       <a href={window._env_.STORAGE_URL+'/'+item}><Icon type='download'/> Download </a>,
                     ]}>
                     {/* <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}> */}
