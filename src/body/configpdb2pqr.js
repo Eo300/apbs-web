@@ -46,8 +46,10 @@ class ConfigPDB2PQR extends ConfigForm{
 
   constructor(props){
     super(props);
-    if( window._env_.GA_TRACKING_ID !== "" ) 
+    // if( window._env_.GA_TRACKING_ID !== "" ) {
+    if( this.hasAnalyticsId() ){
       ReactGA.pageview(window.location.pathname + window.location.search)
+    }
 
     this.state = {
       
@@ -74,7 +76,7 @@ class ConfigPDB2PQR extends ConfigForm{
         PKACALCMETHOD:  "propka",
         FF:             "parse",
         FFOUT:          "internal",
-        OPTIONS:        [ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin' ],
+        OPTIONS:        [ 'atomsnotclose', 'optimizeHnetwork', 'makeapbsin', 'removewater' ],
       },
 
       job_submit: false,
@@ -242,15 +244,25 @@ class ConfigPDB2PQR extends ConfigForm{
         form : self.state.form_values
       }
 
+      let form_post_headers = {
+        'x-requested-with': '',
+        'Content-Type': 'application/json'
+      }
+
+      if( self.hasAnalyticsId() ){
+        ReactGA.ga(function(tracker){
+          let clientId = tracker.get('clientId')
+          // console.log('GA client ID: ' + clientId)
+          form_post_headers['X-APBS-Client-ID'] = clientId
+        })  
+      }
+
       // Submit form data to the workflow service
       let successful_submit = false
       fetch(form_post_url, {
         method: 'POST',
         body: JSON.stringify(payload),
-        headers: {
-          'x-requested-with': '',
-          'Content-Type': 'application/json'
-        }
+        headers: form_post_headers,
       })
         .then(function(response) {
           if (response.status === 202){
