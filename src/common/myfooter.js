@@ -140,7 +140,7 @@ class MyFooter extends Component{
                 <Row>
                     <br/>
                     <Col push={10}>
-                        <a href="https://github.com/Electrostatics/apbs-pdb2pqr" target="_BLANK">
+                        <a href="https://github.com/Electrostatics/apbs-pdb2pqr" target="_BLANK"  rel="noopener noreferrer">
                             <GithubOutlined className="footer-icon" />
                         </a>
                     </Col>

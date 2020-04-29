@@ -39,6 +39,7 @@ import io from 'socket.io-client';
 import { Link } from 'react-router-dom';
 
 import '../styles/jobstatus.css'
+import '../styles/utils.css'
 import { strict } from 'assert';
 
 const { Content, Sider } = Layout;
@@ -136,7 +137,8 @@ class JobStatus extends Component{
         files: [],
         files_input: [],
         files_output: [],
-      }
+      },
+
     }
   }
 
@@ -268,6 +270,16 @@ class JobStatus extends Component{
       else
         console.log(`other reason: ${reason}`)
     })
+  }
+
+  sendRegisterClickEvent(pageType){
+    if( window._env_.GA_TRACKING_ID !== "" ){
+      ReactGA.event({
+        category: 'Registration',
+        action: 'linkClick',
+        label: pageType,
+      })
+    }
   }
 
   prependZeroIfSingleDigit(numString){ 
@@ -470,7 +482,7 @@ class JobStatus extends Component{
     // Add view option if extension is .txt, .json, or .mc
     if( item.endsWith('.txt') || item.endsWith('.json') || item.endsWith('.mc')){
       action_list.unshift(
-        <a href={window._env_.STORAGE_URL+'/'+item+'?view=true'} target='_BLANK'><EyeOutlined /> View </a>
+        <a href={window._env_.STORAGE_URL+'/'+item+'?view=true'} target='_BLANK' rel="noopener noreferrer"><EyeOutlined /> View </a>
       )
     }
 
@@ -597,6 +609,7 @@ class JobStatus extends Component{
         timeline_list.push( <Timeline.Item color="green" dot={<CheckCircleOutlined />}>{this.possibleJobStates.complete}</Timeline.Item> )
       }
 
+
       /** Set elapsed time */
       let elapsedTime = 'computing...'
       if (this.state.elapsedTime[jobtype] !== undefined){
@@ -663,6 +676,22 @@ class JobStatus extends Component{
           <br/>
         </div>
 
+      // Show registration button if its state is true
+      let registration_button = 
+        <div >
+          Please remember to <b>register your use</b>:
+          <a href='http://eepurl.com/by4eQr' target="_blank" rel="noopener noreferrer">
+          <Button
+            className='registration-button' 
+            type="primary"  
+            icon="form"
+            onClick={() => this.sendRegisterClickEvent('jobStatus')}
+          >
+            Register Here
+          </Button>
+        </a>
+        </div>
+
       let job_status_block =
         <div>
           <Row>
@@ -671,6 +700,8 @@ class JobStatus extends Component{
           <Row gutter={16}>
             {/* General job information */}
             <Col span={6}>
+              {/* Registration Button */}
+
               <h2>
                 ID: {this.props.jobid}
               </h2>
@@ -686,6 +717,9 @@ class JobStatus extends Component{
               <Timeline mode="left" pending={pending_text}>
                 {timeline_list}
               </Timeline>
+              {registration_button}
+              <br/>
+              <br/>
 
               {/* <br/> */}
               {/* <h3>Regarding data retention</h3> */}
@@ -706,7 +740,7 @@ class JobStatus extends Component{
                 // dataSource={(jobtype === "pdb2pqr") ? this.state.pdb2pqr.files : this.state.apbs.files}
                 renderItem={ item => (
                     <List.Item actions={[
-                      <a href={window._env_.STORAGE_URL+'/'+item+'?view=true'} target='_BLANK'><EyeOutlined /> View </a>,
+                      <a href={window._env_.STORAGE_URL+'/'+item+'?view=true'} target='_BLANK' rel="noopener noreferrer"><EyeOutlined /> View </a>,
                       <a href={window._env_.STORAGE_URL+'/'+item}><DownloadOutlined /> Download </a>,
                     ]}>
                     {/* <List.Item actions={[<a href={window._env_.STORAGE_URL+'/'+item}><Button type="primary" icon="download">Download</Button></a>]}> */}

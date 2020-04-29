@@ -1,0 +1,46 @@
+.registration-button{
+    background-color: var(--button-color-default);
+    color: #fff;
+    border-color: var(--button-color-default);
+    /* box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045); */
+    /* box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.3); */
+    
+    /* margin-bottom: 100%; */
+    /* Some color variables */
+    --button-color-default: #fca82a;
+    --button-color-hover: #e29727;
+  }
+  .registration-button:hover,
+  .registration-button:focus{
+    /* background-color: #eeba6b; */
+    /* color: #eeba6b; */
+    /* border-color: #eeba6b; */
+    
+    background-color: var(--button-color-hover);
+    color: #fff;
+    border-color: var(--button-color-hover);
+   
+    /* animation: jump 1s 2s forwards cubic-bezier(.84,-0.54,.31,1.19); */
+    animation: wiggle 1.0s infinite;
+    /* animation: wiggle 1.0s infinite; */
+  }
+  
+  @keyframes jump {
+    0% {
+      transform: none;
+    }
+    50% {
+      transform: translateY(-2em);
+    }
+  }
+  @keyframes wiggle {
+    0% { transform: rotate(0deg); }
+   20% { transform: rotate(0deg); }
+   25% { transform: rotate(5deg); }
+   35% { transform: rotate(-5deg); }
+   40% { transform: rotate(0deg); }
+   /* 80% { transform: rotate(0deg); }
+   85% { transform: rotate(5deg); }
+   95% { transform: rotate(-5deg); } */
+  100% { transform: rotate(0deg); }
+  }

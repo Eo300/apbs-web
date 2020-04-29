@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import 'antd/dist/antd.css'
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
@@ -20,6 +21,7 @@ import {
   Spin,
 } from 'antd';
 import RadioGroup from 'antd/lib/radio/group';
+import '../../styles/utils.css'
 import '../../styles/configJob.css';
 
 
@@ -31,7 +33,8 @@ class ConfigForm extends Component{
     super(props);
     this.state = {
 
-      job_submit: false
+      job_submit: false,
+      show_register_button: false,
     }
 
     /** Styling to have radio buttons appear vertical */
@@ -87,6 +90,39 @@ class ConfigForm extends Component{
     
   }
   
+
+  toggleRegisterButton(show_button){
+    this.setState({
+      show_register_button: show_button
+    });
+  }
+
+  sendRegisterClickEvent(pageType){
+    if( this.hasAnalyticsId() ){
+      ReactGA.event({
+        category: 'Registration',
+        action: 'linkClick',
+        label: pageType,
+      })
+    }
+  }
+
+  renderRegistrationButton(){
+    return (
+      <a href='http://eepurl.com/by4eQr' target="_blank" rel="noopener noreferrer">
+        <Button
+          className='registration-button' 
+          type="default"  
+          size='large' 
+          shape='round'
+          icon="form"
+        >
+          Register Here
+        </Button>
+      </a>
+    )
+  }
+
   /** Submission button rendered by default. If submission button's pressed,
    *  button text changes with spinning icon to indicate data has been sent
    */
