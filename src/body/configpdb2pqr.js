@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import 'antd/dist/antd.css'
 import { UploadOutlined } from '@ant-design/icons';
-import { Form } from '@ant-design/compatible';
+import { Form } from 'antd';
+// import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
   Affix,
@@ -149,6 +150,68 @@ class ConfigPDB2PQR extends ConfigForm{
         (itemValue.includes("assignfrommol2")) ? this.toggleMol2UploadButton(true) : this.toggleMol2UploadButton(false);
         (["neutralnterminus", "neutralcterminus"].some(opt=>itemValue.includes(opt))) ? this.toggleMustUseParse(true) : this.toggleMustUseParse(false);
         break;
+    }
+  }
+
+  /** If user tries submitting job again, raise alert. */
+  /** Prepare form data to be sent via JSON request */
+  // handleJobSubmit = (e, self) => {
+  newHandleJobSubmit = values => {
+    // e.preventDefault();
+    if(this.state.job_submit)
+      alert("Job is submitted. Redirecting to job status page");
+    else{
+      console.log("we're past rule checks. About to submit form:", values)
+      this.setState({
+        job_submit: true
+      })
+
+      // // Obtain a job id if not within props
+      // if(self.state.jobid == undefined){
+      //   self.getNewJobID()
+      // }
+
+      let form_and_options = this.state.form_values;
+      for(let option of form_and_options['OPTIONS']){
+        form_and_options[OptionsMapping[option]] = option
+      }
+
+      // let form_post_url = `${window._env_.WORKFLOW_URL}/api/workflow/${self.state.jobid}/pdb2pqr`;
+      let form_post_url = `${window._env_.WORKFLOW_URL}/${this.state.jobid}/pdb2pqr`;
+      let payload = {
+        form : this.state.form_values
+      }
+
+      // Submit form data to the workflow service
+      let successful_submit = false
+      fetch(form_post_url, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+          'x-requested-with': '',
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(function(response) {
+          if (response.status === 202){
+            successful_submit = true
+          }else if(response.status >= 400){
+          // }else if(response.status === 400 || response.status === 500){
+            successful_submit = false
+            this.setState({ job_submit: false })
+          }
+          return response.json()
+        })
+        .then(data => {
+          this.setState({ successful_submit: successful_submit })
+          if ( successful_submit ){
+            console.log('Success: ', data)
+            // window.location.assign(`/jobstatus?jobtype=pdb2pqr&jobid=${self.state.jobid}`)
+          }else{
+            message.error(data['error'])
+          }
+        })
+        .catch(error => console.error('Error: ', error))
     }
   }
 
@@ -329,25 +392,46 @@ class ConfigPDB2PQR extends ConfigForm{
     let return_element = null
     if(this.state.form_values.PDBSOURCE == 'ID'){
       return_element = 
-          <Input name="PDBID" placeholder="PDB ID" maxLength={4} onChange={this.handleFormChange}/>
+          <Form.Item
+          name="pdbid"
+          rules={[
+            {
+              required: true,
+              message: 'Please input a PDB ID',
+            },
+          ]}>
+
+            <Input name="PDBID" placeholder="PDB ID" maxLength={4} onChange={this.handleFormChange}/>
+            {/* <Input name="PDBID" placeholder="PDB ID" maxLength={4}/> */}
+          </Form.Item>
     }
     else{
       let upload_url = `${window._env_.AUTOFILL_URL}/upload/${this.state.jobid}/pdb2pqr`
       console.log(upload_url)
       return_element = 
-        <Upload 
-          name="file"
-          accept=".pdb"
-          action={upload_url}
-          fileList={this.state.pdbFileList}
-          beforeUpload={ (e) => this.beforeUpload(e, this, 'pdb')}
-          onChange={ (e) => this.handleUpload(e, this, 'pdb') }
-          // onChange={ (e) => this.handlePdbUpload(e, this) }
+        <Form.Item
+          name="pdbfile"
+          rules={[
+            {
+              required: true,
+              message: 'Please upload a PDB file',
+            },
+          ]}
         >
-          <Button icon={<UploadOutlined />}>
-            Select File
-          </Button>
-        </Upload>
+          <Upload 
+            name="file"
+            accept=".pdb"
+            action={upload_url}
+            fileList={this.state.pdbFileList}
+            beforeUpload={ (e) => this.beforeUpload(e, this, 'pdb')}
+            onChange={ (e) => this.handleUpload(e, this, 'pdb') }
+            // onChange={ (e) => this.handlePdbUpload(e, this) }
+          >
+            <Button icon={<UploadOutlined />}>
+              Select File
+            </Button>
+          </Upload>
+        </Form.Item>
 
         // return_element = <input className='ant-button' type="file" name="PDB" accept=".pdb"/>
     }
@@ -565,7 +649,8 @@ class ConfigPDB2PQR extends ConfigForm{
     else{
       return(
         <Col offset={1}>
-          <Form onSubmit={ (e) => this.handleJobSubmit(e, this) }>
+          <Form layout="vertical" onFinish={ this.newHandleJobSubmit } >
+          {/* <Form onSubmit={ (e) => this.handleJobSubmit(e, this) }> */}
             {/** Form item for PDB Source (id | upload) */}
             <Form.Item
               // id="pdbid"
@@ -672,7 +757,16 @@ class ConfigPDB2PQR extends ConfigForm{
     }
 
   }
-      
+   
+
+  
+  handleSampleForm = values => {
+    console.log('Success:', values)
+  }
+  handleFailedSampleForm = values => {
+    console.log('Failed:', values)
+  }
+
   render(){
     return(
       <Layout id="pdb2pqr" style={{ padding: '16px 0', marginBottom: 5, background: '#fff', boxShadow: "2px 4px 10px #00000033" }}>
