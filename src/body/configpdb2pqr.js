@@ -7,6 +7,7 @@ import  { Affix, Layout, Menu, Button, Form, Switch,
         } from 'antd';
 import { Redirect } from 'react-router-dom';
 import ConfigForm from './utils/formutils';
+// import '../styles/configJob.css'
 const { Content, Sider } = Layout;
 
 const OptionsMapping = {
@@ -64,6 +65,9 @@ class ConfigPDB2PQR extends ConfigForm{
 
       job_submit: false,
       successful_submit: false,
+
+      // Registration button states
+      show_register_button: false,
     }
     // this.handleJobSubmit = this.handleJobSubmit.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this)
@@ -97,7 +101,14 @@ class ConfigPDB2PQR extends ConfigForm{
         // this.setState({
         //   PDBSOURCE: itemValue
         // });
-        (itemValue == "UPLOAD") ? this.togglePdbUploadButton(true) : this.togglePdbUploadButton(false);
+        if( itemValue == "UPLOAD" ){
+          this.togglePdbUploadButton(true)
+        }else{ this.togglePdbUploadButton(false) }
+        // (itemValue == "UPLOAD") ? this.togglePdbUploadButton(true) : this.togglePdbUploadButton(false);
+        break;
+        
+      case "PDBID":
+        this.toggleRegisterButton(true)
         break;
 
       case "PH":
@@ -320,6 +331,32 @@ class ConfigPDB2PQR extends ConfigForm{
     self.setState({ form_values })
     return true;
   }
+
+  renderRegistrationButton(){
+    if( this.state.show_register_button ){
+      return(
+        <div>
+          For continued support of this server, please register your use of this software:
+          <br/>
+          <a href='http://eepurl.com/by4eQr' target="_blank" rel="noopener noreferrer">
+            <Button
+              className='registration-button' 
+              type="default"  
+              // size='large' 
+              // shape='round'
+              icon="form"
+              onClick={() => this.sendRegisterClickEvent('pdb2pqr')}
+            >
+              Register Here
+            </Button>
+          </a>
+          <br/>
+          <br/>
+        </div>
+      )
+    }
+  }
+
   renderPdbSourceInput(){
     // if(this.state.pdb_upload_hidden) return;
     let return_element = null
@@ -391,7 +428,12 @@ class ConfigPDB2PQR extends ConfigForm{
       message.error(`${info.file.name} file upload failed.`);
     }
 
-    if( file_type == 'pdb' )         self.setState({ pdbFileList: info.fileList.slice(-1) })
+    if( file_type == 'pdb' ){
+      self.setState({
+        pdbFileList: info.fileList.slice(-1),
+        show_register_button: true,
+      })
+    } 
     else if( file_type == 'userff' ) self.setState({ userffFileList: info.fileList.slice(-1) })
     else if( file_type == 'names' )  self.setState({ namesFileList: info.fileList.slice(-1) })
     else if( file_type == 'ligand' ) self.setState({ ligandFileList: info.fileList.slice(-1) })
@@ -590,6 +632,7 @@ class ConfigPDB2PQR extends ConfigForm{
             {/* <Form.Item> */}
               {/* {this.renderPdbSourceInput()} */}
             {/* </Form.Item> */}
+            {this.renderRegistrationButton()}
             
             {/** Form item for pKa option*/}
             <Form.Item
@@ -657,7 +700,14 @@ class ConfigPDB2PQR extends ConfigForm{
             <Form.Item>
               <Col offset={18}>
                 <Affix offsetBottom={100}>
-                  {this.renderSubmitButton()}
+                  <Row>
+                    <Col>
+                      {this.renderSubmitButton()}
+                    {/* </Col>
+                    <Col> */}
+                      {/* {this.renderRegistrationButton()} */}
+                    </Col>
+                  </Row>
                 </Affix>
               </Col>
             </Form.Item>

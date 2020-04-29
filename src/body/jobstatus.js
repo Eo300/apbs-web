@@ -10,6 +10,7 @@ import io from 'socket.io-client';
 import { Link } from 'react-router-dom';
 
 import '../styles/jobstatus.css'
+import '../styles/utils.css'
 import { strict } from 'assert';
 
 const { Content, Sider } = Layout;
@@ -107,7 +108,8 @@ class JobStatus extends Component{
         files: [],
         files_input: [],
         files_output: [],
-      }
+      },
+
     }
   }
 
@@ -239,6 +241,16 @@ class JobStatus extends Component{
       else
         console.log(`other reason: ${reason}`)
     })
+  }
+
+  sendRegisterClickEvent(pageType){
+    if( window._env_.GA_TRACKING_ID !== "" ){
+      ReactGA.event({
+        category: 'Registration',
+        action: 'linkClick',
+        label: pageType,
+      })
+    }
   }
 
   prependZeroIfSingleDigit(numString){ 
@@ -569,6 +581,7 @@ class JobStatus extends Component{
         timeline_list.push( <Timeline.Item color="green" dot={<Icon type="check-circle"/>}>{this.possibleJobStates.complete}</Timeline.Item> )
       }
 
+
       /** Set elapsed time */
       let elapsedTime = 'computing...'
       if (this.state.elapsedTime[jobtype] !== undefined){
@@ -635,6 +648,22 @@ class JobStatus extends Component{
           <br/>
         </div>
 
+      // Show registration button if its state is true
+      let registration_button = 
+        <div >
+          Please remember to <b>register your use</b>:
+          <a href='http://eepurl.com/by4eQr' target="_blank" rel="noopener noreferrer">
+          <Button
+            className='registration-button' 
+            type="primary"  
+            icon="form"
+            onClick={() => this.sendRegisterClickEvent('jobStatus')}
+          >
+            Register Here
+          </Button>
+        </a>
+        </div>
+
       let job_status_block =
         <div>
           <Row>
@@ -643,6 +672,8 @@ class JobStatus extends Component{
           <Row gutter={16}>
             {/* General job information */}
             <Col span={6}>
+              {/* Registration Button */}
+
               <h2>
                 ID: {this.props.jobid}
               </h2>
@@ -658,6 +689,9 @@ class JobStatus extends Component{
               <Timeline mode="left" pending={pending_text}>
                 {timeline_list}
               </Timeline>
+              {registration_button}
+              <br/>
+              <br/>
 
               {/* <br/> */}
               {/* <h3>Regarding data retention</h3> */}

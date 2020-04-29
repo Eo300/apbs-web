@@ -16,6 +16,16 @@ class HomePage extends Component{
             ReactGA.pageview(window.location.pathname + window.location.search)
     }
 
+    sendRegisterClickEvent(pageType){
+        if( window._env_.GA_TRACKING_ID !== "" ){
+          ReactGA.event({
+            category: 'Registration',
+            action: 'linkClick',
+            label: pageType,
+          })
+        }
+    }    
+
     /**
      * Creates and returns the main banner welcoming the user to the website
      */
@@ -31,8 +41,11 @@ class HomePage extends Component{
                         <Content className="welcome-text">
                             <div>
                                 <h1> APBS </h1>
-                                <p> Welcome to the new home for running the APBS/PDB2PQR software suite </p>
+                                <p> Welcome to the new home for running the APBS-PDB2PQR software suite </p>
                                 {/* <p> </p> */}
+
+                                <br/>
+                                <p>Please <b><a href='http://eepurl.com/by4eQr' target="_blank" rel="noopener noreferrer" onClick={() => this.sendRegisterClickEvent('home')}>register</a></b> to ensure continued support for this software.</p>
 
                                 <br/>
                                 <p> Getting Started: </p>

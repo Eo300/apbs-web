@@ -75,12 +75,44 @@ class ConfigAPBS extends ConfigForm {
       
       child_form_values: {},
       
-      
+      // Registration button states
+      show_register_button: false,
+      // show_register_button: true,
     }
+
     // this.handleFormChange = this.handleFormChange.bind(this)
     // this.handlePqrUpload = this.handlePqrUpload.bind(this);
     // this.calc_method_component = this.renderMethodFormItems();
   }
+
+  renderRegistrationButton(){
+    if( this.state.show_register_button ){
+      return(
+        <div>
+          {/* For continued support of this server, please <b>register</b> your use of this software:
+          <br/> */}
+          <Form.Item
+                  label="For continued support of this server, please register your use of this software:"
+          >
+          <a href='http://eepurl.com/by4eQr' target="_blank" rel="noopener noreferrer">
+            <Button
+              className='registration-button' 
+              type="default"  
+              icon="form"
+              onClick={() => this.sendRegisterClickEvent('apbs')}
+            >
+              Register Here
+            </Button>
+          </a>
+          </Form.Item>
+
+          {/* <br/>
+          <br/> */}
+        </div>
+      )
+    }
+  }
+
 
   /** If user tries submitting job again, raise alert. */
   handleNewJobSubmit(e, self){
@@ -169,6 +201,7 @@ class ConfigAPBS extends ConfigForm {
   componentDidMount(){
     if(this.props.jobid){
       this.fetchAutofillData(this.state.jobid)
+      this.toggleRegisterButton(true)
     }
     else{
       this.getNewJobID()
@@ -256,7 +289,7 @@ class ConfigAPBS extends ConfigForm {
   renderInfileUpload(){
     return(
       <div>
-        Use an APBS input file:<br/>
+        {/* Use an APBS input file:<br/> */}
         {/* <Switch
           checked={this.state.use_input_file}
           onChange={() => {this.setState({use_input_file: !this.state.use_input_file})}}
@@ -352,6 +385,8 @@ class ConfigAPBS extends ConfigForm {
       message.error(`${info.file.name} file upload failed.`);
     }
     
+    self.toggleRegisterButton(true)
+
     // have file list show most recent upload
     self.setState({ readfileList: info.fileList })
   }
@@ -719,6 +754,9 @@ class ConfigAPBS extends ConfigForm {
         <Row>
           <Col span={22} offset={1}>
           {/* <Col span={21} offset={1}> */}
+                {/* Render the registration button after files are uploaded */}
+                {this.renderRegistrationButton()}
+
             <Tabs
               defaultActiveKey='1'
               tabPosition='top'
@@ -850,6 +888,9 @@ class ConfigAPBS extends ConfigForm {
               >
                 {/** Toggle to use an APBS infile rather than */}
                 {this.renderInfileUpload()}
+
+                {/* Render the registration button after files are uploaded */}
+                {this.renderRegistrationButton()}
               </TabPane>
             </Tabs>
           </Col>
