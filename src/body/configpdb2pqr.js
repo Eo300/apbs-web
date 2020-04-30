@@ -443,6 +443,7 @@ class ConfigPDB2PQR extends ConfigForm{
       return_element = 
           <Form.Item
           name="pdbid"
+          label="Please enter a PDB ID"
           rules={[
             {
               required: true,
@@ -460,6 +461,7 @@ class ConfigPDB2PQR extends ConfigForm{
       return_element = 
         <Form.Item
           name="pdbfile"
+          label="Please upload a PDB file"
           rules={[
             {
               required: true,
@@ -728,8 +730,10 @@ class ConfigPDB2PQR extends ConfigForm{
                   </Upload></Row> */}
                 </Radio.Button>
               </Radio.Group>
-              {this.renderPdbSourceInput()}
             </Form.Item>
+            
+            {this.renderPdbSourceInput()}
+
             {/* <Form.Item> */}
               {/* {this.renderPdbSourceInput()} */}
             {/* </Form.Item> */}
@@ -831,7 +835,7 @@ class ConfigPDB2PQR extends ConfigForm{
 
   render(){
     return(
-      <Layout id="pdb2pqr" style={{ padding: '16px 0', marginBottom: 5, background: '#fff', boxShadow: "2px 4px 10px #00000033" }}>
+      <Layout id="pdb2pqr" style={{ padding: '16px 0', marginBottom: 5, background: '#fff', boxShadow: "2px 4px 3px #00000033" }}>
           {/* {this.renderSidebar()} */}
           <Layout>
             <Content style={{ background: '#fff', padding: 16, margin: 0, minHeight: 280 }}>

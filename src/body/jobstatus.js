@@ -824,7 +824,7 @@ class JobStatus extends Component{
   render(){
     return(
       <Layout id="pdb2pqr">
-          <Content style={{ background: '#fff', padding: 16, marginBottom: 5, minHeight: 280, boxShadow: "2px 4px 10px #00000033" }}>
+          <Content style={{ background: '#fff', padding: 16, marginBottom: 5, minHeight: 280, boxShadow: "2px 4px 3px #00000033" }}>
           {/* <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}> */}
             {/* Content goes here */}
             {/* {this.createJobStatus()} */}

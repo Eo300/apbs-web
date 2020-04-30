@@ -15,7 +15,7 @@ class AboutPage extends Component{
 
     render(){
         return(
-            <Layout id="about" style={{ padding: '16px 0', marginBottom: 5, background: '#fff', boxShadow: "2px 4px 10px #00000033" }}>
+            <Layout id="about" style={{ padding: '16px 0', marginBottom: 5, background: '#fff', boxShadow: "2px 4px 3px #00000033" }}>
                 <Content style={{ background: '#fff', padding: 16, margin: 0, minHeight: 280 }}>
                     This server enables a user to convert PDB files into PQR files. PQR files are PDB files where the occupancy and B-factor columns have been replaced by per-atom charge and radius.
                     pKa calculations are performed by PROPKA.

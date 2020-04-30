@@ -22,7 +22,7 @@ class DownloadPage extends Component{
         let apbs_block = '$ ./apbs [options] input-file'
         let pdb2pqr_block = '$ ./pdb2pqr [options] --ff={forcefield} {pdb-path} {output-path}'
         return(
-            <Layout id="download" style={{ padding: '16px 0', marginBottom: 5, background: '#fff', boxShadow: "2px 4px 10px #00000033" }}>
+            <Layout id="download" style={{ padding: '16px 0', marginBottom: 5, background: '#fff', boxShadow: "2px 4px 3px #00000033" }}>
                 <Content style={{ background: '#fff', padding: 16, margin: 0, minHeight: 280 }}>
                     <Col offset={2} span={20}>
                         <h2>

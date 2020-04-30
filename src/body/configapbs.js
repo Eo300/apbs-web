@@ -941,7 +941,7 @@ class ConfigAPBS extends ConfigForm {
 
 
     return(
-      <Layout id="apbs" style={{ padding: '16px 0', marginBottom: 5, background: '#fff', boxShadow: "2px 4px 10px #00000033" }}>
+      <Layout id="apbs" style={{ padding: '16px 0', marginBottom: 5, background: '#fff', boxShadow: "2px 4px 3px #00000033" }}>
           {/* {this.renderSidebar()} */}
           <Layout>
             <Content style={{ background: '#fff', padding: 16, margin: 0, minHeight: 280 }}>
