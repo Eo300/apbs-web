@@ -671,7 +671,7 @@ class JobStatus extends Component{
       }
 
       let bookmark_notice_block = 
-        <div style={{ textAlign: 'center' }}>
+        <div>
           <h2> <b>Bookmark</b> <StarTwoTone /> this page to return to your results after leaving</h2>
           {/* <h2> <b>Bookmark</b> this page in order to view your results after leaving this page.</h2> */}
           <br/>
@@ -695,7 +695,7 @@ class JobStatus extends Component{
 
       let job_status_block =
         <div>
-          <Row>
+          <Row justify="center" >
             {bookmark_notice_block}
           </Row>
           <Row gutter={16}>
