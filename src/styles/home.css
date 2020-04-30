@@ -51,3 +51,21 @@ color: #fff;
   /* margin-top: 16px; */
   animation: 1.2s fadeInDown ;
 }
+
+.landing-bullet {
+  /* width: 15%; */
+  text-align: center;
+}
+.landing-bullet .icon{
+  font-size: 72pt;
+}
+.landing-bullet h1{
+  /* font-size: 72pt; */
+  width: 15%;
+  /* text-align: center; */
+}
+.landing-bullet h2{
+  /* font-size: small; */
+  width: 15%;
+  /* text-align: center; */
+}

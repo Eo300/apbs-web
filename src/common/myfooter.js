@@ -68,6 +68,13 @@ class MyFooter extends Component{
         let apbsCitationLink = 'https://www.pnas.org/content/98/18/10037';
         let apbsCopyTooltip = this.generateCopyTooltip(apbsCitationText, 'top')
         let apbsLinkTooltip = this.generateLinkTooltip(apbsCitationLink, 'top')
+        
+        // New citation
+        let newCitationText = 
+        `
+        Baker NA, Sept D, Joseph S, Holst MJ, McCammon JA. Electrostatics of nanosystems: application to
+        microtubules and the ribosome. Proc. Natl. Acad. Sci. USA 98, 10037-10041 2001.
+        `;
 
         const footerStyle = {
             // textAlign: 'center',
