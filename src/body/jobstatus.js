@@ -10,6 +10,7 @@ import {
   LoadingOutlined,
   RightOutlined,
   StarTwoTone,
+  FormOutlined,
 } from '@ant-design/icons';
 
 import { Form } from '@ant-design/compatible';
@@ -684,7 +685,7 @@ class JobStatus extends Component{
           <Button
             className='registration-button' 
             type="primary"  
-            icon="form"
+            icon={<FormOutlined />}
             onClick={() => this.sendRegisterClickEvent('jobStatus')}
           >
             Register Here

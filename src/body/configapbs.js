@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import 'antd/dist/antd.css'
-import { ExportOutlined, SettingOutlined, UploadOutlined } from '@ant-design/icons';
+import { ExportOutlined, SettingOutlined, UploadOutlined, FormOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {
@@ -115,7 +115,7 @@ class ConfigAPBS extends ConfigForm {
             <Button
               className='registration-button' 
               type="default"  
-              icon="form"
+              icon={<FormOutlined />}
               onClick={() => this.sendRegisterClickEvent('apbs')}
             >
               Register Here
@@ -765,7 +765,7 @@ class ConfigAPBS extends ConfigForm {
   renderConfigFormTabular(){
     // console.log(this.state.parent_form_values.mol)
     return (
-      <Form onSubmit={ (e) => this.handleNewJobSubmit(e, this)}>
+      <Form onSubmit={ (e) => this.handleNewJobSubmit(e, this)} layout="vertical">
       {/* <Form action={window._env_.API_URL + "/submit/apbs"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data"> */}
       {/* <Form action={window._env_.API_URL + "/submit/apbs/json"} method="POST" onSubmit={this.handleNewJobSubmit} name="thisform" encType="multipart/form-data"> */}
         <Row>
@@ -886,7 +886,7 @@ class ConfigAPBS extends ConfigForm {
   renderConfigFormInfile(){
     // console.log(this.state.parent_form_values.mol)
     return (
-      <Form onSubmit={ (e) => this.handleNewJobSubmit(e, this)}>
+      <Form onSubmit={ (e) => this.handleNewJobSubmit(e, this)} layout="vertical">
       {/* <Form action={window._env_.API_URL + "/submit/apbs"} method="POST" onSubmit={this.handleJobSubmit} name="thisform" encType="multipart/form-data"> */}
       {/* <Form action={window._env_.API_URL + "/submit/apbs/json"} method="POST" onSubmit={this.handleNewJobSubmit} name="thisform" encType="multipart/form-data"> */}
         <Row>

@@ -20,6 +20,7 @@ import {
   Collapse,
   Spin,
 } from 'antd';
+import { FormOutlined } from '@ant-design/icons';
 import RadioGroup from 'antd/lib/radio/group';
 import '../../styles/utils.css'
 import '../../styles/configJob.css';
@@ -115,7 +116,7 @@ class ConfigForm extends Component{
           type="default"  
           size='large' 
           shape='round'
-          icon="form"
+          icon={<FormOutlined />}
         >
           Register Here
         </Button>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import 'antd/dist/antd.css'
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined, FormOutlined } from '@ant-design/icons';
 import { Form } from 'antd';
 // import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
@@ -423,7 +423,7 @@ class ConfigPDB2PQR extends ConfigForm{
               type="default"  
               // size='large' 
               // shape='round'
-              icon="form"
+              icon={<FormOutlined />}
               onClick={() => this.sendRegisterClickEvent('pdb2pqr')}
             >
               Register Here
