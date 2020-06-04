@@ -152,19 +152,26 @@ class JobStatus extends Component{
     // this.fetchJobStatusSocketIO('apbs')
     // this.fetchJobStatusSocketIO('pdb2pqr')
 
-    // if( window._env_.ON_CLOUD == true ){
-    // if( true ){
-    //   notification.warn({
-    //     key: 'data_retention_notice',
-    //     message: "Regarding Data Retention",
-    //     duration: 0,
-    //     description: 
-    //       "Files for a JobID WILL BE DELETED 48 hours after job creation,\
-    //         if using APBS-REST via our cloud service. Please download\
-    //         the files you need in the meantime.",
-    //     // btn: (<Button type="primary" size="small" onClick={() => notification.close('data_retention_notice')}> Close </Button>)
-    //   })
-    // }
+    // TODO: add ON_CLOUD environement variable then change conditional
+    // if( window._env_.ON_CLOUD == true ){}
+    if( this.props.jobid !== "" && this.props.jobid !== undefined ){
+      console.log(`inside componentDidMount, JOB_ID: ${this.props.jobid}`)
+      const acknowledgement_btn = 
+        <Button size='small' type='primary' onClick={() => notification.close('data_retention_notice')}>
+          Got it!
+        </Button>
+      console.log(acknowledgement_btn.key)
+      notification.warn({
+        key: 'data_retention_notice',
+        message: "Data Retention",
+        duration: 0,
+        // btn: acknowledgement_btn,
+        description: 
+          `Files for the job ${this.props.jobid} will be retained for 14 DAYS following job creation.\
+            Please download the files you wish to keep in the meantime.`,
+        // btn: (<Button type="primary" size="small" onClick={() => notification.close('data_retention_notice')}> Close </Button>)
+      })
+    }
   }
 
   /** Cleans up setInterval objects before unmounting */
