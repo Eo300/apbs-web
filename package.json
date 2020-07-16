@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/compatible": "^1.0.2",
-    "antd": "^4.1.0",
+    "antd": "^4.4.2",
     "query-string-es5": "^6.1.4",
     "react": "^16.13.0",
     "react-copy-to-clipboard": "^5.0.1",
