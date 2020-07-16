@@ -57,7 +57,7 @@ See the section about [deployment](README_CREATEREACTAPP.md#deployment) for more
 If Docker is installed on your machine, you can build this web UI as a container image.
 
 ### `docker build`
-To build the image, run the followingin the project directory:
+To build the image, run the following in the project directory:
 ```shell
 docker build -t <TAG>
 ```
